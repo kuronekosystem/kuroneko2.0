@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { getUserFriendlyApiErrorMessage } from '../core/errors/api-error-message';
-import { LanguageService } from '../core/i18n/language.service';
-import { AccessRequestStatus } from '../core/models/access.models';
-import { LoadingMessageComponent } from '../shared/components/loading-message/loading-message.component';
-import { LoadingSpinnerComponent } from '../shared/components/loading-spinner/loading-spinner.component';
-import { LanguageSelectorComponent } from '../shared/components/language-selector/language-selector.component';
-import { AdminGalleryManagerComponent } from './admin-gallery-manager.component';
-import { AdminService } from './admin.service';
+import { getUserFriendlyApiErrorMessage } from '../../../core/errors/api-error-message';
+import { LanguageService } from '../../../core/i18n/language.service';
+import { AccessRequestStatus } from '../../../core/models/access.models';
+import { LanguageSelectorComponent } from '../../../shared/components/language-selector/language-selector.component';
+import { LoadingMessageComponent } from '../../../shared/components/loading-message/loading-message.component';
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
+import { AdminGalleryManagerComponent } from '../../components/admin-gallery-manager/admin-gallery-manager.component';
+import { AdminService } from '../../services/admin.service';
 import {
   AdminAccessKeyItem,
   AdminAccessKeyStatus,
@@ -18,7 +18,7 @@ import {
   AdminKeyDraft,
   AdminRequestDraft,
   AdminRequestFilter
-} from './admin.types';
+} from '../../models/admin.types';
 
 @Component({
   selector: 'app-admin-panel',

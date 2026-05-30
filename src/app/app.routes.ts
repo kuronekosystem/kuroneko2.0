@@ -19,7 +19,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    loadComponent: () => import('./admin/admin-panel.component').then(m => m.AdminPanelComponent),
+    loadComponent: () => import('./admin/pages/admin-panel/admin-panel.component').then(m => m.AdminPanelComponent),
     title: 'クロネコエンジン 2.0 | 管理パネル'
   },
   {

@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LanguageService } from '../core/i18n/language.service';
-import { LoadingSpinnerComponent } from '../shared/components/loading-spinner/loading-spinner.component';
-import { AdminService } from './admin.service';
+import { LanguageService } from '../../../core/i18n/language.service';
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
+import { AdminService } from '../../services/admin.service';
 import {
   AdminCredentials,
   AdminGalleryFilter,
   AdminGalleryItem,
   AdminGalleryItemPayload,
   GalleryItemStatus
-} from './admin.types';
+} from '../../models/admin.types';
 
 interface GalleryItemForm {
   title: string;

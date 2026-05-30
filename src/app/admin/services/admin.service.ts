@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { KuronekoApiService } from '../core/services/kuroneko-api.service';
+import { environment } from '../../../environments/environment';
+import { KuronekoApiService } from '../../core/services/kuroneko-api.service';
 import {
   AdminAccessKeyItem,
   AdminAccessKeysResponse,
@@ -13,7 +13,7 @@ import {
   AdminGalleryItemResponse,
   AdminGalleryItemsResponse,
   AdminMutationResponse
-} from './admin.types';
+} from '../models/admin.types';
 
 @Injectable({
   providedIn: 'root'

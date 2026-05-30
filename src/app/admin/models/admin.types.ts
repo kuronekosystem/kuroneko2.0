@@ -1,4 +1,4 @@
-import { AccessRequestStatus, AccessSource, ApiResponse } from '../core/models/access.models';
+import { AccessRequestStatus, AccessSource, ApiResponse } from '../../core/models/access.models';
 
 export interface AdminCredentials {
   adminUsername: string;
