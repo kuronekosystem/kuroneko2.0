@@ -20,33 +20,33 @@ export const routes: Routes = [
   {
     path: 'admin',
     loadComponent: () => import('./admin/admin-panel.component').then(m => m.AdminPanelComponent),
-    title: 'クロネコギャラリーシステム 2.0 | 管理パネル'
+    title: 'クロネコエンジン 2.0 | 管理パネル'
   },
   {
     path: 'access',
     loadComponent: () => import('./features/access/pages/access-center.component').then(m => m.AccessCenterComponent),
-    title: 'クロネコギャラリーシステム | VIPアクセス'
+    title: 'クロネコエンジン | VIPアクセス'
   },
   {
     path: 'access/login',
     loadComponent: () => import('./features/access/pages/access-login.component').then(m => m.AccessLoginComponent),
-    title: 'クロネコギャラリーシステム | ログイン'
+    title: 'クロネコエンジン | ログイン'
   },
   {
     path: 'access/request',
     loadComponent: () => import('./features/access/pages/access-request.component').then(m => m.AccessRequestComponent),
-    title: 'クロネコギャラリーシステム | 申請'
+    title: 'クロネコエンジン | 申請'
   },
   {
     path: 'access/status',
     loadComponent: () => import('./features/access/pages/access-status.component').then(m => m.AccessStatusComponent),
-    title: 'クロネコギャラリーシステム | 申請状況'
+    title: 'クロネコエンジン | 申請状況'
   },
   {
     path: 'vip-board',
     canActivate: [vipSessionGuard],
     loadComponent: () => import('./features/vip-board/pages/vip-board/vip-board.component').then(m => m.VipBoardComponent),
-    title: 'クロネコギャラリーシステム | VIPボード'
+    title: 'クロネコエンジン | VIPボード'
   },
   {
     path: 'system',
@@ -57,7 +57,7 @@ export const routes: Routes = [
     path: 'gallery',
     canActivate: [vipSessionGuard],
     loadComponent: () => import('./features/gallery/pages/gallery/gallery.component').then(m => m.GalleryComponent),
-    title: 'クロネコギャラリーシステム | 限定ギャラリー'
+    title: 'クロネコエンジン | 限定ギャラリー'
   },
   {
     path: 'galeria',
@@ -72,6 +72,6 @@ export const routes: Routes = [
   {
     path: '**',
     loadComponent: () => import('./not-found/not-found.component').then(m => m.NotFoundComponent),
-    title: '404｜クロネコギャラリーシステム'
+    title: '404｜クロネコエンジン'
   }
 ];

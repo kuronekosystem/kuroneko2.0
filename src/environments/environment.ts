@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   app: {
-    name: 'クロネコギャラリーシステム 2.0',
+    name: 'クロネコエンジン 2.0',
     projectName: 'クロネコプロジェクト',
     basePath: '/kuroneko2.0/'
   },
@@ -22,6 +22,7 @@ export const environment = {
     vipSession: 'kuronekoVipSession',
     visitCounted: 'kuronekoVisitCounted',
     adminSession: 'kuronekoAdminSession',
+    adultWarningAccepted: 'kuronekoAdultWarningAccepted',
     startVisitData: 'kuroneko_visit_data',
     startSessionActive: 'kuroneko_session_active'
   },

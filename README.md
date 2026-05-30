@@ -1,4 +1,4 @@
-# クロネコギャラリーシステム 2.0
+# クロネコエンジン 2.0
 
 Aplicacion web Angular para `クロネコプロジェクト`, orientada a centralizar enlaces publicos, acceso VIP y gestion manual de solicitudes para una galeria exclusiva.
 
@@ -191,4 +191,4 @@ Una futura version estable puede incorporar Playwright o Cypress para automatiza
 
 ## Nota final
 
-`クロネコギャラリーシステム 2.0` representa un nuevo comienzo para el proyecto: una entrada publica simple, una galeria exclusiva para quienes apoyan el trabajo creativo y una base tecnica preparada para seguir evolucionando con mas estabilidad.
+`クロネコエンジン 2.0` representa un nuevo comienzo para el proyecto: una entrada publica simple, una galeria exclusiva para quienes apoyan el trabajo creativo y una base tecnica preparada para seguir evolucionando con mas estabilidad.

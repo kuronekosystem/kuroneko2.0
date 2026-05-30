@@ -1,0 +1,318 @@
+.admin-gallery {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1rem, 2vw, 1.35rem);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 12px;
+  color: #e0e0e0;
+  background: linear-gradient(135deg, rgba(20, 20, 20, 0.85), rgba(10, 10, 10, 0.95));
+  box-shadow: 0 0 26px rgba(138, 43, 226, 0.12);
+}
+
+.admin-gallery__header,
+.admin-gallery__item-top,
+.admin-gallery__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.admin-gallery__header h2 {
+  margin: 0;
+}
+
+.admin-gallery__header p {
+  margin: 0.25rem 0 0;
+  color: rgba(224, 224, 224, 0.7);
+}
+
+.admin-gallery__kicker,
+.admin-gallery__form-heading span,
+.admin-gallery__details dt {
+  color: #ffd700;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.admin-gallery__form-card,
+.admin-gallery__item,
+.admin-gallery__message,
+.admin-gallery__empty,
+.admin-gallery__loading {
+  border: 1px solid rgba(255, 215, 0, 0.18);
+  border-radius: 8px;
+  background: #1a1a1a;
+}
+
+.admin-gallery__form-card,
+.admin-gallery__item {
+  padding: 1rem;
+}
+
+.admin-gallery__form-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.admin-gallery__form-heading code,
+.admin-gallery__item code {
+  color: #ffd700;
+  overflow-wrap: anywhere;
+}
+
+.admin-gallery__form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.admin-gallery__field {
+  display: grid;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.admin-gallery__field--wide {
+  grid-column: 1 / -1;
+}
+
+.admin-gallery__field span {
+  color: #ffd700;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.admin-gallery__field input,
+.admin-gallery__field textarea,
+.admin-gallery__field select {
+  width: 100%;
+  min-width: 0;
+  padding: 0.75rem 0.85rem;
+  color: #e0e0e0;
+  border: 1px solid rgba(138, 43, 226, 0.45);
+  border-radius: 8px;
+  background: #1a1a1a;
+  font: inherit;
+}
+
+.admin-gallery__field textarea {
+  min-height: 84px;
+  resize: vertical;
+}
+
+.admin-gallery__field input:focus,
+.admin-gallery__field textarea:focus,
+.admin-gallery__field select:focus {
+  outline: none;
+  border-color: #ffd700;
+  box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+}
+
+.admin-gallery__preview {
+  display: grid;
+  min-height: 140px;
+  place-items: center;
+  overflow: hidden;
+  border: 1px dashed rgba(138, 43, 226, 0.5);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.24);
+}
+
+.admin-gallery__preview img,
+.admin-gallery__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.admin-gallery__button,
+.admin-gallery__filter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  max-width: 100%;
+  padding: 0.72rem 1rem;
+  color: #e0e0e0;
+  border: 2px solid #ffd700;
+  border-radius: 4px;
+  background: #1a1a1a;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.16s ease, opacity 0.16s ease, border-color 0.16s ease;
+}
+
+.admin-gallery__button:hover,
+.admin-gallery__filter:hover {
+  color: #0a0a0a;
+  background: #ffd700;
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.admin-gallery__button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: #666;
+  color: #e0e0e0;
+  background: #1a1a1a;
+  box-shadow: none;
+  transform: none;
+}
+
+.admin-gallery__button--ghost,
+.admin-gallery__filter {
+  border: 1px solid rgba(255, 215, 0, 0.35);
+}
+
+.admin-gallery__button--danger {
+  border-color: #8a2be2;
+}
+
+.admin-gallery__button--danger:hover:not(:disabled) {
+  color: #e0e0e0;
+  background: #8a2be2;
+  box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
+}
+
+.admin-gallery__filters {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.admin-gallery__filter.active {
+  color: #0a0a0a;
+  border-color: #ffd700;
+  background: #ffd700;
+}
+
+.admin-gallery__grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.admin-gallery__item {
+  display: grid;
+  grid-template-columns: minmax(140px, 220px) minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.admin-gallery__thumb {
+  display: grid;
+  min-height: 150px;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(138, 43, 226, 0.45);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.admin-gallery__item-body {
+  min-width: 0;
+}
+
+.admin-gallery__item-top strong {
+  display: block;
+  color: #ffd700;
+  overflow-wrap: anywhere;
+}
+
+.admin-gallery__status {
+  padding: 0.35rem 0.65rem;
+  border: 1px solid rgba(102, 102, 102, 0.8);
+  border-radius: 4px;
+  color: rgba(224, 224, 224, 0.72);
+  background: rgba(26, 26, 26, 0.8);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.admin-gallery__status--active {
+  color: #ffd700;
+  border-color: rgba(255, 215, 0, 0.4);
+  background: rgba(255, 215, 0, 0.1);
+}
+
+.admin-gallery__details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin: 1rem 0;
+}
+
+.admin-gallery__details div {
+  min-width: 0;
+  padding: 0.65rem;
+  border: 1px solid rgba(255, 215, 0, 0.12);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.24);
+}
+
+.admin-gallery__details-wide {
+  grid-column: 1 / -1;
+}
+
+.admin-gallery__details dd {
+  margin: 0.2rem 0 0;
+  overflow-wrap: anywhere;
+  line-height: 1.55;
+}
+
+.admin-gallery__message,
+.admin-gallery__empty,
+.admin-gallery__loading {
+  padding: 1rem;
+}
+
+.admin-gallery__message {
+  border-color: rgba(255, 215, 0, 0.3);
+  background: rgba(255, 215, 0, 0.1);
+}
+
+.admin-gallery__message--error {
+  border-color: rgba(138, 43, 226, 0.48);
+  background: rgba(138, 43, 226, 0.14);
+}
+
+.admin-gallery__empty,
+.admin-gallery__loading {
+  color: rgba(224, 224, 224, 0.7);
+  text-align: center;
+}
+
+.admin-gallery__loading {
+  display: grid;
+  place-items: center;
+  gap: 0.75rem;
+}
+
+@media (max-width: 760px) {
+  .admin-gallery__form,
+  .admin-gallery__item,
+  .admin-gallery__details {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-gallery__button,
+  .admin-gallery__filter,
+  .admin-gallery__actions {
+    width: 100%;
+  }
+
+  .admin-gallery__actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}

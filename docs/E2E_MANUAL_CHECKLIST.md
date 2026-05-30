@@ -1,6 +1,6 @@
 # E2E Manual Checklist
 
-Manual stability checklist for クロネコギャラリーシステム 2.0.
+Manual stability checklist for クロネコエンジン 2.0.
 
 ## Tooling Status
 

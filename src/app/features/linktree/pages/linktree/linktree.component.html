@@ -63,10 +63,41 @@
         <span>{{ texts().linktree.paypalLabel }}</span>
         <small>{{ texts().linktree.paypalSmall }}</small>
       </a>
-      <a class="linktree__button linktree__button--system" routerLink="/access">
+      <button type="button" class="linktree__button linktree__button--system" (click)="openVipWarning()">
         <span>{{ texts().linktree.systemButton }}</span>
         <small>{{ texts().linktree.systemSmall }}</small>
-      </a>
+      </button>
     </div>
   </div>
+
+  @if (showAdultWarning()) {
+    <div class="linktree__warning-overlay">
+      <section
+        class="linktree__warning"
+        role="dialog"
+        aria-modal="true"
+        [attr.aria-label]="texts().adultWarning.title"
+      >
+        <p class="linktree__warning-kicker">{{ texts().adultWarning.shortNotice }}</p>
+        <h2 class="linktree__warning-title">{{ texts().adultWarning.title }}</h2>
+
+        <div class="linktree__warning-copy">
+          <p>{{ texts().adultWarning.description1 }}</p>
+          <p>{{ texts().adultWarning.description2 }}</p>
+          <p>{{ texts().adultWarning.description3 }}</p>
+          <p>{{ texts().adultWarning.description4 }}</p>
+          <p class="linktree__warning-question">{{ texts().adultWarning.question }}</p>
+        </div>
+
+        <div class="linktree__warning-actions">
+          <button type="button" class="linktree__warning-button linktree__warning-button--accept" (click)="acceptAdultWarning()">
+            {{ texts().adultWarning.accept }}
+          </button>
+          <button type="button" class="linktree__warning-button" (click)="closeAdultWarning()">
+            {{ texts().adultWarning.cancel }}
+          </button>
+        </div>
+      </section>
+    </div>
+  }
 </section>

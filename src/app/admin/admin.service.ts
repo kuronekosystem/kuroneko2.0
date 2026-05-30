@@ -8,6 +8,10 @@ import {
   AdminAccessRequestsResponse,
   AdminApproveAccessResponse,
   AdminCredentials,
+  AdminGalleryItem,
+  AdminGalleryItemPayload,
+  AdminGalleryItemResponse,
+  AdminGalleryItemsResponse,
   AdminMutationResponse
 } from './admin.types';
 
@@ -144,9 +148,104 @@ export class AdminService {
     return response;
   }
 
+  async adminGetGalleryItems(credentials: AdminCredentials): Promise<AdminGalleryItem[]> {
+    const response = await this.api.post<AdminGalleryItemsResponse>({
+      action: 'admin_get_gallery_items',
+      adminUsername: credentials.adminUsername,
+      adminPassword: credentials.adminPassword
+    });
+
+    this.assertSuccess(response, 'ギャラリー項目を読み込めませんでした。');
+    return response.items ?? [];
+  }
+
+  async adminAddGalleryItem(
+    credentials: AdminCredentials,
+    payload: AdminGalleryItemPayload
+  ): Promise<AdminGalleryItem> {
+    const response = await this.api.post<AdminGalleryItemResponse>({
+      action: 'admin_add_gallery_item',
+      adminUsername: credentials.adminUsername,
+      adminPassword: credentials.adminPassword,
+      ...payload
+    });
+
+    this.assertSuccess(response, 'ギャラリー項目を追加できませんでした。');
+    return this.readGalleryItem(response);
+  }
+
+  async adminUpdateGalleryItem(
+    credentials: AdminCredentials,
+    id: string,
+    payload: AdminGalleryItemPayload
+  ): Promise<AdminGalleryItem> {
+    const response = await this.api.post<AdminGalleryItemResponse>({
+      action: 'admin_update_gallery_item',
+      adminUsername: credentials.adminUsername,
+      adminPassword: credentials.adminPassword,
+      id,
+      ...payload
+    });
+
+    this.assertSuccess(response, 'ギャラリー項目を更新できませんでした。');
+    return this.readGalleryItem(response);
+  }
+
+  async adminDisableGalleryItem(credentials: AdminCredentials, id: string): Promise<void> {
+    const response = await this.api.post<AdminMutationResponse>({
+      action: 'admin_disable_gallery_item',
+      adminUsername: credentials.adminUsername,
+      adminPassword: credentials.adminPassword,
+      id
+    });
+
+    this.assertSuccess(response, 'ギャラリー項目を非公開にできませんでした。');
+  }
+
+  async adminDeleteGalleryItem(credentials: AdminCredentials, id: string): Promise<void> {
+    const response = await this.api.post<AdminMutationResponse>({
+      action: 'admin_delete_gallery_item',
+      adminUsername: credentials.adminUsername,
+      adminPassword: credentials.adminPassword,
+      id
+    });
+
+    this.assertSuccess(response, 'ギャラリー項目を削除できませんでした。');
+  }
+
   private assertSuccess(response: { success: boolean; message?: string }, fallbackMessage: string): void {
     if (!response.success) {
       throw new Error(response.message || fallbackMessage);
     }
+  }
+
+  private readGalleryItem(response: AdminGalleryItemResponse): AdminGalleryItem {
+    if (response.item) return response.item;
+
+    if (
+      typeof response.id === 'string' &&
+      typeof response.title === 'string' &&
+      typeof response.description === 'string' &&
+      typeof response.thumbnail === 'string' &&
+      typeof response.fullSize === 'string' &&
+      typeof response.category === 'string' &&
+      (response.status === 'active' || response.status === 'disabled') &&
+      typeof response.createdAt === 'string' &&
+      typeof response.updatedAt === 'string'
+    ) {
+      return {
+        id: response.id,
+        title: response.title,
+        description: response.description,
+        thumbnail: response.thumbnail,
+        fullSize: response.fullSize,
+        category: response.category,
+        status: response.status,
+        createdAt: response.createdAt,
+        updatedAt: response.updatedAt
+      };
+    }
+
+    throw new Error('ギャラリー項目のレスポンスを確認できませんでした。');
   }
 }

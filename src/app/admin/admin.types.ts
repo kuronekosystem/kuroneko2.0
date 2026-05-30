@@ -67,3 +67,36 @@ export interface AdminKeyDraft {
 }
 
 export type AdminRequestFilter = 'all' | AccessRequestStatus;
+
+export type GalleryItemStatus = 'active' | 'disabled';
+
+export type AdminGalleryFilter = 'all' | GalleryItemStatus;
+
+export interface AdminGalleryItem {
+  readonly id: string;
+  readonly title: string;
+  readonly description: string;
+  readonly thumbnail: string;
+  readonly fullSize: string;
+  readonly category: string;
+  readonly status: GalleryItemStatus;
+  readonly createdAt: string;
+  readonly updatedAt: string;
+}
+
+export interface AdminGalleryItemPayload {
+  readonly title: string;
+  readonly description: string;
+  readonly thumbnail: string;
+  readonly fullSize: string;
+  readonly category: string;
+  readonly status: GalleryItemStatus;
+}
+
+export type AdminGalleryItemsResponse = ApiResponse<{
+  items?: AdminGalleryItem[];
+}>;
+
+export type AdminGalleryItemResponse = ApiResponse<{
+  item?: AdminGalleryItem;
+} & Partial<AdminGalleryItem>>;

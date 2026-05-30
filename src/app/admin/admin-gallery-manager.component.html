@@ -1,0 +1,187 @@
+<section class="admin-gallery">
+  <div class="admin-gallery__header">
+    <div>
+      <span class="admin-gallery__kicker">Gallery Items</span>
+      <h2>{{ texts().admin.gallery.title }}</h2>
+      <p>{{ texts().admin.gallery.subtitle }}</p>
+    </div>
+    <button class="admin-gallery__button admin-gallery__button--ghost" type="button" [disabled]="isFetching" (click)="loadGalleryItems()">
+      {{ texts().admin.gallery.loading }}
+    </button>
+  </div>
+
+  @if (errorMessage) {
+    <div class="admin-gallery__message admin-gallery__message--error" role="alert">{{ errorMessage }}</div>
+  }
+
+  @if (successMessage) {
+    <div class="admin-gallery__message" role="status">{{ successMessage }}</div>
+  }
+
+  <div class="admin-gallery__form-card">
+    <div class="admin-gallery__form-heading">
+      <span>{{ editingGalleryItemId ? texts().admin.gallery.editMode : texts().admin.gallery.add }}</span>
+      @if (editingGalleryItemId) {
+        <code>{{ editingGalleryItemId }}</code>
+      }
+    </div>
+
+    <form class="admin-gallery__form" (ngSubmit)="saveGalleryItem()">
+      <label class="admin-gallery__field">
+        <span>{{ texts().admin.gallery.titleField }}</span>
+        <input name="galleryTitle" [(ngModel)]="galleryForm.title" [disabled]="isSaving" required>
+      </label>
+
+      <label class="admin-gallery__field">
+        <span>{{ texts().admin.gallery.category }}</span>
+        <input name="galleryCategory" [(ngModel)]="galleryForm.category" [disabled]="isSaving">
+      </label>
+
+      <label class="admin-gallery__field admin-gallery__field--wide">
+        <span>{{ texts().admin.gallery.descriptionField }}</span>
+        <textarea name="galleryDescription" [(ngModel)]="galleryForm.description" [disabled]="isSaving"></textarea>
+      </label>
+
+      <label class="admin-gallery__field">
+        <span>{{ texts().admin.gallery.thumbnailUrl }}</span>
+        <input name="galleryThumbnail" [(ngModel)]="galleryForm.thumbnail" [disabled]="isSaving" placeholder="https://">
+      </label>
+
+      <label class="admin-gallery__field">
+        <span>{{ texts().admin.gallery.fullSizeUrl }}</span>
+        <input name="galleryFullSize" [(ngModel)]="galleryForm.fullSize" [disabled]="isSaving" placeholder="https://" required>
+      </label>
+
+      <label class="admin-gallery__field">
+        <span>{{ texts().admin.gallery.status }}</span>
+        <select name="galleryStatus" [(ngModel)]="galleryForm.status" [disabled]="isSaving">
+          <option value="active">{{ texts().admin.gallery.statusActive }}</option>
+          <option value="disabled">{{ texts().admin.gallery.statusDisabled }}</option>
+        </select>
+      </label>
+
+      <div class="admin-gallery__preview admin-gallery__field--wide">
+        @if (formPreviewUrl()) {
+          <img [src]="formPreviewUrl()" alt="" loading="lazy">
+        } @else {
+          <span>{{ texts().admin.gallery.previewUnavailable }}</span>
+        }
+      </div>
+
+      <div class="admin-gallery__actions admin-gallery__field--wide">
+        <button class="admin-gallery__button" type="submit" [disabled]="isSaving" [attr.aria-busy]="isSaving">
+          @if (isSaving) {
+            <app-loading-spinner [label]="texts().admin.gallery.saving" />
+          } @else {
+            {{ editingGalleryItemId ? texts().admin.gallery.save : texts().admin.gallery.add }}
+          }
+        </button>
+        @if (editingGalleryItemId) {
+          <button class="admin-gallery__button admin-gallery__button--ghost" type="button" [disabled]="isSaving" (click)="cancelEdit()">
+            {{ texts().admin.gallery.cancelEdit }}
+          </button>
+        }
+      </div>
+    </form>
+  </div>
+
+  <div class="admin-gallery__filters" aria-label="Gallery filters">
+    @for (filter of filters; track filter) {
+      <button
+        class="admin-gallery__filter"
+        type="button"
+        [class.active]="galleryFilter === filter"
+        (click)="galleryFilter = filter"
+      >
+        {{ filterLabel(filter) }}
+      </button>
+    }
+  </div>
+
+  @if (isFetching) {
+    <div class="admin-gallery__loading">
+      <app-loading-spinner [label]="texts().admin.gallery.loading" />
+      <span>{{ texts().admin.gallery.loading }}</span>
+    </div>
+  } @else if (filteredItems().length === 0) {
+    <p class="admin-gallery__empty">{{ texts().admin.gallery.empty }}</p>
+  }
+
+  <div class="admin-gallery__grid">
+    @for (item of filteredItems(); track trackItem($index, item)) {
+      <article class="admin-gallery__item">
+        <div class="admin-gallery__thumb">
+          @if (isPreviewAvailable(item)) {
+            <img [src]="previewUrl(item)" [alt]="item.title" loading="lazy" (error)="markPreviewFailed(item.id)">
+          } @else {
+            <span>{{ texts().admin.gallery.previewUnavailable }}</span>
+          }
+        </div>
+
+        <div class="admin-gallery__item-body">
+          <div class="admin-gallery__item-top">
+            <div>
+              <strong>{{ item.title }}</strong>
+              <code>{{ item.id }}</code>
+            </div>
+            <span class="admin-gallery__status" [class.admin-gallery__status--active]="item.status === 'active'">
+              {{ statusLabel(item.status) }}
+            </span>
+          </div>
+
+          <dl class="admin-gallery__details">
+            <div>
+              <dt>{{ texts().admin.gallery.category }}</dt>
+              <dd>{{ item.category || '-' }}</dd>
+            </div>
+            <div>
+              <dt>createdAt</dt>
+              <dd>{{ item.createdAt || '-' }}</dd>
+            </div>
+            <div>
+              <dt>updatedAt</dt>
+              <dd>{{ item.updatedAt || '-' }}</dd>
+            </div>
+            <div class="admin-gallery__details-wide">
+              <dt>{{ texts().admin.gallery.descriptionField }}</dt>
+              <dd>{{ item.description || '-' }}</dd>
+            </div>
+            <div class="admin-gallery__details-wide">
+              <dt>{{ texts().admin.gallery.fullSizeUrl }}</dt>
+              <dd>{{ item.fullSize }}</dd>
+            </div>
+          </dl>
+
+          <div class="admin-gallery__actions">
+            <button class="admin-gallery__button admin-gallery__button--ghost" type="button" (click)="editItem(item)">
+              {{ texts().admin.gallery.edit }}
+            </button>
+            @if (item.status === 'active') {
+              <button
+                class="admin-gallery__button"
+                type="button"
+                [disabled]="isProcessing(item.id)"
+                [attr.aria-busy]="isProcessing(item.id, 'disable')"
+                (click)="disableItem(item)"
+              >
+                {{ isProcessing(item.id, 'disable') ? texts().admin.gallery.saving : texts().admin.gallery.disable }}
+              </button>
+            }
+            <button
+              class="admin-gallery__button admin-gallery__button--danger"
+              type="button"
+              [disabled]="isProcessing(item.id)"
+              [attr.aria-busy]="isProcessing(item.id, 'delete')"
+              (click)="deleteItem(item)"
+            >
+              {{ isProcessing(item.id, 'delete') ? texts().admin.gallery.saving : texts().admin.gallery.delete }}
+            </button>
+            <button class="admin-gallery__button admin-gallery__button--ghost" type="button" (click)="copyUrl(item)">
+              {{ texts().admin.gallery.copyUrl }}
+            </button>
+          </div>
+        </div>
+      </article>
+    }
+  </div>
+</section>

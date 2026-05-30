@@ -3,18 +3,22 @@
     <header class="admin-header">
       <div class="admin-header__row">
         <div class="admin-header__copy">
-          <p class="admin-eyebrow">クロネコギャラリーシステム 2.0</p>
-          <h1>管理パネル</h1>
-          <p>VIPアクセス申請と発行済みキーを確認できます。</p>
+          <p class="admin-eyebrow">{{ texts().admin.panel.product }}</p>
+          <h1>{{ texts().admin.panel.title }}</h1>
+          <p>{{ texts().admin.panel.subtitle }}</p>
         </div>
 
         <div class="admin-session">
+          <app-language-selector />
+
           <span class="admin-session__status" [class.admin-session__status--active]="isAuthenticated">
-            {{ isAuthenticated ? '管理者セッション有効' : '管理者未認証' }}
+            {{ isAuthenticated ? texts().admin.panel.sessionActive : texts().admin.panel.sessionInactive }}
           </span>
 
           @if (isAuthenticated) {
-            <button class="admin-button admin-button--ghost" type="button" (click)="logout()">ログアウト</button>
+            <button class="admin-button admin-button--ghost" type="button" (click)="logout()">
+              {{ texts().admin.panel.logout }}
+            </button>
           }
         </div>
       </div>
@@ -23,18 +27,18 @@
     @if (!isAuthenticated) {
       <form class="admin-card admin-login" (ngSubmit)="submitLogin()">
         <div class="admin-card__heading">
-          <span class="admin-card__kicker">Admin Access</span>
-          <h2>管理者ログイン</h2>
-          <p>申請とアクセスキーを管理するため、管理者IDとキーを入力してください。</p>
+          <span class="admin-card__kicker">{{ texts().admin.panel.loginKicker }}</span>
+          <h2>{{ texts().admin.panel.loginTitle }}</h2>
+          <p>{{ texts().admin.panel.loginDescription }}</p>
         </div>
 
         <div class="admin-field">
-          <label for="adminUsername">管理者ID</label>
+          <label for="adminUsername">{{ texts().admin.panel.adminUsername }}</label>
           <input id="adminUsername" name="adminUsername" [(ngModel)]="adminUsername" autocomplete="username" [disabled]="isAuthenticating" required>
         </div>
 
         <div class="admin-field">
-          <label for="adminPassword">管理者キー</label>
+          <label for="adminPassword">{{ texts().admin.panel.adminPassword }}</label>
           <input
             id="adminPassword"
             name="adminPassword"
@@ -48,9 +52,9 @@
 
         <button class="admin-button" type="submit" [disabled]="isAuthenticating" [attr.aria-busy]="isAuthenticating">
           @if (isAuthenticating) {
-            <app-loading-spinner label="認証中..." />
+            <app-loading-spinner [label]="texts().admin.panel.authenticating" />
           } @else {
-            管理者として入る
+            {{ texts().admin.panel.loginSubmit }}
           }
         </button>
       </form>
@@ -58,9 +62,9 @@
 
     @if (isBusy) {
       <app-loading-message
-        title="管理データを読み込んでいます。"
-        description="Google Sheets との通信に少し時間がかかる場合があります…"
-        spinnerLabel="処理中..."
+        [title]="texts().admin.panel.loadingTitle"
+        [description]="texts().admin.panel.loadingDescription"
+        [spinnerLabel]="texts().admin.panel.processing"
       />
     }
 
@@ -76,14 +80,16 @@
       <section class="admin-section admin-section--requests">
         <div class="admin-section__header">
           <div class="admin-section__title">
-            <span class="admin-card__kicker">Access Requests</span>
-            <h2>アクセス申請一覧</h2>
+            <span class="admin-card__kicker">{{ texts().admin.panel.requestsKicker }}</span>
+            <h2>{{ texts().admin.panel.requestsTitle }}</h2>
           </div>
-          <span class="admin-count">{{ filteredRequests().length }} / {{ requests.length }} 件</span>
-          <button class="admin-button admin-button--ghost" type="button" [disabled]="isFetching" (click)="refreshAdminData()">更新</button>
+          <span class="admin-count">{{ filteredRequests().length }} / {{ requests.length }} {{ texts().admin.panel.countSuffix }}</span>
+          <button class="admin-button admin-button--ghost" type="button" [disabled]="isFetching" (click)="refreshAdminData()">
+            {{ texts().admin.panel.refresh }}
+          </button>
         </div>
 
-        <div class="admin-filters" aria-label="アクセス申請フィルター">
+        <div class="admin-filters" [attr.aria-label]="texts().admin.panel.filtersLabel">
           @for (filter of filters; track filter) {
             <button
               class="admin-filter"
@@ -97,7 +103,7 @@
         </div>
 
         @if (!isFetching && filteredRequests().length === 0) {
-          <p class="admin-empty">現在、表示できる申請はありません。</p>
+          <p class="admin-empty">{{ texts().admin.panel.emptyRequests }}</p>
         }
 
         <div class="admin-grid admin-grid--requests">
@@ -115,7 +121,7 @@
 
               <dl class="admin-details">
                 <div>
-                  <dt>source</dt>
+                  <dt>{{ texts().admin.panel.source }}</dt>
                   <dd>{{ request.source }}</dd>
                 </div>
                 <div>
@@ -123,26 +129,26 @@
                   <dd>{{ request.source === 'fanbox' ? request.fanboxName : request.paypalTransactionId }}</dd>
                 </div>
                 <div>
-                  <dt>contact</dt>
+                  <dt>{{ texts().admin.panel.contact }}</dt>
                   <dd>{{ request.contact || '-' }}</dd>
                 </div>
                 <div>
-                  <dt>createdAt</dt>
+                  <dt>{{ texts().admin.panel.createdAt }}</dt>
                   <dd>{{ request.createdAt }}</dd>
                 </div>
                 <div class="admin-details__wide">
-                  <dt>proofText</dt>
+                  <dt>{{ texts().admin.panel.proofText }}</dt>
                   <dd>{{ request.proofText || '-' }}</dd>
                 </div>
                 <div class="admin-details__wide">
-                  <dt>adminNotes</dt>
+                  <dt>{{ texts().admin.panel.adminNotes }}</dt>
                   <dd>{{ request.adminNotes || '-' }}</dd>
                 </div>
               </dl>
 
               <div class="admin-actions admin-actions--stack">
                 <div class="admin-field admin-field--inline">
-                  <label [for]="'duration-' + request.requestCode">durationDays</label>
+                  <label [for]="'duration-' + request.requestCode">{{ texts().admin.panel.durationDays }}</label>
                   <input
                     [id]="'duration-' + request.requestCode"
                     type="number"
@@ -154,7 +160,7 @@
                 </div>
 
                 <div class="admin-field">
-                  <label [for]="'notes-' + request.requestCode">notes</label>
+                  <label [for]="'notes-' + request.requestCode">{{ texts().admin.panel.notes }}</label>
                   <textarea
                     [id]="'notes-' + request.requestCode"
                     [ngModel]="requestDraft(request.requestCode).notes"
@@ -172,9 +178,9 @@
                     (click)="approveRequest(request)"
                   >
                     @if (isRequestProcessing(request.requestCode, 'approve')) {
-                      <app-loading-spinner label="承認中..." />
+                      <app-loading-spinner [label]="texts().admin.panel.approving" />
                     } @else {
-                      承認する
+                      {{ texts().admin.panel.approve }}
                     }
                   </button>
                   <button
@@ -185,9 +191,9 @@
                     (click)="rejectRequest(request)"
                   >
                     @if (isRequestProcessing(request.requestCode, 'reject')) {
-                      <app-loading-spinner label="処理中..." />
+                      <app-loading-spinner [label]="texts().admin.panel.processing" />
                     } @else {
-                      却下する
+                      {{ texts().admin.panel.rejectAction }}
                     }
                   </button>
                   <button
@@ -198,9 +204,9 @@
                     (click)="needMoreInfo(request)"
                   >
                     @if (isRequestProcessing(request.requestCode, 'needMoreInfo')) {
-                      <app-loading-spinner label="処理中..." />
+                      <app-loading-spinner [label]="texts().admin.panel.processing" />
                     } @else {
-                      追加確認にする
+                      {{ texts().admin.panel.needMoreInfoAction }}
                     }
                   </button>
                 </div>
@@ -208,7 +214,7 @@
 
               @if (approvedResults[request.requestCode]) {
                 <div class="admin-approved">
-                  <strong>この情報をユーザーに共有してください。</strong>
+                  <strong>{{ texts().admin.panel.shareIssued }}</strong>
                   <span>userCode: <code>{{ approvedResults[request.requestCode].userCode }}</code></span>
                   <span>accessKey: <code>{{ approvedResults[request.requestCode].accessKey }}</code></span>
                   <span>{{ approvedResults[request.requestCode].startDate }} - {{ approvedResults[request.requestCode].endDate }}</span>
@@ -218,14 +224,14 @@
                       type="button"
                       (click)="copyText(approvedResults[request.requestCode].userCode, 'userCode')"
                     >
-                      userCode コピー
+                      {{ texts().admin.panel.copyUserCode }}
                     </button>
                     <button
                       class="admin-button admin-button--ghost"
                       type="button"
                       (click)="copyText(approvedResults[request.requestCode].accessKey, 'accessKey')"
                     >
-                      accessKey コピー
+                      {{ texts().admin.panel.copyAccessKey }}
                     </button>
                   </div>
                 </div>
@@ -238,14 +244,14 @@
       <section class="admin-section admin-section--keys">
         <div class="admin-section__header">
           <div class="admin-section__title">
-            <span class="admin-card__kicker">Issued Keys</span>
-            <h2>発行済みアクセスキー</h2>
+            <span class="admin-card__kicker">{{ texts().admin.panel.keysKicker }}</span>
+            <h2>{{ texts().admin.panel.keysTitle }}</h2>
           </div>
-          <span class="admin-count">{{ accessKeys.length }} 件</span>
+          <span class="admin-count">{{ accessKeys.length }} {{ texts().admin.panel.countSuffix }}</span>
         </div>
 
         @if (!isFetching && accessKeys.length === 0) {
-          <p class="admin-empty">発行済みアクセスキーはありません。</p>
+          <p class="admin-empty">{{ texts().admin.panel.emptyKeys }}</p>
         }
 
         <div class="admin-grid admin-grid--keys">
@@ -263,33 +269,33 @@
 
               <dl class="admin-details">
                 <div>
-                  <dt>accessKey</dt>
+                  <dt>{{ texts().admin.panel.accessKey }}</dt>
                   <dd><code>{{ displayAccessKey(item) }}</code></dd>
                 </div>
                 <div>
-                  <dt>source</dt>
+                  <dt>{{ texts().admin.panel.source }}</dt>
                   <dd>{{ item.source }}</dd>
                 </div>
                 <div>
-                  <dt>requestCode</dt>
+                  <dt>{{ texts().admin.panel.requestCode }}</dt>
                   <dd>{{ item.requestCode }}</dd>
                 </div>
                 <div>
-                  <dt>startDate</dt>
+                  <dt>{{ texts().admin.panel.startDate }}</dt>
                   <dd>{{ item.startDate }}</dd>
                 </div>
                 <div>
-                  <dt>endDate</dt>
+                  <dt>{{ texts().admin.panel.endDate }}</dt>
                   <dd>{{ item.endDate }}</dd>
                 </div>
                 <div class="admin-details__wide">
-                  <dt>notes</dt>
+                  <dt>{{ texts().admin.panel.notes }}</dt>
                   <dd>{{ item.notes || '-' }}</dd>
                 </div>
               </dl>
 
               <div class="admin-field">
-                <label [for]="'key-notes-' + item.userCode">notes</label>
+                <label [for]="'key-notes-' + item.userCode">{{ texts().admin.panel.notes }}</label>
                 <input
                   [id]="'key-notes-' + item.userCode"
                   [ngModel]="keyDraft(item.userCode).notes"
@@ -300,9 +306,11 @@
 
               <div class="admin-actions">
                 <button class="admin-button admin-button--ghost" type="button" (click)="toggleKey(item.userCode)">
-                  {{ isKeyRevealed(item.userCode) ? 'キーを隠す' : 'キーを表示' }}
+                  {{ isKeyRevealed(item.userCode) ? texts().admin.panel.hideKey : texts().admin.panel.showKey }}
                 </button>
-                <button class="admin-button admin-button--ghost" type="button" (click)="copyKeyPair(item)">コピー</button>
+                <button class="admin-button admin-button--ghost" type="button" (click)="copyKeyPair(item)">
+                  {{ texts().admin.panel.copy }}
+                </button>
                 <button
                   class="admin-button admin-button--danger"
                   type="button"
@@ -311,9 +319,9 @@
                   (click)="disableAccessKey(item)"
                 >
                   @if (isKeyProcessing(item.userCode, 'disable')) {
-                    <app-loading-spinner label="無効化中..." />
+                    <app-loading-spinner [label]="texts().admin.panel.disabling" />
                   } @else {
-                    無効化
+                    {{ texts().admin.panel.disable }}
                   }
                 </button>
                 <button
@@ -324,9 +332,9 @@
                   (click)="extendAccessKey(item)"
                 >
                   @if (isKeyProcessing(item.userCode, 'extend')) {
-                    <app-loading-spinner label="延長中..." />
+                    <app-loading-spinner [label]="texts().admin.panel.extending" />
                   } @else {
-                    30日延長
+                    {{ texts().admin.panel.extend30 }}
                   }
                 </button>
               </div>
@@ -334,6 +342,8 @@
           }
         </div>
       </section>
+
+      <app-admin-gallery-manager />
     }
   </div>
 </section>

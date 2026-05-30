@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, HostListener, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { environment } from '../../../../../environments/environment';
 import { APP_LINKS } from '../../../../core/constants/app-links.config';
 import { LanguageService } from '../../../../core/i18n/language.service';
@@ -9,14 +9,16 @@ import { VisitCounterService } from '../../services/visit-counter.service';
 @Component({
   selector: 'app-linktree',
   standalone: true,
-  imports: [RouterLink, LanguageSelectorComponent],
+  imports: [LanguageSelectorComponent],
   templateUrl: './linktree.component.html',
   styleUrls: ['./linktree.component.scss']
 })
 export class LinktreeComponent implements OnInit, OnDestroy {
   private readonly languageService = inject(LanguageService);
   private readonly visitCounterService = inject(VisitCounterService);
+  private readonly router = inject(Router);
   private readonly audioSource = environment.assets.bgm;
+  private readonly adultWarningAcceptedKey = environment.storage.adultWarningAccepted;
   private audio: HTMLAudioElement | null = null;
 
   private readonly handleAudioLoaded = (): void => {
@@ -38,6 +40,7 @@ export class LinktreeComponent implements OnInit, OnDestroy {
   readonly audioLoaded = signal(false);
   readonly audioError = signal(false);
   readonly isMusicLoading = signal(false);
+  readonly showAdultWarning = signal(false);
   readonly shouldShowVisitCounter = computed(() => this.isVisitCountLoading() || this.visitCount() !== null);
   readonly formattedVisitCount = computed(() => {
     const count = this.visitCount();
@@ -72,6 +75,36 @@ export class LinktreeComponent implements OnInit, OnDestroy {
     }
 
     await this.playMusic();
+  }
+
+  openVipWarning(): void {
+    if (sessionStorage.getItem(this.adultWarningAcceptedKey) === 'true') {
+      this.navigateToAccess();
+      return;
+    }
+
+    this.showAdultWarning.set(true);
+  }
+
+  acceptAdultWarning(): void {
+    sessionStorage.setItem(this.adultWarningAcceptedKey, 'true');
+    this.showAdultWarning.set(false);
+    this.navigateToAccess();
+  }
+
+  closeAdultWarning(): void {
+    this.showAdultWarning.set(false);
+  }
+
+  @HostListener('document:keydown.escape')
+  closeWarningOnEscape(): void {
+    if (this.showAdultWarning()) {
+      this.closeAdultWarning();
+    }
+  }
+
+  private navigateToAccess(): void {
+    void this.router.navigateByUrl('/access');
   }
 
   private prepareAudio(): void {
