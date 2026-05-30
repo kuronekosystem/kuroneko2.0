@@ -1,6 +1,7 @@
 import { Component, ElementRef, ViewChild, computed, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { environment } from '../../../../../environments/environment';
 import { APP_LINKS } from '../../../../core/constants/app-links.config';
 import { LanguageCode } from '../../../../core/i18n/language.model';
 import { LanguageService } from '../../../../core/i18n/language.service';
@@ -26,6 +27,7 @@ export class StartComponent implements OnInit {
   readonly links = APP_LINKS;
 
   @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
+  readonly audioSource = environment.assets.bgm;
   isPlaying = signal(false);
   audioLoaded = signal(false);
   currentFrequency = signal('432.5');
@@ -36,8 +38,8 @@ export class StartComponent implements OnInit {
     this.languageService.currentLanguage() === 'ja' ? 'jp' : 'en'
   );
 
-  private readonly STORAGE_KEY = 'kuroneko_visit_data';
-  private readonly SESSION_KEY = 'kuroneko_session_active';
+  private readonly STORAGE_KEY = environment.storage.startVisitData;
+  private readonly SESSION_KEY = environment.storage.startSessionActive;
 
   // Textos multilingües
   messages = {

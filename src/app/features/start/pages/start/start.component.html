@@ -248,7 +248,7 @@
     </div>
 
     <audio #audioPlayer loop preload="auto" (canplay)="onAudioCanPlay()">
-      <source src="music/init.mp3" type="audio/mpeg">
+      <source [src]="audioSource" type="audio/mpeg">
       お使いのブラウザはHTML5オーディオに対応していません
     </audio>
   </div>

@@ -1,8 +1,7 @@
 import { Injectable, inject } from '@angular/core';
+import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../core/models/access.models';
 import { KuronekoApiService } from '../../../core/services/kuroneko-api.service';
-
-const VISIT_COUNTED_SESSION_KEY = 'kuronekoVisitCounted';
 
 type VisitCounterResponse = ApiResponse<{
   count?: number;
@@ -13,13 +12,14 @@ type VisitCounterResponse = ApiResponse<{
 })
 export class VisitCounterService {
   private readonly api = inject(KuronekoApiService);
+  private readonly visitCountedSessionKey = environment.storage.visitCounted;
 
   async loadVisitCount(): Promise<number | null> {
-    const shouldIncrement = sessionStorage.getItem(VISIT_COUNTED_SESSION_KEY) !== 'true';
+    const shouldIncrement = sessionStorage.getItem(this.visitCountedSessionKey) !== 'true';
 
     try {
       if (shouldIncrement) {
-        sessionStorage.setItem(VISIT_COUNTED_SESSION_KEY, 'true');
+        sessionStorage.setItem(this.visitCountedSessionKey, 'true');
       }
 
       const response = shouldIncrement

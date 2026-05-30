@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { environment } from '../../../../../environments/environment';
 import { APP_LINKS } from '../../../../core/constants/app-links.config';
 import { LanguageService } from '../../../../core/i18n/language.service';
 import { LanguageSelectorComponent } from '../../../../shared/components/language-selector/language-selector.component';
@@ -15,7 +16,7 @@ import { VisitCounterService } from '../../services/visit-counter.service';
 export class LinktreeComponent implements OnInit, OnDestroy {
   private readonly languageService = inject(LanguageService);
   private readonly visitCounterService = inject(VisitCounterService);
-  private readonly audioSource = 'music/init.mp3';
+  private readonly audioSource = environment.assets.bgm;
   private audio: HTMLAudioElement | null = null;
 
   private readonly handleAudioLoaded = (): void => {

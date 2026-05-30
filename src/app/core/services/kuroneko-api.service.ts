@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
 import { KURONEKO_API_CONFIG } from '../constants/api.config';
-
-const DEBUG_API = false;
 
 @Injectable({
   providedIn: 'root'
 })
 export class KuronekoApiService {
   private readonly baseUrl = KURONEKO_API_CONFIG.baseUrl;
+  private readonly debugApi = environment.debug.api;
 
   async get<T>(params: Record<string, string>): Promise<T> {
     const query = new URLSearchParams(params);
@@ -58,7 +58,7 @@ export class KuronekoApiService {
 
       this.debugLogResponse(logContext.action, parsed);
 
-      if (DEBUG_API && this.readSuccess(parsed) === false) {
+      if (this.debugApi && this.readSuccess(parsed) === false) {
         console.warn('[API SUCCESS FALSE]', {
           action: logContext.action,
           response: this.sanitizeValue(parsed)
@@ -77,7 +77,7 @@ export class KuronekoApiService {
     url: string,
     context: { method: string; action: string; payload?: Record<string, unknown> }
   ): void {
-    if (!DEBUG_API) return;
+    if (!this.debugApi) return;
 
     if (this.hasLegacySheetReference(url, context.payload)) {
       console.warn('[API LEGACY SHEET WARNING]', {
@@ -96,7 +96,7 @@ export class KuronekoApiService {
   }
 
   private debugLogResponse(action: string, response: unknown): void {
-    if (!DEBUG_API) return;
+    if (!this.debugApi) return;
 
     console.log('[API RESPONSE]', {
       action,
@@ -107,7 +107,7 @@ export class KuronekoApiService {
   }
 
   private debugLogError(action: string, message: string): void {
-    if (!DEBUG_API) return;
+    if (!this.debugApi) return;
 
     console.error('[API ERROR]', {
       action,

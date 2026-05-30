@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 import { KuronekoApiService } from './kuroneko-api.service';
 import {
   AccessRequestPayload,
@@ -10,13 +11,12 @@ import {
   VipCredentials
 } from '../models/access.models';
 
-const VIP_SESSION_KEY = 'kuronekoVipSession';
-
 @Injectable({
   providedIn: 'root'
 })
 export class AccessService {
   private readonly api = inject(KuronekoApiService);
+  private readonly vipSessionKey = environment.storage.vipSession;
 
   async validateAccess(userCode: string, accessKey: string): Promise<ValidateAccessResponse> {
     return this.api.post<ValidateAccessResponse>({
@@ -46,7 +46,7 @@ export class AccessService {
   }
 
   getStoredSession(): VipAccessSession | null {
-    const rawSession = sessionStorage.getItem(VIP_SESSION_KEY);
+    const rawSession = sessionStorage.getItem(this.vipSessionKey);
     if (!rawSession) return null;
 
     try {
@@ -78,11 +78,11 @@ export class AccessService {
   }
 
   saveSession(session: VipAccessSession): void {
-    sessionStorage.setItem(VIP_SESSION_KEY, JSON.stringify(session));
+    sessionStorage.setItem(this.vipSessionKey, JSON.stringify(session));
   }
 
   clearSession(): void {
-    sessionStorage.removeItem(VIP_SESSION_KEY);
+    sessionStorage.removeItem(this.vipSessionKey);
   }
 
   hasValidSession(): boolean {

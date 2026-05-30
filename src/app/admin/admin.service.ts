@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { KuronekoApiService } from '../core/services/kuroneko-api.service';
 import {
   AdminAccessKeyItem,
@@ -10,16 +11,15 @@ import {
   AdminMutationResponse
 } from './admin.types';
 
-const ADMIN_SESSION_KEY = 'kuronekoAdminSession';
-
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
   private readonly api = inject(KuronekoApiService);
+  private readonly adminSessionKey = environment.storage.adminSession;
 
   getStoredCredentials(): AdminCredentials | null {
-    const rawSession = sessionStorage.getItem(ADMIN_SESSION_KEY);
+    const rawSession = sessionStorage.getItem(this.adminSessionKey);
     if (!rawSession) return null;
 
     try {
@@ -38,11 +38,11 @@ export class AdminService {
   }
 
   saveCredentials(credentials: AdminCredentials): void {
-    sessionStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(credentials));
+    sessionStorage.setItem(this.adminSessionKey, JSON.stringify(credentials));
   }
 
   clearCredentials(): void {
-    sessionStorage.removeItem(ADMIN_SESSION_KEY);
+    sessionStorage.removeItem(this.adminSessionKey);
   }
 
   async getAccessRequests(credentials: AdminCredentials): Promise<AdminAccessRequestItem[]> {

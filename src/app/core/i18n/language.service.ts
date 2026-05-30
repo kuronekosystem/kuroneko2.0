@@ -1,13 +1,13 @@
 import { Injectable, computed, signal } from '@angular/core';
+import { environment } from '../../../environments/environment';
 import { DEFAULT_LANGUAGE, LANGUAGE_OPTIONS, TRANSLATIONS } from './translations';
 import { LanguageCode, TranslationMap } from './language.model';
-
-const LANGUAGE_STORAGE_KEY = 'kuronekoLanguage';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LanguageService {
+  private readonly languageStorageKey = environment.storage.language;
   private readonly selectedLanguage = signal<LanguageCode>(this.readStoredLanguage());
 
   readonly currentLanguage = this.selectedLanguage.asReadonly();
@@ -19,7 +19,7 @@ export class LanguageService {
     if (!this.isLanguageCode(language)) return;
 
     this.selectedLanguage.set(language);
-    localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
+    localStorage.setItem(this.languageStorageKey, language);
   }
 
   translate<K extends keyof TranslationMap>(key: K): TranslationMap[K] {
@@ -31,11 +31,11 @@ export class LanguageService {
   }
 
   private readStoredLanguage(): LanguageCode {
-    const stored = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    const stored = localStorage.getItem(this.languageStorageKey);
     const language = this.normalizeLanguageCode(stored);
 
     if (language) {
-      localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
+      localStorage.setItem(this.languageStorageKey, language);
       return language;
     }
 
