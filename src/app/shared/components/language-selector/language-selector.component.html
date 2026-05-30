@@ -1,0 +1,8 @@
+<label class="language-selector">
+  <span>{{ texts().languageSelector.label }}</span>
+  <select [ngModel]="language()" (ngModelChange)="changeLanguage($event)">
+    @for (option of options; track option.code) {
+      <option [ngValue]="option.code">{{ option.nativeLabel }}</option>
+    }
+  </select>
+</label>

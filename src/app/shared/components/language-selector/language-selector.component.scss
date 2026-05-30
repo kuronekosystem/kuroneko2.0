@@ -1,0 +1,30 @@
+.language-selector {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: #ffd700;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.language-selector select {
+  min-width: 132px;
+  padding: 0.5rem 0.75rem;
+  color: #f3f3f3;
+  border: 1px solid rgba(255, 215, 0, 0.38);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.62);
+  font: inherit;
+  cursor: pointer;
+}
+
+@media (max-width: 520px) {
+  .language-selector {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .language-selector select {
+    flex: 1;
+  }
+}

@@ -1,0 +1,26 @@
+.loading-spinner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  line-height: 1;
+}
+
+.loading-spinner__ring {
+  width: 1em;
+  height: 1em;
+  border: 3px solid #333;
+  border-top-color: #ffd700;
+  border-right-color: #8a2be2;
+  border-radius: 50%;
+  animation: loading-spinner-spin 0.8s linear infinite;
+}
+
+.loading-spinner__text {
+  line-height: 1.1;
+}
+
+@keyframes loading-spinner-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

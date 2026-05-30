@@ -1,0 +1,48 @@
+<section class="access-page">
+  <div class="access-panel access-panel--narrow">
+    <app-back-button fallbackRoute="/access" />
+
+    <p class="access-eyebrow">{{ texts().accessLogin.eyebrow }}</p>
+    <h1 class="access-title">{{ texts().accessLogin.title }}</h1>
+    <p class="access-copy">{{ texts().accessLogin.description }}</p>
+
+    <form class="access-form" (ngSubmit)="submit()">
+      <div class="access-field">
+        <label for="userCode">{{ texts().accessLogin.userCode }}</label>
+        <input id="userCode" name="userCode" [(ngModel)]="userCode" autocomplete="username" [disabled]="isSubmitting" required>
+      </div>
+
+      <div class="access-field">
+        <label for="accessKey">{{ texts().accessLogin.accessKey }}</label>
+        <input id="accessKey" name="accessKey" [(ngModel)]="accessKey" autocomplete="current-password" [disabled]="isSubmitting" required>
+      </div>
+
+      <div class="access-actions">
+        <button class="access-submit" type="submit" [disabled]="isSubmitting" [attr.aria-busy]="isSubmitting">
+          @if (isSubmitting) {
+            <app-loading-spinner [label]="texts().accessLogin.submitting" />
+          } @else {
+            {{ texts().accessLogin.submit }}
+          }
+        </button>
+        <a class="access-secondary" routerLink="/access" [attr.aria-disabled]="isSubmitting">{{ texts().accessLogin.backToAccess }}</a>
+      </div>
+    </form>
+
+    @if (isSubmitting) {
+      <app-loading-message
+        title="認証情報を確認しています。"
+        description="少しお待ちください…"
+        [spinnerLabel]="texts().accessLogin.submitting"
+      />
+    }
+
+    @if (errorMessage) {
+      <div class="access-message access-message--error" role="alert">{{ errorMessage }}</div>
+    }
+
+    @if (successMessage) {
+      <div class="access-message" role="status">{{ successMessage }}</div>
+    }
+  </div>
+</section>

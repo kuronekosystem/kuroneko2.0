@@ -1,0 +1,64 @@
+<section class="access-page">
+  <div class="access-panel access-panel--narrow">
+    <app-back-button fallbackRoute="/access" />
+
+    <p class="access-eyebrow">{{ texts().accessStatus.eyebrow }}</p>
+    <h1 class="access-title">{{ texts().accessStatus.title }}</h1>
+    <p class="access-copy">{{ texts().accessStatus.description }}</p>
+
+    <form class="access-form" (ngSubmit)="submit()">
+      <div class="access-field">
+        <label for="requestCode">{{ texts().accessStatus.requestCode }}</label>
+        <input id="requestCode" name="requestCode" [(ngModel)]="requestCode" [disabled]="isSubmitting" required>
+      </div>
+
+      <div class="access-actions">
+        <button class="access-submit" type="submit" [disabled]="isSubmitting" [attr.aria-busy]="isSubmitting">
+          @if (isSubmitting) {
+            <app-loading-spinner [label]="texts().accessStatus.submitting" />
+          } @else {
+            {{ texts().accessStatus.submit }}
+          }
+        </button>
+        <a class="access-secondary" routerLink="/access">{{ texts().accessStatus.backToAccess }}</a>
+      </div>
+    </form>
+
+    @if (isSubmitting) {
+      <app-loading-message
+        title="申請状況を確認しています。"
+        description="少しお待ちください…"
+        [spinnerLabel]="texts().accessStatus.submitting"
+      />
+    }
+
+    @if (errorMessage) {
+      <div class="access-message access-message--error" role="alert">{{ errorMessage }}</div>
+    }
+
+    @if (result?.success) {
+      <div class="access-message access-result" role="status">
+        <strong>{{ texts().vipBoard.status }}: {{ statusLabel(result?.status) }}</strong>
+        <span>{{ texts().accessStatus.requestCode }}: <code class="access-code">{{ result?.requestCode }}</code></span>
+
+        @if (result?.status === 'approved') {
+          <span>{{ texts().accessStatus.accessId }}: <code class="access-code">{{ result?.userCode }}</code></span>
+          <span>{{ texts().accessStatus.accessKey }}: <code class="access-code">{{ result?.accessKey }}</code></span>
+          <span>{{ texts().accessStatus.loginInstruction }}</span>
+        }
+
+        @if (result?.status === 'rejected') {
+          <span>{{ texts().accessStatus.rejected }} {{ result?.adminNotes }}</span>
+        }
+
+        @if (result?.status === 'need_more_info') {
+          <span>{{ texts().accessStatus.adminNotes }}: {{ result?.adminNotes || texts().accessStatus.needMoreInfo }}</span>
+        }
+
+        @if (result?.status === 'pending') {
+          <span>{{ texts().accessStatus.pending }}</span>
+        }
+      </div>
+    }
+  </div>
+</section>

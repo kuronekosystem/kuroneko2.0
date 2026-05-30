@@ -1,0 +1,339 @@
+<section class="admin-page">
+  <div class="admin-shell">
+    <header class="admin-header">
+      <div class="admin-header__row">
+        <div class="admin-header__copy">
+          <p class="admin-eyebrow">クロネコギャラリーシステム 2.0</p>
+          <h1>管理パネル</h1>
+          <p>VIPアクセス申請と発行済みキーを確認できます。</p>
+        </div>
+
+        <div class="admin-session">
+          <span class="admin-session__status" [class.admin-session__status--active]="isAuthenticated">
+            {{ isAuthenticated ? '管理者セッション有効' : '管理者未認証' }}
+          </span>
+
+          @if (isAuthenticated) {
+            <button class="admin-button admin-button--ghost" type="button" (click)="logout()">ログアウト</button>
+          }
+        </div>
+      </div>
+    </header>
+
+    @if (!isAuthenticated) {
+      <form class="admin-card admin-login" (ngSubmit)="submitLogin()">
+        <div class="admin-card__heading">
+          <span class="admin-card__kicker">Admin Access</span>
+          <h2>管理者ログイン</h2>
+          <p>申請とアクセスキーを管理するため、管理者IDとキーを入力してください。</p>
+        </div>
+
+        <div class="admin-field">
+          <label for="adminUsername">管理者ID</label>
+          <input id="adminUsername" name="adminUsername" [(ngModel)]="adminUsername" autocomplete="username" [disabled]="isAuthenticating" required>
+        </div>
+
+        <div class="admin-field">
+          <label for="adminPassword">管理者キー</label>
+          <input
+            id="adminPassword"
+            name="adminPassword"
+            type="password"
+            [(ngModel)]="adminPassword"
+            autocomplete="current-password"
+            [disabled]="isAuthenticating"
+            required
+          >
+        </div>
+
+        <button class="admin-button" type="submit" [disabled]="isAuthenticating" [attr.aria-busy]="isAuthenticating">
+          @if (isAuthenticating) {
+            <app-loading-spinner label="認証中..." />
+          } @else {
+            管理者として入る
+          }
+        </button>
+      </form>
+    }
+
+    @if (isBusy) {
+      <app-loading-message
+        title="管理データを読み込んでいます。"
+        description="Google Sheets との通信に少し時間がかかる場合があります…"
+        spinnerLabel="処理中..."
+      />
+    }
+
+    @if (errorMessage) {
+      <div class="admin-message admin-message--error" role="alert">{{ errorMessage }}</div>
+    }
+
+    @if (successMessage) {
+      <div class="admin-message" role="status">{{ successMessage }}</div>
+    }
+
+    @if (isAuthenticated) {
+      <section class="admin-section admin-section--requests">
+        <div class="admin-section__header">
+          <div class="admin-section__title">
+            <span class="admin-card__kicker">Access Requests</span>
+            <h2>アクセス申請一覧</h2>
+          </div>
+          <span class="admin-count">{{ filteredRequests().length }} / {{ requests.length }} 件</span>
+          <button class="admin-button admin-button--ghost" type="button" [disabled]="isFetching" (click)="refreshAdminData()">更新</button>
+        </div>
+
+        <div class="admin-filters" aria-label="アクセス申請フィルター">
+          @for (filter of filters; track filter) {
+            <button
+              class="admin-filter"
+              type="button"
+              [class.active]="activeFilter === filter"
+              (click)="activeFilter = filter"
+            >
+              {{ filterLabel(filter) }}
+            </button>
+          }
+        </div>
+
+        @if (!isFetching && filteredRequests().length === 0) {
+          <p class="admin-empty">現在、表示できる申請はありません。</p>
+        }
+
+        <div class="admin-grid admin-grid--requests">
+          @for (request of filteredRequests(); track trackRequest($index, request)) {
+            <article class="admin-card admin-request">
+              <div class="admin-card__top">
+                <div>
+                  <strong>{{ request.requestCode }}</strong>
+                  <span>{{ request.displayName }}</span>
+                </div>
+                <span class="admin-status" [ngClass]="'admin-status--' + request.status">
+                  {{ requestStatusLabel(request.status) }}
+                </span>
+              </div>
+
+              <dl class="admin-details">
+                <div>
+                  <dt>source</dt>
+                  <dd>{{ request.source }}</dd>
+                </div>
+                <div>
+                  <dt>{{ request.source === 'fanbox' ? 'fanboxName' : 'paypalTransactionId' }}</dt>
+                  <dd>{{ request.source === 'fanbox' ? request.fanboxName : request.paypalTransactionId }}</dd>
+                </div>
+                <div>
+                  <dt>contact</dt>
+                  <dd>{{ request.contact || '-' }}</dd>
+                </div>
+                <div>
+                  <dt>createdAt</dt>
+                  <dd>{{ request.createdAt }}</dd>
+                </div>
+                <div class="admin-details__wide">
+                  <dt>proofText</dt>
+                  <dd>{{ request.proofText || '-' }}</dd>
+                </div>
+                <div class="admin-details__wide">
+                  <dt>adminNotes</dt>
+                  <dd>{{ request.adminNotes || '-' }}</dd>
+                </div>
+              </dl>
+
+              <div class="admin-actions admin-actions--stack">
+                <div class="admin-field admin-field--inline">
+                  <label [for]="'duration-' + request.requestCode">durationDays</label>
+                  <input
+                    [id]="'duration-' + request.requestCode"
+                    type="number"
+                    min="1"
+                    [ngModel]="requestDraft(request.requestCode).durationDays"
+                    [ngModelOptions]="{standalone: true}"
+                    (ngModelChange)="setRequestDuration(request.requestCode, $event)"
+                  >
+                </div>
+
+                <div class="admin-field">
+                  <label [for]="'notes-' + request.requestCode">notes</label>
+                  <textarea
+                    [id]="'notes-' + request.requestCode"
+                    [ngModel]="requestDraft(request.requestCode).notes"
+                    [ngModelOptions]="{standalone: true}"
+                    (ngModelChange)="setRequestNotes(request.requestCode, $event)"
+                  ></textarea>
+                </div>
+
+                <div class="admin-actions">
+                  <button
+                    class="admin-button"
+                    type="button"
+                    [disabled]="isFetching || isRequestProcessing(request.requestCode)"
+                    [attr.aria-busy]="isRequestProcessing(request.requestCode, 'approve')"
+                    (click)="approveRequest(request)"
+                  >
+                    @if (isRequestProcessing(request.requestCode, 'approve')) {
+                      <app-loading-spinner label="承認中..." />
+                    } @else {
+                      承認する
+                    }
+                  </button>
+                  <button
+                    class="admin-button admin-button--danger"
+                    type="button"
+                    [disabled]="isFetching || isRequestProcessing(request.requestCode)"
+                    [attr.aria-busy]="isRequestProcessing(request.requestCode, 'reject')"
+                    (click)="rejectRequest(request)"
+                  >
+                    @if (isRequestProcessing(request.requestCode, 'reject')) {
+                      <app-loading-spinner label="処理中..." />
+                    } @else {
+                      却下する
+                    }
+                  </button>
+                  <button
+                    class="admin-button admin-button--ghost"
+                    type="button"
+                    [disabled]="isFetching || isRequestProcessing(request.requestCode)"
+                    [attr.aria-busy]="isRequestProcessing(request.requestCode, 'needMoreInfo')"
+                    (click)="needMoreInfo(request)"
+                  >
+                    @if (isRequestProcessing(request.requestCode, 'needMoreInfo')) {
+                      <app-loading-spinner label="処理中..." />
+                    } @else {
+                      追加確認にする
+                    }
+                  </button>
+                </div>
+              </div>
+
+              @if (approvedResults[request.requestCode]) {
+                <div class="admin-approved">
+                  <strong>この情報をユーザーに共有してください。</strong>
+                  <span>userCode: <code>{{ approvedResults[request.requestCode].userCode }}</code></span>
+                  <span>accessKey: <code>{{ approvedResults[request.requestCode].accessKey }}</code></span>
+                  <span>{{ approvedResults[request.requestCode].startDate }} - {{ approvedResults[request.requestCode].endDate }}</span>
+                  <div class="admin-actions">
+                    <button
+                      class="admin-button admin-button--ghost"
+                      type="button"
+                      (click)="copyText(approvedResults[request.requestCode].userCode, 'userCode')"
+                    >
+                      userCode コピー
+                    </button>
+                    <button
+                      class="admin-button admin-button--ghost"
+                      type="button"
+                      (click)="copyText(approvedResults[request.requestCode].accessKey, 'accessKey')"
+                    >
+                      accessKey コピー
+                    </button>
+                  </div>
+                </div>
+              }
+            </article>
+          }
+        </div>
+      </section>
+
+      <section class="admin-section admin-section--keys">
+        <div class="admin-section__header">
+          <div class="admin-section__title">
+            <span class="admin-card__kicker">Issued Keys</span>
+            <h2>発行済みアクセスキー</h2>
+          </div>
+          <span class="admin-count">{{ accessKeys.length }} 件</span>
+        </div>
+
+        @if (!isFetching && accessKeys.length === 0) {
+          <p class="admin-empty">発行済みアクセスキーはありません。</p>
+        }
+
+        <div class="admin-grid admin-grid--keys">
+          @for (item of accessKeys; track trackKey($index, item)) {
+            <article class="admin-card admin-key">
+              <div class="admin-card__top">
+                <div>
+                  <strong>{{ item.userCode }}</strong>
+                  <span>{{ item.displayName }}</span>
+                </div>
+                <span class="admin-status" [ngClass]="'admin-status--' + item.status">
+                  {{ keyStatusLabel(item.status) }}
+                </span>
+              </div>
+
+              <dl class="admin-details">
+                <div>
+                  <dt>accessKey</dt>
+                  <dd><code>{{ displayAccessKey(item) }}</code></dd>
+                </div>
+                <div>
+                  <dt>source</dt>
+                  <dd>{{ item.source }}</dd>
+                </div>
+                <div>
+                  <dt>requestCode</dt>
+                  <dd>{{ item.requestCode }}</dd>
+                </div>
+                <div>
+                  <dt>startDate</dt>
+                  <dd>{{ item.startDate }}</dd>
+                </div>
+                <div>
+                  <dt>endDate</dt>
+                  <dd>{{ item.endDate }}</dd>
+                </div>
+                <div class="admin-details__wide">
+                  <dt>notes</dt>
+                  <dd>{{ item.notes || '-' }}</dd>
+                </div>
+              </dl>
+
+              <div class="admin-field">
+                <label [for]="'key-notes-' + item.userCode">notes</label>
+                <input
+                  [id]="'key-notes-' + item.userCode"
+                  [ngModel]="keyDraft(item.userCode).notes"
+                  [ngModelOptions]="{standalone: true}"
+                  (ngModelChange)="setKeyNotes(item.userCode, $event)"
+                >
+              </div>
+
+              <div class="admin-actions">
+                <button class="admin-button admin-button--ghost" type="button" (click)="toggleKey(item.userCode)">
+                  {{ isKeyRevealed(item.userCode) ? 'キーを隠す' : 'キーを表示' }}
+                </button>
+                <button class="admin-button admin-button--ghost" type="button" (click)="copyKeyPair(item)">コピー</button>
+                <button
+                  class="admin-button admin-button--danger"
+                  type="button"
+                  [disabled]="isFetching || isKeyProcessing(item.userCode)"
+                  [attr.aria-busy]="isKeyProcessing(item.userCode, 'disable')"
+                  (click)="disableAccessKey(item)"
+                >
+                  @if (isKeyProcessing(item.userCode, 'disable')) {
+                    <app-loading-spinner label="無効化中..." />
+                  } @else {
+                    無効化
+                  }
+                </button>
+                <button
+                  class="admin-button"
+                  type="button"
+                  [disabled]="isFetching || isKeyProcessing(item.userCode)"
+                  [attr.aria-busy]="isKeyProcessing(item.userCode, 'extend')"
+                  (click)="extendAccessKey(item)"
+                >
+                  @if (isKeyProcessing(item.userCode, 'extend')) {
+                    <app-loading-spinner label="延長中..." />
+                  } @else {
+                    30日延長
+                  }
+                </button>
+              </div>
+            </article>
+          }
+        </div>
+      </section>
+    }
+  </div>
+</section>

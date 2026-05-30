@@ -1,0 +1,123 @@
+import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { APP_LINKS } from '../../../../core/constants/app-links.config';
+import { LanguageService } from '../../../../core/i18n/language.service';
+import { LanguageSelectorComponent } from '../../../../shared/components/language-selector/language-selector.component';
+import { VisitCounterService } from '../../services/visit-counter.service';
+
+@Component({
+  selector: 'app-linktree',
+  standalone: true,
+  imports: [RouterLink, LanguageSelectorComponent],
+  templateUrl: './linktree.component.html',
+  styleUrls: ['./linktree.component.scss']
+})
+export class LinktreeComponent implements OnInit, OnDestroy {
+  private readonly languageService = inject(LanguageService);
+  private readonly visitCounterService = inject(VisitCounterService);
+  private readonly audioSource = 'music/init.mp3';
+  private audio: HTMLAudioElement | null = null;
+
+  private readonly handleAudioLoaded = (): void => {
+    this.audioLoaded.set(true);
+    this.isMusicLoading.set(false);
+  };
+
+  private readonly handleAudioError = (): void => {
+    this.pauseMusic();
+    this.audioError.set(true);
+    this.isMusicLoading.set(false);
+  };
+
+  readonly links = APP_LINKS;
+  readonly texts = this.languageService.texts;
+  readonly visitCount = signal<number | null>(null);
+  readonly isVisitCountLoading = signal(true);
+  readonly isPlaying = signal(false);
+  readonly audioLoaded = signal(false);
+  readonly audioError = signal(false);
+  readonly isMusicLoading = signal(false);
+  readonly shouldShowVisitCounter = computed(() => this.isVisitCountLoading() || this.visitCount() !== null);
+  readonly formattedVisitCount = computed(() => {
+    const count = this.visitCount();
+    if (count === null) return '';
+
+    return new Intl.NumberFormat(this.languageService.currentLanguage()).format(count);
+  });
+  readonly musicButtonLabel = computed(() => (this.isPlaying() ? this.texts().music.pause : this.texts().music.play));
+  readonly musicStatusText = computed(() => {
+    if (this.audioError()) return this.texts().music.error;
+    if (this.isMusicLoading()) return this.texts().music.loading;
+
+    return this.musicButtonLabel();
+  });
+
+  async ngOnInit(): Promise<void> {
+    this.prepareAudio();
+
+    const count = await this.visitCounterService.loadVisitCount();
+    this.visitCount.set(count);
+    this.isVisitCountLoading.set(false);
+  }
+
+  ngOnDestroy(): void {
+    this.destroyAudio();
+  }
+
+  async toggleMusic(): Promise<void> {
+    if (this.isPlaying()) {
+      this.pauseMusic();
+      return;
+    }
+
+    await this.playMusic();
+  }
+
+  private prepareAudio(): void {
+    if (this.audio !== null) return;
+
+    const audio = new Audio(this.audioSource);
+    audio.loop = true;
+    audio.volume = 0.35;
+    audio.preload = 'metadata';
+    audio.addEventListener('canplaythrough', this.handleAudioLoaded);
+    audio.addEventListener('error', this.handleAudioError);
+    this.audio = audio;
+  }
+
+  private async playMusic(): Promise<void> {
+    this.prepareAudio();
+
+    if (this.audio === null) return;
+
+    this.audioError.set(false);
+    this.isMusicLoading.set(!this.audioLoaded());
+
+    try {
+      await this.audio.play();
+      this.isPlaying.set(true);
+    } catch {
+      this.audioError.set(true);
+      this.isPlaying.set(false);
+    } finally {
+      this.isMusicLoading.set(false);
+    }
+  }
+
+  private pauseMusic(): void {
+    this.audio?.pause();
+    this.isPlaying.set(false);
+    this.isMusicLoading.set(false);
+  }
+
+  private destroyAudio(): void {
+    if (this.audio === null) return;
+
+    this.pauseMusic();
+    this.audio.removeEventListener('canplaythrough', this.handleAudioLoaded);
+    this.audio.removeEventListener('error', this.handleAudioError);
+    this.audio.src = '';
+    this.audio.load();
+    this.audio = null;
+  }
+}

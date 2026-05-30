@@ -1,0 +1,137 @@
+<app-navbar />
+
+<section id="gallery" class="gallery">
+  <app-back-button fallbackRoute="/" />
+
+  <!-- Breadcrumb de navegación -->
+  <div class="gallery__breadcrumb">
+    <a class="breadcrumb-link" (click)="goToHome()">
+      <span class="breadcrumb-icon">⌂</span>
+      <span class="breadcrumb-text">{{ texts().gallery.home }}</span>
+    </a>
+    <span class="breadcrumb-separator">›</span>
+    <span class="breadcrumb-current">{{ texts().gallery.title }}</span>
+
+    @if (currentCategory() !== 'All') {
+      <span class="breadcrumb-separator">›</span>
+      <span class="breadcrumb-category">{{ currentCategory() }}</span>
+    }
+
+    <div class="breadcrumb-url">
+      <span class="url-label">{{ texts().gallery.vipLabel }}:</span>
+      <code class="url-path">{{ session?.displayName || currentPath }}</code>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+    <div class="gallery__loader">
+      <app-loading-message
+        title="クロネコギャラリーを読み込んでいます。"
+        description="画像の取得に少し時間がかかる場合があります…"
+        [spinnerLabel]="texts().gallery.loading"
+      />
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="gallery__empty gallery__empty--error" role="alert">
+      <p>{{ errorMessage }}</p>
+    </div>
+  }
+
+  @if (!isLoading()) {
+    @if (!errorMessage) {
+    <div class="gallery__filter">
+      <label for="categorySelect">{{ texts().gallery.category }}</label>
+      <select
+        id="categorySelect"
+        class="gallery__select"
+        [value]="currentCategory()"
+        (change)="onCategoryChange($event)"
+      >
+        @for (cat of categories(); track cat) {
+          <option [value]="cat">{{ cat }}</option>
+        }
+      </select>
+
+      <button class="pagination__btn" type="button" (click)="goToVipBoard()">{{ texts().gallery.vipBoard }}</button>
+    </div>
+    }
+
+    @if (!errorMessage && filteredImages().length === 0) {
+      <div class="gallery__empty">
+        <p>{{ texts().gallery.empty }}</p>
+      </div>
+    }
+
+    @if (!errorMessage && filteredImages().length > 0) {
+      <div #galleryGrid class="gallery__grid">
+        @for (img of currentImages(); track img.id; let i = $index) {
+          <div
+            class="gallery__item"
+            [style.animation-delay.ms]="i * 50"
+            (click)="onImageClick((currentPage() - 1) * itemsPerPage + i)"
+          >
+            <div class="gallery__image-wrapper">
+              <div class="gallery__loader-spinner"></div>
+              <img
+                #galleryImg
+                class="gallery__image"
+                [attr.data-src]="img.thumbnail"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                [alt]="img.title"
+                loading="lazy"
+                (load)="onImageLoaded(galleryImg)"
+                (error)="onImageError(galleryImg)"
+              >
+            </div>
+            <div class="gallery__info">
+              <h3 class="gallery__title">{{ img.title }}</h3>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    @if (!errorMessage && filteredImages().length > 0) {
+      <div class="gallery__pagination">
+        <button
+          class="pagination__btn pagination__btn--prev"
+          [disabled]="currentPage() === 1"
+          (click)="onPrevPage()"
+        >
+          <span>←</span> {{ texts().gallery.previous }}
+        </button>
+
+        <div class="pagination__info">
+          <span class="pagination__text">{{ texts().gallery.page }}</span>
+          <input
+            type="number"
+            class="pagination__input"
+            [min]="1"
+            [max]="totalPages()"
+            [value]="currentPage()"
+            (change)="onPageInput($event)"
+            (keydown)="onPageKeydown($event)"
+            [attr.aria-label]="texts().gallery.page"
+          >
+          <span class="pagination__text">/ {{ totalPages() }}</span>
+        </div>
+
+        <button
+          class="pagination__btn pagination__btn--next"
+          [disabled]="currentPage() === totalPages()"
+          (click)="onNextPage()"
+        >
+          {{ texts().gallery.next }} <span>→</span>
+        </button>
+      </div>
+    }
+  }
+
+  @if (slideshowActive) {
+    <app-slideshow />
+  }
+</section>
+
+<app-footer />

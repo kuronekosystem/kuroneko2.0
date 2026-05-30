@@ -1,0 +1,78 @@
+<section class="vip-board">
+  <div class="vip-board__shell">
+    <app-back-button fallbackRoute="/gallery" />
+
+    <div class="vip-board__header">
+      <div>
+        <p class="vip-board__eyebrow">{{ texts().vipBoard.eyebrow }}</p>
+        <h1>{{ texts().vipBoard.title }}</h1>
+        @if (session) {
+          <p class="vip-board__copy">{{ session.displayName }}{{ texts().vipBoard.welcome }}</p>
+        }
+      </div>
+      <a class="vip-board__link" routerLink="/gallery">{{ texts().vipBoard.galleryLink }}</a>
+    </div>
+
+    <form class="vip-board__form" (ngSubmit)="submit()">
+      <fieldset class="vip-board__fieldset" [disabled]="isSubmitting">
+      <div class="vip-board__field">
+        <label for="title">{{ texts().vipBoard.titleField }}</label>
+        <input id="title" name="title" [(ngModel)]="title">
+      </div>
+
+      <div class="vip-board__field">
+        <label for="message">{{ texts().vipBoard.messageField }}</label>
+        <textarea id="message" name="message" [(ngModel)]="message" required></textarea>
+      </div>
+
+      <button class="vip-board__submit" type="submit" [disabled]="isSubmitting" [attr.aria-busy]="isSubmitting">
+        @if (isSubmitting) {
+          <app-loading-spinner [label]="texts().vipBoard.submitting" />
+        } @else {
+          {{ texts().vipBoard.submit }}
+        }
+      </button>
+      </fieldset>
+    </form>
+
+    @if (errorMessage) {
+      <div class="vip-board__message vip-board__message--error" role="alert">{{ errorMessage }}</div>
+    }
+
+    @if (successMessage) {
+      <div class="vip-board__message" role="status">{{ successMessage }}</div>
+    }
+
+    <div class="vip-board__list">
+      <h2>{{ texts().vipBoard.listTitle }}</h2>
+
+      @if (isLoading) {
+        <app-loading-message
+          title="リクエストボードを読み込んでいます。"
+          description="少しお待ちください…"
+          [spinnerLabel]="texts().vipBoard.loading"
+        />
+      }
+
+      @if (!isLoading && suggestions.length === 0) {
+        <p class="vip-board__empty">{{ texts().vipBoard.empty }}</p>
+      }
+
+      @for (item of suggestions; track item.id) {
+        <article class="vip-board__item">
+          <div class="vip-board__item-header">
+            <strong>{{ item.title || texts().vipBoard.untitled }}</strong>
+            <span>{{ texts().vipBoard.status }}: {{ statusLabel(item.status) }}</span>
+          </div>
+          <p>{{ item.message }}</p>
+          @if (item.adminReply) {
+            <div class="vip-board__reply">
+              <strong>{{ texts().vipBoard.adminReply }}</strong>
+              <span>{{ item.adminReply }}</span>
+            </div>
+          }
+        </article>
+      }
+    </div>
+  </div>
+</section>

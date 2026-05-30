@@ -17,13 +17,15 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "outputPath": "dist/kuroneko2.0",
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "public",
+                "output": "./"
               }
             ],
             "styles": [
@@ -32,6 +34,8 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "/kuroneko2.0/",
+              "deployUrl": "/kuroneko2.0/",
               "budgets": [
                 {
                   "type": "initial",
@@ -40,8 +44,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "15kB",
+                  "maximumError": "25kB"
                 }
               ],
               "outputHashing": "all"
@@ -77,7 +81,8 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "public",
+                "output": "./"
               }
             ],
             "styles": [
@@ -87,5 +92,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

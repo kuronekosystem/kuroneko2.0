@@ -1,0 +1,28 @@
+<section class="access-page">
+  <div class="access-panel">
+    <app-back-button [label]="texts().backButton.toLinktree" fallbackRoute="/" />
+
+    <p class="access-eyebrow">{{ texts().accessCenter.eyebrow }}</p>
+    <h1 class="access-title">{{ texts().accessCenter.title }}</h1>
+    <p class="access-copy">
+      {{ texts().accessCenter.introLine1 }}<br>
+      {{ texts().accessCenter.introLine2 }}<br>
+      {{ texts().accessCenter.introLine3 }}
+    </p>
+
+    <div class="access-grid">
+      <a class="access-card" routerLink="/access/login">
+        <strong>{{ texts().accessCenter.loginTitle }}</strong>
+        <span>{{ texts().accessCenter.loginDescription }}</span>
+      </a>
+      <a class="access-card" routerLink="/access/request">
+        <strong>{{ texts().accessCenter.requestTitle }}</strong>
+        <span>{{ texts().accessCenter.requestDescription }}</span>
+      </a>
+      <a class="access-card" routerLink="/access/status">
+        <strong>{{ texts().accessCenter.statusTitle }}</strong>
+        <span>{{ texts().accessCenter.statusDescription }}</span>
+      </a>
+    </div>
+  </div>
+</section>

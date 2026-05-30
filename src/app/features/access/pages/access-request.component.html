@@ -1,0 +1,83 @@
+<section class="access-page">
+  <div class="access-panel access-panel--narrow">
+    <app-back-button fallbackRoute="/access" />
+
+    <p class="access-eyebrow">{{ texts().accessRequest.eyebrow }}</p>
+    <h1 class="access-title">{{ texts().accessRequest.title }}</h1>
+    <p class="access-copy">{{ texts().accessRequest.description }}</p>
+
+    <form class="access-form" (ngSubmit)="submit()">
+      <fieldset class="access-fieldset" [disabled]="isSubmitting">
+      <div class="access-field">
+        <label for="displayName">{{ texts().accessRequest.displayName }}</label>
+        <input id="displayName" name="displayName" [(ngModel)]="displayName" required>
+      </div>
+
+      <div class="access-field">
+        <label for="source">{{ texts().accessRequest.source }}</label>
+        <select id="source" name="source" [(ngModel)]="source">
+          <option value="fanbox">{{ texts().accessRequest.fanbox }}</option>
+          <option value="paypal">{{ texts().accessRequest.paypal }}</option>
+        </select>
+      </div>
+
+      @if (source === 'fanbox') {
+        <div class="access-field">
+          <label for="fanboxName">{{ texts().accessRequest.fanboxName }}</label>
+          <input id="fanboxName" name="fanboxName" [(ngModel)]="fanboxName">
+        </div>
+      }
+
+      @if (source === 'paypal') {
+        <div class="access-field">
+          <label for="paypalTransactionId">{{ texts().accessRequest.paypalTransactionId }}</label>
+          <input id="paypalTransactionId" name="paypalTransactionId" [(ngModel)]="paypalTransactionId">
+        </div>
+      }
+
+      <div class="access-field">
+        <label for="proofText">{{ texts().accessRequest.proofText }}</label>
+        <textarea id="proofText" name="proofText" [(ngModel)]="proofText"></textarea>
+      </div>
+
+      <div class="access-field">
+        <label for="contact">{{ texts().accessRequest.contact }}</label>
+        <input id="contact" name="contact" [(ngModel)]="contact">
+      </div>
+
+      <div class="access-actions">
+        <button class="access-submit" type="submit" [disabled]="isSubmitting" [attr.aria-busy]="isSubmitting">
+          @if (isSubmitting) {
+            <app-loading-spinner [label]="texts().accessRequest.submitting" />
+          } @else {
+            {{ texts().accessRequest.submit }}
+          }
+        </button>
+        <a class="access-secondary" routerLink="/access">{{ texts().accessRequest.backToAccess }}</a>
+      </div>
+      </fieldset>
+    </form>
+
+    @if (isSubmitting) {
+      <app-loading-message
+        title="申請内容を送信しています。"
+        description="確認コードを発行していますので、少しお待ちください…"
+        [spinnerLabel]="texts().accessRequest.submitting"
+      />
+    }
+
+    @if (errorMessage) {
+      <div class="access-message access-message--error" role="alert">{{ errorMessage }}</div>
+    }
+
+    @if (result?.success) {
+      <div class="access-message" role="status">
+        <strong>{{ texts().accessRequest.accepted }}</strong><br>
+        {{ texts().accessRequest.saveRequestCode }}<br>
+        <code class="access-code">{{ result?.requestCode }}</code><br>
+        {{ texts().accessRequest.manualReview }}<br>
+        {{ texts().accessRequest.checkLater }}
+      </div>
+    }
+  </div>
+</section>

@@ -1,11 +1,28 @@
 <!doctype html>
-<html lang="en">
+<html lang="ja">
 <head>
   <meta charset="utf-8">
-  <title>KuroNekoEngine</title>
+  <title>クロネコエンジン</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="クロネコエンジン - デジタルギャラリー">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <script>
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+        if (e.key === 'F12') e.preventDefault();
+        if (e.ctrlKey && e.shiftKey && ['I', 'J'].includes(e.key.toUpperCase())) e.preventDefault();
+        if (e.ctrlKey && e.key.toUpperCase() === 'U') e.preventDefault();
+    })
+    const currentVersion = "6";
+    if (localStorage.getItem("siteVersion") !== currentVersion) {
+        localStorage.setItem("siteVersion", currentVersion);
+        location.reload();
+    }
+  </script>
 </head>
 <body>
   <app-root></app-root>

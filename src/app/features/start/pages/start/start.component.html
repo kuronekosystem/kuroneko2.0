@@ -1,0 +1,255 @@
+<div class="start">
+  <div class="start__container">
+    <div class="start__logo">
+      <img src="images/logo.webp" alt="Kuroneko Logo" class="start__image">
+      <h1 class="start__jp">クロネコエンジン</h1>
+      <p class="start__en">KuroNekoEngine</p>
+    </div>
+
+      <div class="welcome-panel">
+        <!-- Contador de visitas futurista -->
+        <div class="counter-panel">
+          <div class="counter-container">
+            <div class="counter-header">
+              <span class="counter-icon">✨ ฅ^&gt;⩊&lt;^ ฅ ✨</span>
+            </div>
+
+            <div class="counter-display">
+              <div class="counter-label">{{ displayLanguage() === 'jp' ? messages.jp.counterLabel : messages.en.counterLabel }}</div>
+              <div class="counter-value-wrapper">
+                <div class="counter-digit" *ngFor="let digit of visitCount().toString().padStart(6, '0').split('')">
+                  <span class="digit-number">{{ digit }}</span>
+                  <div class="digit-glow"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="counter-footer">
+              <div class="counter-status">
+                <span class="status-led"></span>
+                <span class="status-text">LIVE COUNT</span>
+                <span class="status-led"></span>
+              </div>
+              <div class="counter-note">{{ displayLanguage() === 'jp' ? '累計訪問者数' : 'Total visitors' }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    <div class="audio-player-modern">
+      <div class="player-content">
+        <div class="player-identity">
+          <div class="neon-ring">
+            <div class="rotating-ring"></div>
+            <img src="images/logo.webp" alt="Kuroneko" class="holographic-img">
+          </div>
+          <div class="identity-info">
+            <div class="artist-name-glow">
+              <span class="glitch-text">KuroNekoEngine</span>
+            </div>
+            <div class="song-title">
+              <span class="song-title-text">"クロネコエンジン"</span>
+              <span class="music-symbol">⚡</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="player-controls-futuristic">
+          <div class="control-interface">
+            <button class="holo-button" (click)="togglePlay()" [disabled]="!audioLoaded()">
+              <div class="button-core"></div>
+              <div class="button-ring"></div>
+              <span class="button-icon play" [class.hidden]="isPlaying()">▶</span>
+              <span class="button-icon pause" [class.hidden]="!isPlaying()">⏸</span>
+              <div class="button-pulse"></div>
+            </button>
+            <div class="audio-info-display">
+              <div class="frequency-display">
+                <span class="freq-label">周波数</span>
+                <span class="freq-value">{{ currentFrequency() }} Hz</span>
+              </div>
+              <div class="time-display">
+                <span class="time-label">再生</span>
+                <span class="time-value">∞ ループ</span>
+              </div>
+            </div>
+          </div>
+          <div class="spectrum-indicator">
+            <div class="spectrum-line"></div>
+            <div class="spectrum-dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel de bienvenida multilingüe -->
+      <div class="welcome-panel">
+        <div class="welcome-header">
+          <span class="welcome-icon">🎧</span>
+          <span class="welcome-icon">✨</span>
+          <span class="welcome-icon">🎵</span>
+        </div>
+
+        <div class="language-selector">
+          <button class="lang-btn" [class.active]="displayLanguage() === 'jp'" (click)="setLanguage('ja')">
+            🇯🇵 日本語
+          </button>
+          <button class="lang-btn" [class.active]="displayLanguage() === 'en'" (click)="setLanguage('en')">
+            🇬🇧 English
+          </button>
+        </div>
+
+        <div class="welcome-message">
+          @if (displayLanguage() === 'jp') {
+            <div class="message-jp">
+              <h3 class="message-title">{{ messages.jp.title }}</h3>
+              <p class="message-text">
+                {{ messages.jp.message1 }}<br>
+                {{ messages.jp.message2 }}<br>
+                {{ messages.jp.message3 }}<br>
+                {{ messages.jp.message4 }}<br>
+                <strong>{{ messages.jp.message5 }}</strong>
+              </p>
+              <div class="message-footer">
+                <span class="kaomoji">(´｡• ᵕ •｡`) ♡</span>
+                <span class="welcome-greeting">{{ messages.jp.welcome }}</span>
+              </div>
+            </div>
+          }
+
+          @if (displayLanguage() === 'en') {
+            <div class="message-es">
+              <h3 class="message-title">{{ messages.en.title }}</h3>
+              <p class="message-text">
+                {{ messages.en.message1 }}<br>
+                {{ messages.en.message2 }}<br>
+                {{ messages.en.message3 }}<br>
+                {{ messages.en.message4 }}<br>
+                <strong>{{ messages.en.message5 }}</strong>
+              </p>
+              <div class="message-footer">
+                <span class="kaomoji">(´｡• ᵕ •｡`) ♡</span>
+                <span class="welcome-greeting">{{ messages.en.welcome }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="particle-field">
+        <div class="music-particle"></div>
+        <div class="music-particle"></div>
+        <div class="music-particle"></div>
+        <div class="music-particle"></div>
+        <div class="music-particle"></div>
+      </div>
+    </div>
+
+    <!-- Sección de Redes Sociales -->
+    <div class="social-section">
+      <div class="social-card">
+        <div class="social-glow"></div>
+
+        <div class="social-header">
+          <span class="social-icon">⚡</span>
+          <span class="social-icon">🔮</span>
+          <span class="social-icon">💠</span>
+        </div>
+
+        <div class="social-message">
+          <p class="social-text">
+            <span class="cyber-text">>>_ CONNECT_WITH_US</span><br>
+            <span class="neon-subtitle">⚡ クリエイターをフォロー ⚡</span>
+          </p>
+        </div>
+
+        <div class="social-buttons">
+          <a [href]="links.pixiv"
+             class="social-btn social-btn--pixiv"
+             target="_blank"
+             rel="noopener noreferrer">
+            <div class="btn-glow"></div>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M4.935 0C2.21 0 0 2.21 0 4.935v14.13C0 21.79 2.21 24 4.935 24h14.13C21.79 24 24 21.79 24 19.065V4.935C24 2.21 21.79 0 19.065 0H4.935zM7.5 6.5h2v7h-2v-7zm4 0h2v7h-2v-7zm4 0h2v7h-2v-7z"/>
+            </svg>
+            <span class="btn-text">PIXIV</span>
+            <span class="btn-code">[FOLIO]</span>
+            <div class="btn-pulse"></div>
+          </a>
+
+          <a [href]="links.x"
+             class="social-btn social-btn--x"
+             target="_blank"
+             rel="noopener noreferrer">
+            <div class="btn-glow"></div>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+            <span class="btn-text">X (TWITTER)</span>
+            <span class="btn-code">[FOLLOW]</span>
+            <div class="btn-pulse"></div>
+          </a>
+        </div>
+
+        <div class="social-footer">
+          <div class="hologram-line"></div>
+          <div class="status-badge">
+            <span class="led-red"></span>
+            <span class="status-text">ONLINE // CONNECTED</span>
+            <span class="led-blue"></span>
+          </div>
+          <div class="digital-noise"></div>
+        </div>
+      </div>
+    </div>
+
+    <button class="start__enter-btn" (click)="goToGallery()">
+      ギャラリーへ入る
+    </button>
+
+    <!-- Sección de Donaciones -->
+    <div class="donation-section">
+      <div class="donation-warning">
+        <div class="warning-header">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" class="warning-icon">
+            <path d="M12 9V11M12 15H12.01M5.07183 19H18.9282C20.4678 19 21.4301 17.3333 20.6603 16L13.7321 4C12.9623 2.66667 11.0377 2.66667 10.2679 4L3.33975 16C2.56995 17.3333 3.53223 19 5.07183 19Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <h3 class="warning-title">ギャラリー支援のお願い</h3>
+        </div>
+
+        <p class="donation-message">
+          このギャラリーは皆様からの温かいご支援によって運営されています。<br>
+          いただいた支援金は、より魅力的なコンテンツの追加、<br>
+          システムの安定性向上、新機能の開発に全額活用させていただきます。<br>
+          <strong>※返金対応は行っておりません。あらかじめご了承ください。</strong>
+        </p>
+
+        <div class="donation-buttons">
+          <a [href]="links.paypal" class="donation-btn donation-btn--paypal" target="_blank" rel="noopener noreferrer">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 2C4.23858 2 2 4.23858 2 7C2 9.76142 4.23858 12 7 12C9.76142 12 12 9.76142 12 7C12 4.23858 9.76142 2 7 2Z"/>
+              <path d="M14 16C12.8954 16 12 16.8954 12 18C12 19.1046 12.8954 20 14 20H20C21.1046 20 22 19.1046 22 18C22 16.8954 21.1046 16 20 16H14Z"/>
+            </svg>
+            <span>PayPalで支援する</span>
+          </a>
+
+          <a [href]="links.fanbox" class="donation-btn donation-btn--fanbox" target="_blank" rel="noopener noreferrer">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            <span>Fanboxで応援する</span>
+          </a>
+        </div>
+
+        <p class="donation-note">
+          ✨ 皆様の応援が創作の原動力となります。心より感謝申し上げます ✨
+        </p>
+      </div>
+    </div>
+
+    <audio #audioPlayer loop preload="auto" (canplay)="onAudioCanPlay()">
+      <source src="music/init.mp3" type="audio/mpeg">
+      お使いのブラウザはHTML5オーディオに対応していません
+    </audio>
+  </div>
+</div>

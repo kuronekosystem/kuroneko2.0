@@ -1,0 +1,24 @@
+<section class="not-found-page" aria-labelledby="not-found-title">
+  <div class="not-found-shell">
+    <article class="not-found-panel">
+      <div class="not-found-panel__scanline"></div>
+      <p class="not-found-eyebrow">KURONEKO SYSTEM ERROR</p>
+      <strong class="not-found-code">{{ texts().notFound.code }}</strong>
+
+      <div class="not-found-copy">
+        <h1 id="not-found-title">{{ texts().notFound.title }}</h1>
+        <p>{{ texts().notFound.message }}</p>
+        <p>{{ texts().notFound.subMessage }}</p>
+      </div>
+
+      <div class="not-found-actions">
+        <button class="not-found-button" type="button" (click)="navigateToLinktree()">
+          {{ texts().notFound.backToLinktree }}
+        </button>
+        <button class="not-found-button not-found-button--ghost" type="button" (click)="navigateToAccess()">
+          {{ texts().notFound.goToAccess }}
+        </button>
+      </div>
+    </article>
+  </div>
+</section>

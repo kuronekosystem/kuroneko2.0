@@ -1,0 +1,62 @@
+<button
+  class="sidebar-toggle"
+  type="button"
+  (click)="toggleSidebar()"
+  [class.active]="sidebarOpen()"
+  [attr.aria-label]="texts().navbar.toggleLabel"
+>
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M3 12h18M3 6h18M3 18h18"/>
+  </svg>
+</button>
+
+<aside class="sidebar" [class.open]="sidebarOpen()">
+  <div class="sidebar__logo">
+    <img src="images/logo.webp" alt="Kuroneko" class="sidebar__image">
+    <span class="sidebar__title">{{ texts().navbar.brand }}</span>
+  </div>
+  <nav class="sidebar__nav">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeSidebar()">
+      <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2h-5v-8H9v8H5a2 2 0 0 1-2-2z"/>
+      </svg>
+      <span>{{ texts().navbar.links }}</span>
+    </a>
+    <a routerLink="/access" routerLinkActive="active" (click)="closeSidebar()">
+      <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 1l3 6 6 .9-4.5 4.4 1.1 6.2L12 15.5 6.4 18.5l1.1-6.2L3 7.9 9 7z"/>
+      </svg>
+      <span>{{ texts().navbar.access }}</span>
+    </a>
+    <a routerLink="/gallery" routerLinkActive="active" (click)="closeSidebar()">
+      <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="3" width="20" height="18" rx="2" ry="2"/>
+        <circle cx="9" cy="10" r="2"/>
+        <path d="M21 15l-5-4-3 3-4-4-5 5"/>
+      </svg>
+      <span>{{ texts().navbar.gallery }}</span>
+    </a>
+    <a routerLink="/vip-board" routerLinkActive="active" (click)="closeSidebar()">
+      <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 4h16v12H5.2L4 17.2V4z"/>
+        <path d="M8 8h8M8 12h5"/>
+      </svg>
+      <span>{{ texts().navbar.vipBoard }}</span>
+    </a>
+  </nav>
+</aside>
+
+<div class="sidebar-overlay" [class.visible]="sidebarOpen()" (click)="closeSidebar()"></div>
+
+<header class="app-header">
+  <div class="app-header__container">
+    <div class="app-header__logo">
+      <img src="images/logo.webp" alt="Kuroneko" class="app-header__image">
+      <div class="app-header__title-group">
+        <h1 class="app-header__jp">{{ texts().navbar.brand }}</h1>
+        <p class="app-header__en">{{ texts().navbar.subtitle }}</p>
+      </div>
+      <app-language-selector />
+    </div>
+  </div>
+</header>

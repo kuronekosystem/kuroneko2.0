@@ -1,0 +1,22 @@
+<div class="loading-message" role="status" aria-live="polite">
+  <app-loading-spinner [label]="spinnerLabel()" />
+
+  <div class="loading-message__copy-stack">
+    <div class="loading-message__copy loading-message__copy--initial">
+      <strong>{{ title() }}</strong>
+      @if (description()) {
+        <span>{{ description() }}</span>
+      }
+    </div>
+
+    <div class="loading-message__copy loading-message__copy--slow">
+      <strong>{{ slowTitle() }}</strong>
+      <span>{{ slowDescription() }}</span>
+    </div>
+
+    <div class="loading-message__copy loading-message__copy--very-slow">
+      <strong>{{ verySlowTitle() }}</strong>
+      <span>{{ verySlowDescription() }}</span>
+    </div>
+  </div>
+</div>

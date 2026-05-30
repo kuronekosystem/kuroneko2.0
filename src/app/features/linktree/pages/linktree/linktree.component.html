@@ -1,0 +1,72 @@
+<section class="linktree">
+  <div class="linktree__shell">
+    <div class="linktree__language">
+      <app-language-selector />
+    </div>
+
+    <img src="images/logo.webp" alt="Kuroneko" class="linktree__logo">
+
+    <p class="linktree__eyebrow">{{ texts().linktree.eyebrow }}</p>
+    <h1 class="linktree__title">{{ texts().linktree.title }}</h1>
+    <p class="linktree__copy">
+      {{ texts().linktree.introLine1 }}<br>
+      {{ texts().linktree.introLine2 }}<br>
+      {{ texts().linktree.introLine3 }}
+    </p>
+
+    @if (shouldShowVisitCounter()) {
+      <div class="linktree__counter" [attr.aria-label]="texts().linktree.visitCount">
+        <span class="linktree__counter-label">{{ texts().linktree.visitCount }}</span>
+        <strong class="linktree__counter-value">
+          @if (isVisitCountLoading()) {
+            {{ texts().linktree.visitLoading }}
+          } @else {
+            {{ formattedVisitCount() }}
+          }
+        </strong>
+      </div>
+    }
+
+    <div class="linktree__music" [class.linktree__music--playing]="isPlaying()">
+      <div class="linktree__music-info">
+        <span class="linktree__music-title">{{ texts().music.title }}</span>
+        <span class="linktree__music-status">{{ musicStatusText() }}</span>
+      </div>
+
+      <button
+        type="button"
+        class="linktree__music-button"
+        [disabled]="isMusicLoading()"
+        [attr.aria-label]="musicButtonLabel()"
+        [attr.aria-pressed]="isPlaying()"
+        (click)="toggleMusic()"
+      >
+        <span class="linktree__music-indicator" aria-hidden="true"></span>
+        <span>{{ musicButtonLabel() }}</span>
+      </button>
+    </div>
+
+    <div class="linktree__links" [attr.aria-label]="texts().linktree.ariaLabel">
+      <a class="linktree__button" [href]="links.pixiv" target="_blank" rel="noopener noreferrer">
+        <span>{{ texts().linktree.pixivLabel }}</span>
+        <small>{{ texts().linktree.pixivSmall }}</small>
+      </a>
+      <a class="linktree__button" [href]="links.x" target="_blank" rel="noopener noreferrer">
+        <span>{{ texts().linktree.xLabel }}</span>
+        <small>{{ texts().linktree.xSmall }}</small>
+      </a>
+      <a class="linktree__button" [href]="links.fanbox" target="_blank" rel="noopener noreferrer">
+        <span>{{ texts().linktree.fanboxLabel }}</span>
+        <small>{{ texts().linktree.fanboxSmall }}</small>
+      </a>
+      <a class="linktree__button" [href]="links.paypal" target="_blank" rel="noopener noreferrer">
+        <span>{{ texts().linktree.paypalLabel }}</span>
+        <small>{{ texts().linktree.paypalSmall }}</small>
+      </a>
+      <a class="linktree__button linktree__button--system" routerLink="/access">
+        <span>{{ texts().linktree.systemButton }}</span>
+        <small>{{ texts().linktree.systemSmall }}</small>
+      </a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,26 @@
+<div class="age-verification">
+  <div class="age-verification__modal">
+    <h2 class="age-verification__title">⚠️ 年齢確認</h2>
+
+    <p class="age-verification__message">
+      このギャラリーには成人向けコンテンツが含まれています。<br>
+      18歳以上の方のみご覧いただけます。
+    </p>
+
+    <div class="age-verification__buttons">
+      <button
+        class="age-verification__btn age-verification__btn--adult"
+        (click)="onAdult()"
+      >
+        18歳以上です
+      </button>
+
+      <button
+        class="age-verification__btn age-verification__btn--minor"
+        (click)="onUnderage()"
+      >
+        18歳未満です
+      </button>
+    </div>
+  </div>
+</div>
