@@ -2,6 +2,7 @@
 
 <section id="gallery" class="gallery">
   <app-back-button fallbackRoute="/" />
+  <app-vip-session-status class="gallery__vip-session" />
 
   <!-- Breadcrumb de navegación -->
   <div class="gallery__breadcrumb">
@@ -23,7 +24,7 @@
     </div>
   </div>
 
-  @if (isLoading()) {
+  @if (isLoading() && !isRefreshing) {
     <div class="gallery__loader">
       <app-loading-message
         title="クロネコギャラリーを読み込んでいます。"
@@ -39,7 +40,7 @@
     </div>
   }
 
-  @if (!isLoading()) {
+  @if (!isLoading() || isRefreshing) {
     @if (!errorMessage) {
     <div class="gallery__filter">
       <label for="categorySelect">{{ texts().gallery.category }}</label>
@@ -53,6 +54,18 @@
           <option [value]="cat">{{ cat }}</option>
         }
       </select>
+
+      @if (lastUpdatedAt) {
+        <span class="gallery__last-updated">{{ lastUpdatedLabel() }}</span>
+      }
+
+      <button class="pagination__btn" type="button" [disabled]="isRefreshing" [attr.aria-busy]="isRefreshing" (click)="refreshGallery()">
+        @if (isRefreshing) {
+          <app-loading-spinner [label]="texts().refresh.action" />
+        } @else {
+          {{ texts().refresh.action }}
+        }
+      </button>
 
       <button class="pagination__btn" type="button" (click)="goToVipBoard()">{{ texts().gallery.vipBoard }}</button>
     </div>
@@ -81,6 +94,7 @@
                 src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
                 [alt]="img.title"
                 loading="lazy"
+                decoding="async"
                 (load)="onImageLoaded(galleryImg)"
                 (error)="onImageError(galleryImg)"
               >

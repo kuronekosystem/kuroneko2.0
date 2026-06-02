@@ -11,6 +11,36 @@ export interface TranslationMap {
     label: string;
     ariaLabel: string;
   };
+  appLoader: {
+    brand: string;
+    latinBrand: string;
+    initializing: string;
+    accessingMainframe: string;
+    decodingSecurity: string;
+    welcome: string;
+  };
+  loadingMessage: {
+    loading: string;
+    processing: string;
+    slowTitle: string;
+    slowDescription: string;
+    verySlowTitle: string;
+    verySlowDescription: string;
+  };
+  refresh: {
+    action: string;
+    success: string;
+    lastUpdated: string;
+  };
+  modal: {
+    ok: string;
+    cancel: string;
+    close: string;
+    success: string;
+    error: string;
+    info: string;
+    confirm: string;
+  };
   linktree: {
     ariaLabel: string;
     eyebrow: string;
@@ -48,6 +78,17 @@ export interface TranslationMap {
     accept: string;
     cancel: string;
     shortNotice: string;
+  };
+  access: {
+    activityHours: {
+      title: string;
+      shortTitle: string;
+      shortDescription: string;
+      description: string;
+      daytime: string;
+      nighttime: string;
+      note: string;
+    };
   };
   accessCenter: {
     eyebrow: string;
@@ -140,23 +181,49 @@ export interface TranslationMap {
     page: string;
     previous: string;
     next: string;
+    zoom: {
+      label: string;
+      in: string;
+      out: string;
+      reset: string;
+    };
+    close: string;
+    toggleUi: string;
+    imageLoading: string;
+    highResolutionNotice: string;
+    imageLoadError: string;
   };
   vipBoard: {
     eyebrow: string;
     title: string;
     welcome: string;
     description: string;
+    privacyNotice: string;
     titleField: string;
     messageField: string;
     submit: string;
     submitting: string;
+    requestReceived: string;
+    requestReceivedDescription: string;
     sent: string;
     sendFailed: string;
     listTitle: string;
+    myRequests: string;
+    noMyRequests: string;
     loading: string;
     empty: string;
     untitled: string;
-    status: string;
+    statusLabel: string;
+    createdAt: string;
+    updatedAt: string;
+    status: {
+      pending: string;
+      reviewed: string;
+      accepted: string;
+      rejected: string;
+      done: string;
+      disabled: string;
+    };
     adminReply: string;
     galleryLink: string;
     messageRequired: string;
@@ -167,8 +234,17 @@ export interface TranslationMap {
     back: string;
     toLinktree: string;
   };
+  vipSession: {
+    active: string;
+    loggedInAs: string;
+    accessId: string;
+    goToGallery: string;
+    logout: string;
+    confirmLogout: string;
+  };
   notFound: {
     code: string;
+    eyebrow: string;
     title: string;
     message: string;
     subMessage: string;
@@ -188,7 +264,50 @@ export interface TranslationMap {
     done: string;
     unknown: string;
   };
+  apiErrors: {
+    invalidAccess: string;
+    expiredAccess: string;
+    inactiveAccess: string;
+    requestNotFound: string;
+    adminInvalidCredentials: string;
+    gallerySessionInvalid: string;
+    requestSystem: string;
+    statusSystem: string;
+    gallerySystem: string;
+    adminSystem: string;
+    vipBoardSystem: string;
+    accessSystem: string;
+  };
   admin: {
+    tabs: {
+      requests: string;
+      keys: string;
+      gallery: string;
+      vipRequests: string;
+    };
+    requestFilters: {
+      all: string;
+      pending: string;
+      approved: string;
+      rejected: string;
+      needMoreInfo: string;
+      disabled: string;
+    };
+    requestState: {
+      pendingHelp: string;
+      needMoreInfoHelp: string;
+      approvedHelp: string;
+      rejectedHelp: string;
+      disabledHelp: string;
+    };
+    requestActions: {
+      reviewAgain: string;
+      alreadyApproved: string;
+      alreadyRejected: string;
+      alreadyDisabled: string;
+      confirmAction: string;
+      confirmDisableRequest: string;
+    };
     panel: {
       product: string;
       title: string;
@@ -216,6 +335,7 @@ export interface TranslationMap {
       source: string;
       contact: string;
       createdAt: string;
+      updatedAt: string;
       proofText: string;
       adminNotes: string;
       durationDays: string;
@@ -239,6 +359,7 @@ export interface TranslationMap {
       copy: string;
       disabling: string;
       disable: string;
+      disableRequest: string;
       extending: string;
       extend30: string;
       inputCredentials: string;
@@ -252,6 +373,8 @@ export interface TranslationMap {
       updateFailed: string;
       disableSuccess: string;
       disableFailed: string;
+      disableRequestSuccess: string;
+      disableRequestFailed: string;
       extendSuccess: string;
       extendFailed: string;
       copySuccess: string;
@@ -260,7 +383,23 @@ export interface TranslationMap {
       authenticationRequired: string;
       dataLoadFailed: string;
     };
+    vipRequests: {
+      kicker: string;
+      title: string;
+      filtersLabel: string;
+      empty: string;
+      userCode: string;
+      loading: string;
+      error: string;
+      completeAction: string;
+      completing: string;
+      confirmComplete: string;
+      adminReplyPrompt: string;
+      completeSuccess: string;
+      updateFailed: string;
+    };
     gallery: {
+      kicker: string;
       title: string;
       subtitle: string;
       add: string;
@@ -281,6 +420,14 @@ export interface TranslationMap {
       filterAll: string;
       filterActive: string;
       filterDisabled: string;
+      search: string;
+      searchPlaceholder: string;
+      filtersLabel: string;
+      allCategories: string;
+      results: string;
+      page: string;
+      previous: string;
+      next: string;
       loading: string;
       empty: string;
       saving: string;

@@ -14,6 +14,8 @@
       {{ texts().linktree.introLine3 }}
     </p>
 
+    <app-vip-session-status class="linktree__vip-session" />
+
     @if (shouldShowVisitCounter()) {
       <div class="linktree__counter" [attr.aria-label]="texts().linktree.visitCount">
         <span class="linktree__counter-label">{{ texts().linktree.visitCount }}</span>
@@ -63,6 +65,11 @@
         <span>{{ texts().linktree.paypalLabel }}</span>
         <small>{{ texts().linktree.paypalSmall }}</small>
       </a>
+      <div class="linktree__activity-hours" aria-live="polite">
+        <strong>{{ texts().access.activityHours.shortTitle }}</strong>
+        <span>{{ texts().access.activityHours.daytime }} / {{ texts().access.activityHours.nighttime }}</span>
+        <small>{{ texts().access.activityHours.shortDescription }}</small>
+      </div>
       <button type="button" class="linktree__button linktree__button--system" (click)="openVipWarning()">
         <span>{{ texts().linktree.systemButton }}</span>
         <small>{{ texts().linktree.systemSmall }}</small>

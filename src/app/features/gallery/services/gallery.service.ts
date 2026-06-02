@@ -15,6 +15,9 @@ export type GalleryLoadResult = 'success' | 'invalid-session' | 'system-error';
   providedIn: 'root'
 })
 export class GalleryService {
+  private readonly minZoom = 1;
+  private readonly maxZoom = 3;
+  private readonly zoomStep = 0.25;
   private readonly accessService = inject(AccessService);
   private readonly api = inject(KuronekoApiService);
   private galleryState = signal<GalleryState>(DEFAULT_GALLERY_STATE);
@@ -123,7 +126,7 @@ export class GalleryService {
       ...state,
       active: true,
       index,
-      pan: { ...DEFAULT_PAN_STATE } // reset pan al abrir
+      ...this.getResetZoomState()
     }));
   }
 
@@ -142,7 +145,7 @@ export class GalleryService {
       this.slideshowState.update(state => ({
         ...state,
         index: state.index + 1,
-        pan: { ...DEFAULT_PAN_STATE } // reset pan al cambiar imagen
+        ...this.getResetZoomState()
       }));
       this.preloadNextImage(state.index + 2);
     }
@@ -154,17 +157,42 @@ export class GalleryService {
       this.slideshowState.update(state => ({
         ...state,
         index: state.index - 1,
-        pan: { ...DEFAULT_PAN_STATE } // reset pan
+        ...this.getResetZoomState()
       }));
     }
   }
 
   toggleZoom(): void {
-    this.slideshowState.update(state => ({
-      ...state,
-      zoomed: !state.zoomed,
-      pan: { ...DEFAULT_PAN_STATE } // reset pan al cambiar zoom
-    }));
+    const nextZoom = this.slideshowState().zoomLevel > this.minZoom ? this.minZoom : this.minZoom + this.zoomStep;
+    this.setZoom(nextZoom);
+  }
+
+  zoomIn(): void {
+    this.setZoom(this.slideshowState().zoomLevel + this.zoomStep);
+  }
+
+  zoomOut(): void {
+    this.setZoom(this.slideshowState().zoomLevel - this.zoomStep);
+  }
+
+  resetZoom(): void {
+    this.setZoom(this.minZoom);
+  }
+
+  setZoom(value: number): void {
+    const zoomLevel = this.normalizeZoom(value);
+
+    this.slideshowState.update(state => {
+      const zoomed = zoomLevel > this.minZoom;
+      const pan = zoomed ? this.clampPanState(state.pan, zoomLevel) : { ...DEFAULT_PAN_STATE };
+
+      return {
+        ...state,
+        zoomed,
+        zoomLevel,
+        pan
+      };
+    });
   }
 
   toggleUI(): void {
@@ -195,17 +223,20 @@ export class GalleryService {
     const state = this.slideshowState();
     if (!state.zoomed || !state.pan.isDragging) return;
 
-    const newX = clientX - state.pan.startX;
-    const newY = clientY - state.pan.startY;
+    const nextPan = this.clampPanPosition(
+      clientX - state.pan.startX,
+      clientY - state.pan.startY,
+      state.zoomLevel
+    );
 
     this.slideshowState.update(state => ({
       ...state,
       pan: {
         ...state.pan,
-        currentX: newX,
-        currentY: newY,
-        lastX: newX,
-        lastY: newY
+        currentX: nextPan.x,
+        currentY: nextPan.y,
+        lastX: nextPan.x,
+        lastY: nextPan.y
       }
     }));
   }
@@ -227,6 +258,43 @@ export class GalleryService {
       ...state,
       pan: { ...DEFAULT_PAN_STATE }
     }));
+  }
+
+  private getResetZoomState(): Pick<SlideshowState, 'zoomed' | 'zoomLevel' | 'pan'> {
+    return {
+      zoomed: false,
+      zoomLevel: this.minZoom,
+      pan: { ...DEFAULT_PAN_STATE }
+    };
+  }
+
+  private normalizeZoom(value: number): number {
+    const clamped = Math.max(this.minZoom, Math.min(this.maxZoom, value));
+    return Math.round(clamped / this.zoomStep) * this.zoomStep;
+  }
+
+  private clampPanState(pan: SlideshowState['pan'], zoomLevel: number): SlideshowState['pan'] {
+    const nextPan = this.clampPanPosition(pan.currentX, pan.currentY, zoomLevel);
+
+    return {
+      ...pan,
+      currentX: nextPan.x,
+      currentY: nextPan.y,
+      lastX: nextPan.x,
+      lastY: nextPan.y
+    };
+  }
+
+  private clampPanPosition(x: number, y: number, zoomLevel: number): { x: number; y: number } {
+    if (zoomLevel <= this.minZoom) return { x: 0, y: 0 };
+
+    const maxX = window.innerWidth * (zoomLevel - 1) * 0.5;
+    const maxY = window.innerHeight * (zoomLevel - 1) * 0.5;
+
+    return {
+      x: Math.max(-maxX, Math.min(maxX, x)),
+      y: Math.max(-maxY, Math.min(maxY, y))
+    };
   }
 
   private preloadNextImage(index: number): void {

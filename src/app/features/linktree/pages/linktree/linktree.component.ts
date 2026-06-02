@@ -4,12 +4,13 @@ import { environment } from '../../../../../environments/environment';
 import { APP_LINKS } from '../../../../core/constants/app-links.config';
 import { LanguageService } from '../../../../core/i18n/language.service';
 import { LanguageSelectorComponent } from '../../../../shared/components/language-selector/language-selector.component';
+import { VipSessionStatusComponent } from '../../../../shared/components/vip-session-status/vip-session-status.component';
 import { VisitCounterService } from '../../services/visit-counter.service';
 
 @Component({
   selector: 'app-linktree',
   standalone: true,
-  imports: [LanguageSelectorComponent],
+  imports: [LanguageSelectorComponent, VipSessionStatusComponent],
   templateUrl: './linktree.component.html',
   styleUrls: ['./linktree.component.scss']
 })

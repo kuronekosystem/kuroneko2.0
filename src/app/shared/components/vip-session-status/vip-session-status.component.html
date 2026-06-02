@@ -1,0 +1,17 @@
+@if (session(); as vipSession) {
+  <button
+    class="vip-session"
+    type="button"
+    (click)="goToGallery()"
+    [attr.aria-label]="texts().vipSession.goToGallery"
+  >
+    <span class="vip-session__kicker">{{ texts().vipSession.active }}</span>
+    <span class="vip-session__name">
+      {{ texts().vipSession.loggedInAs }} {{ vipSession.displayName }}
+    </span>
+    <span class="vip-session__code">
+      {{ texts().vipSession.accessId }} <strong>{{ maskedUserCode() }}</strong>
+    </span>
+    <span class="vip-session__cta">{{ texts().vipSession.goToGallery }}</span>
+  </button>
+}

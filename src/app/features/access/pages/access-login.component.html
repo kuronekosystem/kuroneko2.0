@@ -18,7 +18,7 @@
       </div>
 
       <div class="access-actions">
-        <button class="access-submit" type="submit" [disabled]="isSubmitting" [attr.aria-busy]="isSubmitting">
+        <button class="access-submit" type="submit" [disabled]="isSubmitting || isFormInvalid()" [attr.aria-busy]="isSubmitting">
           @if (isSubmitting) {
             <app-loading-spinner [label]="texts().accessLogin.submitting" />
           } @else {

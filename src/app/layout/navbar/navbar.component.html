@@ -43,6 +43,16 @@
       </svg>
       <span>{{ texts().navbar.vipBoard }}</span>
     </a>
+    @if (vipSession()) {
+      <button type="button" class="sidebar__logout" (click)="logoutVipSession()">
+        <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <path d="M16 17l5-5-5-5"/>
+          <path d="M21 12H9"/>
+        </svg>
+        <span>{{ texts().vipSession.logout }}</span>
+      </button>
+    }
   </nav>
 </aside>
 

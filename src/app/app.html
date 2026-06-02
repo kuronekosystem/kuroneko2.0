@@ -4,23 +4,23 @@
       <div class="kuro-loader__logo">
         <img src="images/logo.webp" alt="Kuroneko Logo" class="kuro-loader__image">
         <div class="kuro-loader__text">
-          <span class="kuro-loader__jp">クロネコエンジン</span>
-          <span class="kuro-loader__en">KuroNekoEngine</span>
+          <span class="kuro-loader__jp">{{ texts().appLoader.brand }}</span>
+          <span class="kuro-loader__en">{{ texts().appLoader.latinBrand }}</span>
         </div>
       </div>
       <div class="kuro-loader__progress">
         <div class="kuro-loader__bar" [style.width.%]="loadProgress()"></div>
       </div>
       <div class="kuro-loader__hacker">
-        <span class="kuro-loader__line">> システム初期化中... {{ loadProgress() }}%</span>
+        <span class="kuro-loader__line">> {{ texts().appLoader.initializing }} {{ loadProgress() }}%</span>
         @if (loadProgress() > 30) {
-          <span class="kuro-loader__line">> メインフレームにアクセス中... OK</span>
+          <span class="kuro-loader__line">> {{ texts().appLoader.accessingMainframe }} OK</span>
         }
         @if (loadProgress() > 60) {
-          <span class="kuro-loader__line">> セキュリティを解読中... OK</span>
+          <span class="kuro-loader__line">> {{ texts().appLoader.decodingSecurity }} OK</span>
         }
         @if (loadProgress() > 90) {
-          <span class="kuro-loader__line">> ようこそ、クロネコオペレーター</span>
+          <span class="kuro-loader__line">> {{ texts().appLoader.welcome }}</span>
         }
       </div>
     </div>
@@ -30,3 +30,5 @@
 @if (!showLoader()) {
   <router-outlet />
 }
+
+<app-modal />

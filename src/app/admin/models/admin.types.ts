@@ -5,6 +5,8 @@ export interface AdminCredentials {
   adminPassword: string;
 }
 
+export type AdminAccessRequestStatus = AccessRequestStatus | 'disabled';
+
 export interface AdminAccessRequestItem {
   id: number;
   requestCode: string;
@@ -14,13 +16,21 @@ export interface AdminAccessRequestItem {
   paypalTransactionId: string;
   contact: string;
   proofText: string;
-  status: AccessRequestStatus;
+  status: AdminAccessRequestStatus;
   adminNotes: string;
   createdAt: string;
   updatedAt: string;
 }
 
 export type AdminAccessKeyStatus = 'active' | 'expired' | 'disabled';
+
+export type VipIllustrationRequestStatus =
+  | 'pending'
+  | 'reviewed'
+  | 'accepted'
+  | 'rejected'
+  | 'done'
+  | 'disabled';
 
 export interface AdminAccessKeyItem {
   id: number;
@@ -57,6 +67,28 @@ export type AdminMutationResponse = ApiResponse<{
   userCode?: string;
 }>;
 
+export interface AdminVipIllustrationRequest {
+  readonly id: number;
+  readonly userCode: string;
+  readonly displayName: string;
+  readonly title: string;
+  readonly message: string;
+  readonly status: VipIllustrationRequestStatus;
+  readonly adminReply: string;
+  readonly createdAt: string;
+  readonly updatedAt: string;
+}
+
+export type AdminVipIllustrationRequestItem = AdminVipIllustrationRequest;
+
+export type AdminVipIllustrationRequestsResponse = ApiResponse<{
+  items?: AdminVipIllustrationRequest[];
+}>;
+
+export type AdminVipIllustrationRequestUpdateResponse = ApiResponse<{
+  item?: AdminVipIllustrationRequest;
+}>;
+
 export interface AdminRequestDraft {
   durationDays: number;
   notes: string;
@@ -66,7 +98,11 @@ export interface AdminKeyDraft {
   notes: string;
 }
 
-export type AdminRequestFilter = 'all' | AccessRequestStatus;
+export type AdminPanelTab = 'requests' | 'keys' | 'gallery' | 'vipRequests';
+
+export type AdminRequestFilter = 'all' | AdminAccessRequestStatus;
+
+export type AdminVipRequestFilter = 'all' | VipIllustrationRequestStatus;
 
 export type GalleryItemStatus = 'active' | 'disabled';
 

@@ -1,6 +1,7 @@
-import { Component, inject, OnDestroy, OnInit, HostListener } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, HostListener, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GalleryService } from '../../services/gallery.service';
+import { LanguageService } from '../../../../core/i18n/language.service';
 
 @Component({
   selector: 'app-slideshow',
@@ -11,6 +12,10 @@ import { GalleryService } from '../../services/gallery.service';
 })
 export class SlideshowComponent implements OnInit, OnDestroy {
   private readonly galleryService = inject(GalleryService);
+  private readonly languageService = inject(LanguageService);
+  readonly texts = this.languageService.texts;
+  readonly isImageLoading = signal(true);
+  readonly imageLoadError = signal(false);
 
   get slideshowState() {
     return this.galleryService.slideshowState();
@@ -30,8 +35,10 @@ export class SlideshowComponent implements OnInit, OnDestroy {
   }
 
   private uiTimeout: ReturnType<typeof setTimeout> | null = null;
+  private activeImageKey = '';
 
   ngOnInit(): void {
+    this.prepareImageLoadState();
     this.preloadNextImage();
   }
 
@@ -53,7 +60,20 @@ export class SlideshowComponent implements OnInit, OnDestroy {
         break;
       case ' ':
         event.preventDefault();
-        this.toggleZoom();
+        this.zoomIn();
+        break;
+      case '+':
+      case '=':
+        event.preventDefault();
+        this.zoomIn();
+        break;
+      case '-':
+        event.preventDefault();
+        this.zoomOut();
+        break;
+      case '0':
+        event.preventDefault();
+        this.resetZoom();
         break;
     }
   }
@@ -71,6 +91,7 @@ export class SlideshowComponent implements OnInit, OnDestroy {
   next(): void {
     if (this.slideshowState.index < this.totalImages - 1) {
       this.galleryService.nextSlide();
+      this.prepareImageLoadState();
       this.resetUITimer();
       this.preloadNextImage();
     }
@@ -79,6 +100,7 @@ export class SlideshowComponent implements OnInit, OnDestroy {
   prev(): void {
     if (this.slideshowState.index > 0) {
       this.galleryService.prevSlide();
+      this.prepareImageLoadState();
       this.resetUITimer();
       this.preloadNextImage();
     }
@@ -93,9 +115,66 @@ export class SlideshowComponent implements OnInit, OnDestroy {
     this.showUITemporarily();
   }
 
+  zoomIn(): void {
+    this.galleryService.zoomIn();
+    this.showUITemporarily();
+  }
+
+  zoomOut(): void {
+    this.galleryService.zoomOut();
+    this.showUITemporarily();
+  }
+
+  resetZoom(): void {
+    this.galleryService.resetZoom();
+    this.showUITemporarily();
+  }
+
+  zoomPercent(): string {
+    return `${Math.round(this.slideshowState.zoomLevel * 100)}%`;
+  }
+
+  imageTransform(): string {
+    const { currentX, currentY } = this.slideshowState.pan;
+    return `translate3d(${currentX}px, ${currentY}px, 0) scale(${this.slideshowState.zoomLevel})`;
+  }
+
+  onWheelZoom(event: WheelEvent): void {
+    event.preventDefault();
+
+    if (event.deltaY < 0) {
+      this.zoomIn();
+      return;
+    }
+
+    this.zoomOut();
+  }
+
+  onDoubleClick(event: MouseEvent): void {
+    event.preventDefault();
+
+    if (this.slideshowState.zoomLevel >= 3) {
+      this.galleryService.resetZoom();
+    } else {
+      this.galleryService.zoomIn();
+    }
+
+    this.showUITemporarily();
+  }
+
   toggleUI(): void {
     this.galleryService.toggleUI();
     this.clearUITimeout();
+  }
+
+  onImageLoad(): void {
+    this.isImageLoading.set(false);
+    this.imageLoadError.set(false);
+  }
+
+  onImageError(): void {
+    this.isImageLoading.set(false);
+    this.imageLoadError.set(true);
   }
 
   private showUITemporarily(): void {
@@ -143,6 +222,16 @@ export class SlideshowComponent implements OnInit, OnDestroy {
         img.src = nextImage.fullSize;
       }
     }
+  }
+
+  private prepareImageLoadState(): void {
+    const image = this.currentImage;
+    const imageKey = `${image?.id ?? ''}:${image?.fullSize ?? ''}`;
+    if (imageKey === this.activeImageKey) return;
+
+    this.activeImageKey = imageKey;
+    this.isImageLoading.set(true);
+    this.imageLoadError.set(false);
   }
 
   // --- Eventos de arrastre (mouse) ---

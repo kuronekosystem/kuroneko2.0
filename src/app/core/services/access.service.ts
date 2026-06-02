@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { KuronekoApiService } from './kuroneko-api.service';
@@ -17,6 +17,9 @@ import {
 export class AccessService {
   private readonly api = inject(KuronekoApiService);
   private readonly vipSessionKey = environment.storage.vipSession;
+  private readonly storedSession = signal<VipAccessSession | null>(this.readStoredSession());
+
+  readonly vipSession = this.storedSession.asReadonly();
 
   async validateAccess(userCode: string, accessKey: string): Promise<ValidateAccessResponse> {
     return this.api.post<ValidateAccessResponse>({
@@ -46,6 +49,35 @@ export class AccessService {
   }
 
   getStoredSession(): VipAccessSession | null {
+    return this.storedSession();
+  }
+
+  saveSession(session: VipAccessSession): void {
+    sessionStorage.setItem(this.vipSessionKey, JSON.stringify(session));
+    this.storedSession.set(session);
+  }
+
+  clearSession(): void {
+    sessionStorage.removeItem(this.vipSessionKey);
+    this.storedSession.set(null);
+  }
+
+  hasValidSession(): boolean {
+    const session = this.getStoredSession();
+    return !!session && session.status === 'active';
+  }
+
+  getSessionCredentials(): VipCredentials | null {
+    const session = this.getStoredSession();
+    if (!session) return null;
+
+    return {
+      userCode: session.userCode,
+      accessKey: session.accessKey
+    };
+  }
+
+  private readStoredSession(): VipAccessSession | null {
     const rawSession = sessionStorage.getItem(this.vipSessionKey);
     if (!rawSession) return null;
 
@@ -71,33 +103,10 @@ export class AccessService {
         };
       }
     } catch {
-      this.clearSession();
+      sessionStorage.removeItem(this.vipSessionKey);
     }
 
     return null;
-  }
-
-  saveSession(session: VipAccessSession): void {
-    sessionStorage.setItem(this.vipSessionKey, JSON.stringify(session));
-  }
-
-  clearSession(): void {
-    sessionStorage.removeItem(this.vipSessionKey);
-  }
-
-  hasValidSession(): boolean {
-    const session = this.getStoredSession();
-    return !!session && session.status === 'active';
-  }
-
-  getSessionCredentials(): VipCredentials | null {
-    const session = this.getStoredSession();
-    if (!session) return null;
-
-    return {
-      userCode: session.userCode,
-      accessKey: session.accessKey
-    };
   }
 }
 

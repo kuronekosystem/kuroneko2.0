@@ -1,21 +1,30 @@
 <section class="admin-gallery">
   <div class="admin-gallery__header">
     <div>
-      <span class="admin-gallery__kicker">Gallery Items</span>
+      <span class="admin-gallery__kicker">{{ texts().admin.gallery.kicker }}</span>
       <h2>{{ texts().admin.gallery.title }}</h2>
       <p>{{ texts().admin.gallery.subtitle }}</p>
+      @if (lastUpdatedAt) {
+        <span class="admin-gallery__last-updated">{{ lastUpdatedLabel() }}</span>
+      }
     </div>
-    <button class="admin-gallery__button admin-gallery__button--ghost" type="button" [disabled]="isFetching" (click)="loadGalleryItems()">
-      {{ texts().admin.gallery.loading }}
+    <button
+      class="admin-gallery__button admin-gallery__button--ghost"
+      type="button"
+      [disabled]="isFetching"
+      [attr.aria-busy]="isFetching"
+      (click)="refreshGalleryItems()"
+    >
+      @if (isFetching) {
+        <app-loading-spinner [label]="texts().admin.gallery.loading" />
+      } @else {
+        {{ texts().refresh.action }}
+      }
     </button>
   </div>
 
   @if (errorMessage) {
     <div class="admin-gallery__message admin-gallery__message--error" role="alert">{{ errorMessage }}</div>
-  }
-
-  @if (successMessage) {
-    <div class="admin-gallery__message" role="status">{{ successMessage }}</div>
   }
 
   <div class="admin-gallery__form-card">
@@ -69,7 +78,7 @@
       </div>
 
       <div class="admin-gallery__actions admin-gallery__field--wide">
-        <button class="admin-gallery__button" type="submit" [disabled]="isSaving" [attr.aria-busy]="isSaving">
+        <button class="admin-gallery__button" type="submit" [disabled]="isSaving || isGalleryFormInvalid()" [attr.aria-busy]="isSaving">
           @if (isSaving) {
             <app-loading-spinner [label]="texts().admin.gallery.saving" />
           } @else {
@@ -85,17 +94,44 @@
     </form>
   </div>
 
-  <div class="admin-gallery__filters" aria-label="Gallery filters">
-    @for (filter of filters; track filter) {
-      <button
-        class="admin-gallery__filter"
-        type="button"
-        [class.active]="galleryFilter === filter"
-        (click)="galleryFilter = filter"
+  <div class="admin-gallery__tools" [attr.aria-label]="texts().admin.gallery.filtersLabel">
+    <div class="admin-gallery__search">
+      <label for="adminGallerySearch">{{ texts().admin.gallery.search }}</label>
+      <input
+        id="adminGallerySearch"
+        type="search"
+        [ngModel]="searchTerm"
+        [placeholder]="texts().admin.gallery.searchPlaceholder"
+        (ngModelChange)="setSearchTerm($event)"
       >
-        {{ filterLabel(filter) }}
-      </button>
-    }
+    </div>
+
+    <div class="admin-gallery__select-field">
+      <label for="adminGalleryCategory">{{ texts().admin.gallery.category }}</label>
+      <select id="adminGalleryCategory" [ngModel]="categoryFilter" (ngModelChange)="setCategoryFilter($event)">
+        <option value="all">{{ texts().admin.gallery.allCategories }}</option>
+        @for (category of categories(); track category) {
+          <option [value]="category">{{ category }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="admin-gallery__status-filters">
+      @for (filter of filters; track filter) {
+        <button
+          class="admin-gallery__filter"
+          type="button"
+          [class.active]="galleryFilter === filter"
+          (click)="setGalleryFilter(filter)"
+        >
+          {{ filterLabel(filter) }}
+        </button>
+      }
+    </div>
+
+    <span class="admin-gallery__result-count">
+      {{ filteredItems().length }} / {{ galleryItems.length }} {{ texts().admin.gallery.results }}
+    </span>
   </div>
 
   @if (isFetching) {
@@ -108,7 +144,7 @@
   }
 
   <div class="admin-gallery__grid">
-    @for (item of filteredItems(); track trackItem($index, item)) {
+    @for (item of paginatedItems(); track trackItem($index, item)) {
       <article class="admin-gallery__item">
         <div class="admin-gallery__thumb">
           @if (isPreviewAvailable(item)) {
@@ -135,11 +171,11 @@
               <dd>{{ item.category || '-' }}</dd>
             </div>
             <div>
-              <dt>createdAt</dt>
+              <dt>{{ texts().admin.panel.createdAt }}</dt>
               <dd>{{ item.createdAt || '-' }}</dd>
             </div>
             <div>
-              <dt>updatedAt</dt>
+              <dt>{{ texts().admin.panel.updatedAt }}</dt>
               <dd>{{ item.updatedAt || '-' }}</dd>
             </div>
             <div class="admin-gallery__details-wide">
@@ -184,4 +220,39 @@
       </article>
     }
   </div>
+
+  @if (!isFetching && filteredItems().length > 0) {
+    <div class="admin-gallery__pagination">
+      <button
+        class="admin-gallery__page-button"
+        type="button"
+        [disabled]="currentPage === 1"
+        (click)="onPrevPage()"
+      >
+        <span>←</span> {{ texts().admin.gallery.previous }}
+      </button>
+
+      <div class="admin-gallery__page-info">
+        <span>{{ texts().admin.gallery.page }}</span>
+        <input
+          type="number"
+          [min]="1"
+          [max]="totalPages()"
+          [value]="currentPage"
+          (change)="onPageInput($event)"
+          [attr.aria-label]="texts().admin.gallery.page"
+        >
+        <span>/ {{ totalPages() }}</span>
+      </div>
+
+      <button
+        class="admin-gallery__page-button"
+        type="button"
+        [disabled]="currentPage === totalPages()"
+        (click)="onNextPage()"
+      >
+        {{ texts().admin.gallery.next }} <span>→</span>
+      </button>
+    </div>
+  }
 </section>

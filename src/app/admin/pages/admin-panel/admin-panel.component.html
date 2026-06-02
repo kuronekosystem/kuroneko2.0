@@ -50,7 +50,7 @@
           >
         </div>
 
-        <button class="admin-button" type="submit" [disabled]="isAuthenticating" [attr.aria-busy]="isAuthenticating">
+        <button class="admin-button" type="submit" [disabled]="isAuthenticating || isLoginInvalid()" [attr.aria-busy]="isAuthenticating">
           @if (isAuthenticating) {
             <app-loading-spinner [label]="texts().admin.panel.authenticating" />
           } @else {
@@ -72,278 +72,470 @@
       <div class="admin-message admin-message--error" role="alert">{{ errorMessage }}</div>
     }
 
-    @if (successMessage) {
-      <div class="admin-message" role="status">{{ successMessage }}</div>
-    }
-
     @if (isAuthenticated) {
-      <section class="admin-section admin-section--requests">
-        <div class="admin-section__header">
-          <div class="admin-section__title">
-            <span class="admin-card__kicker">{{ texts().admin.panel.requestsKicker }}</span>
-            <h2>{{ texts().admin.panel.requestsTitle }}</h2>
-          </div>
-          <span class="admin-count">{{ filteredRequests().length }} / {{ requests.length }} {{ texts().admin.panel.countSuffix }}</span>
-          <button class="admin-button admin-button--ghost" type="button" [disabled]="isFetching" (click)="refreshAdminData()">
-            {{ texts().admin.panel.refresh }}
+      <nav class="admin-tabs" [attr.aria-label]="texts().admin.panel.title">
+        @for (tab of tabs; track tab) {
+          <button
+            class="admin-tab"
+            type="button"
+            [class.active]="activeAdminTab === tab"
+            (click)="setActiveAdminTab(tab)"
+          >
+            {{ adminTabLabel(tab) }}
           </button>
-        </div>
+        }
+      </nav>
 
-        <div class="admin-filters" [attr.aria-label]="texts().admin.panel.filtersLabel">
-          @for (filter of filters; track filter) {
-            <button
-              class="admin-filter"
-              type="button"
-              [class.active]="activeFilter === filter"
-              (click)="activeFilter = filter"
-            >
-              {{ filterLabel(filter) }}
-            </button>
-          }
-        </div>
+      @switch (activeAdminTab) {
+        @case ('requests') {
+          <section class="admin-section admin-section--requests">
+            <div class="admin-section__header">
+              <div class="admin-section__title">
+                <span class="admin-card__kicker">{{ texts().admin.panel.requestsKicker }}</span>
+                <h2>{{ texts().admin.panel.requestsTitle }}</h2>
+              </div>
+              <span class="admin-count">{{ filteredRequests().length }} / {{ requests.length }} {{ texts().admin.panel.countSuffix }}</span>
+              @if (requestsLastUpdatedAt) {
+                <span class="admin-count">{{ lastUpdatedLabel(requestsLastUpdatedAt) }}</span>
+              }
+              <button
+                class="admin-button admin-button--ghost"
+                type="button"
+                [disabled]="isRequestsRefreshing"
+                [attr.aria-busy]="isRequestsRefreshing"
+                (click)="refreshActiveAdminTab()"
+              >
+                @if (isRequestsRefreshing) {
+                  <app-loading-spinner [label]="texts().refresh.action" />
+                } @else {
+                  {{ texts().refresh.action }}
+                }
+              </button>
+            </div>
 
-        @if (!isFetching && filteredRequests().length === 0) {
-          <p class="admin-empty">{{ texts().admin.panel.emptyRequests }}</p>
+            <div class="admin-request-filters" [attr.aria-label]="texts().admin.panel.filtersLabel">
+              @for (filter of filters; track filter) {
+                <button
+                  class="admin-filter-card"
+                  type="button"
+                  [class.active]="activeFilter === filter"
+                  (click)="setActiveFilter(filter)"
+                >
+                  <span>{{ requestFilterLabel(filter) }}</span>
+                  <strong>{{ requestCount(filter) }}</strong>
+                </button>
+              }
+            </div>
+
+            @if (!isFetching && filteredRequests().length === 0) {
+              <p class="admin-empty">{{ texts().admin.panel.emptyRequests }}</p>
+            }
+
+            <div class="admin-grid admin-grid--requests">
+              @for (request of filteredRequests(); track trackRequest($index, request)) {
+                <article class="admin-card admin-request">
+                  <div class="admin-card__top">
+                    <div>
+                      <strong>{{ request.requestCode }}</strong>
+                      <span>{{ request.displayName }}</span>
+                    </div>
+                    <span class="admin-status" [ngClass]="'admin-status--' + request.status">
+                      {{ requestStatusLabel(request.status) }}
+                    </span>
+                  </div>
+
+                  <p class="admin-request__help">{{ requestStateHelp(request.status) }}</p>
+
+                  <dl class="admin-details">
+                    <div>
+                      <dt>{{ texts().admin.panel.source }}</dt>
+                      <dd>{{ request.source }}</dd>
+                    </div>
+                    <div>
+                      <dt>{{ request.source === 'fanbox' ? 'fanboxName' : 'paypalTransactionId' }}</dt>
+                      <dd>{{ request.source === 'fanbox' ? request.fanboxName : request.paypalTransactionId }}</dd>
+                    </div>
+                    <div>
+                      <dt>{{ texts().admin.panel.contact }}</dt>
+                      <dd>{{ request.contact || '-' }}</dd>
+                    </div>
+                    <div>
+                      <dt>{{ texts().admin.panel.createdAt }}</dt>
+                      <dd>{{ request.createdAt }}</dd>
+                    </div>
+                    <div class="admin-details__wide">
+                      <dt>{{ texts().admin.panel.proofText }}</dt>
+                      <dd>{{ request.proofText || '-' }}</dd>
+                    </div>
+                    <div class="admin-details__wide">
+                      <dt>{{ texts().admin.panel.adminNotes }}</dt>
+                      <dd>{{ request.adminNotes || '-' }}</dd>
+                    </div>
+                  </dl>
+
+                  @if (canShowDecisionActions(request.status)) {
+                    <div class="admin-actions admin-actions--stack">
+                      @if (request.status === 'need_more_info') {
+                        <span class="admin-card__kicker">{{ texts().admin.requestActions.reviewAgain }}</span>
+                      }
+
+                      <div class="admin-field admin-field--inline">
+                        <label [for]="'duration-' + request.requestCode">{{ texts().admin.panel.durationDays }}</label>
+                        <input
+                          [id]="'duration-' + request.requestCode"
+                          type="number"
+                          min="1"
+                          [ngModel]="requestDraft(request.requestCode).durationDays"
+                          [ngModelOptions]="{standalone: true}"
+                          (ngModelChange)="setRequestDuration(request.requestCode, $event)"
+                        >
+                      </div>
+
+                      <div class="admin-field">
+                        <label [for]="'notes-' + request.requestCode">{{ texts().admin.panel.notes }}</label>
+                        <textarea
+                          [id]="'notes-' + request.requestCode"
+                          [ngModel]="requestDraft(request.requestCode).notes"
+                          [ngModelOptions]="{standalone: true}"
+                          (ngModelChange)="setRequestNotes(request.requestCode, $event)"
+                        ></textarea>
+                      </div>
+
+                      <div class="admin-actions">
+                        <button
+                          class="admin-button"
+                          type="button"
+                          [disabled]="isFetching || isRequestProcessing(request.requestCode) || isApproveDraftInvalid(request.requestCode)"
+                          [attr.aria-busy]="isRequestProcessing(request.requestCode, 'approve')"
+                          (click)="approveRequest(request)"
+                        >
+                          @if (isRequestProcessing(request.requestCode, 'approve')) {
+                            <app-loading-spinner [label]="texts().admin.panel.approving" />
+                          } @else {
+                            {{ texts().admin.panel.approve }}
+                          }
+                        </button>
+                        <button
+                          class="admin-button admin-button--danger"
+                          type="button"
+                          [disabled]="isFetching || isRequestProcessing(request.requestCode) || isNotesDraftEmpty(request.requestCode)"
+                          [attr.aria-busy]="isRequestProcessing(request.requestCode, 'reject')"
+                          (click)="rejectRequest(request)"
+                        >
+                          @if (isRequestProcessing(request.requestCode, 'reject')) {
+                            <app-loading-spinner [label]="texts().admin.panel.processing" />
+                          } @else {
+                            {{ texts().admin.panel.rejectAction }}
+                          }
+                        </button>
+                        <button
+                          class="admin-button admin-button--ghost"
+                          type="button"
+                          [disabled]="isFetching || isRequestProcessing(request.requestCode) || isNotesDraftEmpty(request.requestCode)"
+                          [attr.aria-busy]="isRequestProcessing(request.requestCode, 'needMoreInfo')"
+                          (click)="needMoreInfo(request)"
+                        >
+                          @if (isRequestProcessing(request.requestCode, 'needMoreInfo')) {
+                            <app-loading-spinner [label]="texts().admin.panel.processing" />
+                          } @else {
+                            {{ texts().admin.panel.needMoreInfoAction }}
+                          }
+                        </button>
+                      </div>
+                    </div>
+                  } @else {
+                    <p class="admin-request__processed">{{ processedRequestMessage(request.status) }}</p>
+                    @if (request.status === 'approved') {
+                      <div class="admin-actions">
+                        <button
+                          class="admin-button admin-button--ghost"
+                          type="button"
+                          [disabled]="isFetching || isRequestProcessing(request.requestCode)"
+                          [attr.aria-busy]="isRequestProcessing(request.requestCode, 'disable')"
+                          (click)="disableAccessRequest(request)"
+                        >
+                          @if (isRequestProcessing(request.requestCode, 'disable')) {
+                            <app-loading-spinner [label]="texts().admin.panel.processing" />
+                          } @else {
+                            {{ texts().admin.panel.disableRequest }}
+                          }
+                        </button>
+                      </div>
+                    }
+                  }
+
+                  @if (approvedResults[request.requestCode]) {
+                    <div class="admin-approved">
+                      <strong>{{ texts().admin.panel.shareIssued }}</strong>
+                      <span>{{ texts().accessLogin.userCode }}: <code>{{ approvedResults[request.requestCode].userCode }}</code></span>
+                      <span>{{ texts().admin.panel.accessKey }}: <code>{{ approvedResults[request.requestCode].accessKey }}</code></span>
+                      <span>{{ approvedResults[request.requestCode].startDate }} - {{ approvedResults[request.requestCode].endDate }}</span>
+                      <div class="admin-actions">
+                        <button
+                          class="admin-button admin-button--ghost"
+                          type="button"
+                          (click)="copyText(approvedResults[request.requestCode].userCode, texts().accessLogin.userCode)"
+                        >
+                          {{ texts().admin.panel.copyUserCode }}
+                        </button>
+                        <button
+                          class="admin-button admin-button--ghost"
+                          type="button"
+                          (click)="copyText(approvedResults[request.requestCode].accessKey, texts().admin.panel.accessKey)"
+                        >
+                          {{ texts().admin.panel.copyAccessKey }}
+                        </button>
+                      </div>
+                    </div>
+                  }
+                </article>
+              }
+            </div>
+          </section>
         }
 
-        <div class="admin-grid admin-grid--requests">
-          @for (request of filteredRequests(); track trackRequest($index, request)) {
-            <article class="admin-card admin-request">
-              <div class="admin-card__top">
-                <div>
-                  <strong>{{ request.requestCode }}</strong>
-                  <span>{{ request.displayName }}</span>
-                </div>
-                <span class="admin-status" [ngClass]="'admin-status--' + request.status">
-                  {{ requestStatusLabel(request.status) }}
-                </span>
+        @case ('keys') {
+          <section class="admin-section admin-section--keys">
+            <div class="admin-section__header">
+              <div class="admin-section__title">
+                <span class="admin-card__kicker">{{ texts().admin.panel.keysKicker }}</span>
+                <h2>{{ texts().admin.panel.keysTitle }}</h2>
               </div>
+              <span class="admin-count">{{ accessKeys.length }} {{ texts().admin.panel.countSuffix }}</span>
+              @if (accessKeysLastUpdatedAt) {
+                <span class="admin-count">{{ lastUpdatedLabel(accessKeysLastUpdatedAt) }}</span>
+              }
+              <button
+                class="admin-button admin-button--ghost"
+                type="button"
+                [disabled]="isAccessKeysRefreshing"
+                [attr.aria-busy]="isAccessKeysRefreshing"
+                (click)="refreshActiveAdminTab()"
+              >
+                @if (isAccessKeysRefreshing) {
+                  <app-loading-spinner [label]="texts().refresh.action" />
+                } @else {
+                  {{ texts().refresh.action }}
+                }
+              </button>
+            </div>
 
-              <dl class="admin-details">
-                <div>
-                  <dt>{{ texts().admin.panel.source }}</dt>
-                  <dd>{{ request.source }}</dd>
-                </div>
-                <div>
-                  <dt>{{ request.source === 'fanbox' ? 'fanboxName' : 'paypalTransactionId' }}</dt>
-                  <dd>{{ request.source === 'fanbox' ? request.fanboxName : request.paypalTransactionId }}</dd>
-                </div>
-                <div>
-                  <dt>{{ texts().admin.panel.contact }}</dt>
-                  <dd>{{ request.contact || '-' }}</dd>
-                </div>
-                <div>
-                  <dt>{{ texts().admin.panel.createdAt }}</dt>
-                  <dd>{{ request.createdAt }}</dd>
-                </div>
-                <div class="admin-details__wide">
-                  <dt>{{ texts().admin.panel.proofText }}</dt>
-                  <dd>{{ request.proofText || '-' }}</dd>
-                </div>
-                <div class="admin-details__wide">
-                  <dt>{{ texts().admin.panel.adminNotes }}</dt>
-                  <dd>{{ request.adminNotes || '-' }}</dd>
-                </div>
-              </dl>
+            @if (!isFetching && accessKeys.length === 0) {
+              <p class="admin-empty">{{ texts().admin.panel.emptyKeys }}</p>
+            }
 
-              <div class="admin-actions admin-actions--stack">
-                <div class="admin-field admin-field--inline">
-                  <label [for]="'duration-' + request.requestCode">{{ texts().admin.panel.durationDays }}</label>
-                  <input
-                    [id]="'duration-' + request.requestCode"
-                    type="number"
-                    min="1"
-                    [ngModel]="requestDraft(request.requestCode).durationDays"
-                    [ngModelOptions]="{standalone: true}"
-                    (ngModelChange)="setRequestDuration(request.requestCode, $event)"
-                  >
-                </div>
+            <div class="admin-grid admin-grid--keys">
+              @for (item of accessKeys; track trackKey($index, item)) {
+                <article class="admin-card admin-key">
+                  <div class="admin-card__top">
+                    <div>
+                      <strong>{{ item.userCode }}</strong>
+                      <span>{{ item.displayName }}</span>
+                    </div>
+                    <span class="admin-status" [ngClass]="'admin-status--' + item.status">
+                      {{ keyStatusLabel(item.status) }}
+                    </span>
+                  </div>
 
-                <div class="admin-field">
-                  <label [for]="'notes-' + request.requestCode">{{ texts().admin.panel.notes }}</label>
-                  <textarea
-                    [id]="'notes-' + request.requestCode"
-                    [ngModel]="requestDraft(request.requestCode).notes"
-                    [ngModelOptions]="{standalone: true}"
-                    (ngModelChange)="setRequestNotes(request.requestCode, $event)"
-                  ></textarea>
-                </div>
+                  <dl class="admin-details">
+                    <div>
+                      <dt>{{ texts().admin.panel.accessKey }}</dt>
+                      <dd><code>{{ displayAccessKey(item) }}</code></dd>
+                    </div>
+                    <div>
+                      <dt>{{ texts().admin.panel.source }}</dt>
+                      <dd>{{ item.source }}</dd>
+                    </div>
+                    <div>
+                      <dt>{{ texts().admin.panel.requestCode }}</dt>
+                      <dd>{{ item.requestCode }}</dd>
+                    </div>
+                    <div>
+                      <dt>{{ texts().admin.panel.startDate }}</dt>
+                      <dd>{{ item.startDate }}</dd>
+                    </div>
+                    <div>
+                      <dt>{{ texts().admin.panel.endDate }}</dt>
+                      <dd>{{ item.endDate }}</dd>
+                    </div>
+                    <div class="admin-details__wide">
+                      <dt>{{ texts().admin.panel.notes }}</dt>
+                      <dd>{{ item.notes || '-' }}</dd>
+                    </div>
+                  </dl>
 
-                <div class="admin-actions">
-                  <button
-                    class="admin-button"
-                    type="button"
-                    [disabled]="isFetching || isRequestProcessing(request.requestCode)"
-                    [attr.aria-busy]="isRequestProcessing(request.requestCode, 'approve')"
-                    (click)="approveRequest(request)"
-                  >
-                    @if (isRequestProcessing(request.requestCode, 'approve')) {
-                      <app-loading-spinner [label]="texts().admin.panel.approving" />
-                    } @else {
-                      {{ texts().admin.panel.approve }}
-                    }
-                  </button>
-                  <button
-                    class="admin-button admin-button--danger"
-                    type="button"
-                    [disabled]="isFetching || isRequestProcessing(request.requestCode)"
-                    [attr.aria-busy]="isRequestProcessing(request.requestCode, 'reject')"
-                    (click)="rejectRequest(request)"
-                  >
-                    @if (isRequestProcessing(request.requestCode, 'reject')) {
-                      <app-loading-spinner [label]="texts().admin.panel.processing" />
-                    } @else {
-                      {{ texts().admin.panel.rejectAction }}
-                    }
-                  </button>
-                  <button
-                    class="admin-button admin-button--ghost"
-                    type="button"
-                    [disabled]="isFetching || isRequestProcessing(request.requestCode)"
-                    [attr.aria-busy]="isRequestProcessing(request.requestCode, 'needMoreInfo')"
-                    (click)="needMoreInfo(request)"
-                  >
-                    @if (isRequestProcessing(request.requestCode, 'needMoreInfo')) {
-                      <app-loading-spinner [label]="texts().admin.panel.processing" />
-                    } @else {
-                      {{ texts().admin.panel.needMoreInfoAction }}
-                    }
-                  </button>
-                </div>
-              </div>
-
-              @if (approvedResults[request.requestCode]) {
-                <div class="admin-approved">
-                  <strong>{{ texts().admin.panel.shareIssued }}</strong>
-                  <span>userCode: <code>{{ approvedResults[request.requestCode].userCode }}</code></span>
-                  <span>accessKey: <code>{{ approvedResults[request.requestCode].accessKey }}</code></span>
-                  <span>{{ approvedResults[request.requestCode].startDate }} - {{ approvedResults[request.requestCode].endDate }}</span>
-                  <div class="admin-actions">
-                    <button
-                      class="admin-button admin-button--ghost"
-                      type="button"
-                      (click)="copyText(approvedResults[request.requestCode].userCode, 'userCode')"
+                  <div class="admin-field">
+                    <label [for]="'key-notes-' + item.userCode">{{ texts().admin.panel.notes }}</label>
+                    <input
+                      [id]="'key-notes-' + item.userCode"
+                      [ngModel]="keyDraft(item.userCode).notes"
+                      [ngModelOptions]="{standalone: true}"
+                      (ngModelChange)="setKeyNotes(item.userCode, $event)"
                     >
-                      {{ texts().admin.panel.copyUserCode }}
+                  </div>
+
+                  <div class="admin-actions">
+                    <button class="admin-button admin-button--ghost" type="button" (click)="toggleKey(item.userCode)">
+                      {{ isKeyRevealed(item.userCode) ? texts().admin.panel.hideKey : texts().admin.panel.showKey }}
+                    </button>
+                    <button class="admin-button admin-button--ghost" type="button" (click)="copyKeyPair(item)">
+                      {{ texts().admin.panel.copy }}
                     </button>
                     <button
-                      class="admin-button admin-button--ghost"
+                      class="admin-button admin-button--danger"
                       type="button"
-                      (click)="copyText(approvedResults[request.requestCode].accessKey, 'accessKey')"
+                      [disabled]="isFetching || isKeyProcessing(item.userCode)"
+                      [attr.aria-busy]="isKeyProcessing(item.userCode, 'disable')"
+                      (click)="disableAccessKey(item)"
                     >
-                      {{ texts().admin.panel.copyAccessKey }}
+                      @if (isKeyProcessing(item.userCode, 'disable')) {
+                        <app-loading-spinner [label]="texts().admin.panel.disabling" />
+                      } @else {
+                        {{ texts().admin.panel.disable }}
+                      }
+                    </button>
+                    <button
+                      class="admin-button"
+                      type="button"
+                      [disabled]="isFetching || isKeyProcessing(item.userCode)"
+                      [attr.aria-busy]="isKeyProcessing(item.userCode, 'extend')"
+                      (click)="extendAccessKey(item)"
+                    >
+                      @if (isKeyProcessing(item.userCode, 'extend')) {
+                        <app-loading-spinner [label]="texts().admin.panel.extending" />
+                      } @else {
+                        {{ texts().admin.panel.extend30 }}
+                      }
                     </button>
                   </div>
-                </div>
+                </article>
               }
-            </article>
-          }
-        </div>
-      </section>
-
-      <section class="admin-section admin-section--keys">
-        <div class="admin-section__header">
-          <div class="admin-section__title">
-            <span class="admin-card__kicker">{{ texts().admin.panel.keysKicker }}</span>
-            <h2>{{ texts().admin.panel.keysTitle }}</h2>
-          </div>
-          <span class="admin-count">{{ accessKeys.length }} {{ texts().admin.panel.countSuffix }}</span>
-        </div>
-
-        @if (!isFetching && accessKeys.length === 0) {
-          <p class="admin-empty">{{ texts().admin.panel.emptyKeys }}</p>
+            </div>
+          </section>
         }
 
-        <div class="admin-grid admin-grid--keys">
-          @for (item of accessKeys; track trackKey($index, item)) {
-            <article class="admin-card admin-key">
-              <div class="admin-card__top">
-                <div>
-                  <strong>{{ item.userCode }}</strong>
-                  <span>{{ item.displayName }}</span>
-                </div>
-                <span class="admin-status" [ngClass]="'admin-status--' + item.status">
-                  {{ keyStatusLabel(item.status) }}
-                </span>
+        @case ('vipRequests') {
+          <section class="admin-section admin-section--vip-requests">
+            <div class="admin-section__header">
+              <div class="admin-section__title">
+                <span class="admin-card__kicker">{{ texts().admin.vipRequests.kicker }}</span>
+                <h2>{{ texts().admin.vipRequests.title }}</h2>
               </div>
+              <span class="admin-count">
+                {{ filteredVipRequests().length }} / {{ vipIllustrationRequests.length }} {{ texts().admin.panel.countSuffix }}
+              </span>
+              @if (vipRequestsLastUpdatedAt) {
+                <span class="admin-count">{{ lastUpdatedLabel(vipRequestsLastUpdatedAt) }}</span>
+              }
+              <button
+                class="admin-button admin-button--ghost"
+                type="button"
+                [disabled]="isVipRequestsFetching"
+                [attr.aria-busy]="isVipRequestsFetching"
+                (click)="refreshActiveAdminTab()"
+              >
+                @if (isVipRequestsFetching) {
+                  <app-loading-spinner [label]="texts().refresh.action" />
+                } @else {
+                  {{ texts().refresh.action }}
+                }
+              </button>
+            </div>
 
-              <dl class="admin-details">
-                <div>
-                  <dt>{{ texts().admin.panel.accessKey }}</dt>
-                  <dd><code>{{ displayAccessKey(item) }}</code></dd>
-                </div>
-                <div>
-                  <dt>{{ texts().admin.panel.source }}</dt>
-                  <dd>{{ item.source }}</dd>
-                </div>
-                <div>
-                  <dt>{{ texts().admin.panel.requestCode }}</dt>
-                  <dd>{{ item.requestCode }}</dd>
-                </div>
-                <div>
-                  <dt>{{ texts().admin.panel.startDate }}</dt>
-                  <dd>{{ item.startDate }}</dd>
-                </div>
-                <div>
-                  <dt>{{ texts().admin.panel.endDate }}</dt>
-                  <dd>{{ item.endDate }}</dd>
-                </div>
-                <div class="admin-details__wide">
-                  <dt>{{ texts().admin.panel.notes }}</dt>
-                  <dd>{{ item.notes || '-' }}</dd>
-                </div>
-              </dl>
-
-              <div class="admin-field">
-                <label [for]="'key-notes-' + item.userCode">{{ texts().admin.panel.notes }}</label>
-                <input
-                  [id]="'key-notes-' + item.userCode"
-                  [ngModel]="keyDraft(item.userCode).notes"
-                  [ngModelOptions]="{standalone: true}"
-                  (ngModelChange)="setKeyNotes(item.userCode, $event)"
-                >
+            @if (isVipRequestsFetching) {
+              <div class="admin-empty" role="status">
+                <app-loading-spinner [label]="texts().admin.vipRequests.loading" />
+                {{ texts().admin.vipRequests.loading }}
               </div>
+            }
 
-              <div class="admin-actions">
-                <button class="admin-button admin-button--ghost" type="button" (click)="toggleKey(item.userCode)">
-                  {{ isKeyRevealed(item.userCode) ? texts().admin.panel.hideKey : texts().admin.panel.showKey }}
-                </button>
-                <button class="admin-button admin-button--ghost" type="button" (click)="copyKeyPair(item)">
-                  {{ texts().admin.panel.copy }}
-                </button>
+            @if (vipRequestsErrorMessage) {
+              <div class="admin-message admin-message--error" role="alert">
+                {{ vipRequestsErrorMessage }}
+              </div>
+            }
+
+            <div class="admin-request-filters" [attr.aria-label]="texts().admin.vipRequests.filtersLabel">
+              @for (filter of vipRequestFilters; track filter) {
                 <button
-                  class="admin-button admin-button--danger"
+                  class="admin-filter-card"
                   type="button"
-                  [disabled]="isFetching || isKeyProcessing(item.userCode)"
-                  [attr.aria-busy]="isKeyProcessing(item.userCode, 'disable')"
-                  (click)="disableAccessKey(item)"
+                  [class.active]="activeVipRequestFilter === filter"
+                  (click)="setActiveVipRequestFilter(filter)"
                 >
-                  @if (isKeyProcessing(item.userCode, 'disable')) {
-                    <app-loading-spinner [label]="texts().admin.panel.disabling" />
-                  } @else {
-                    {{ texts().admin.panel.disable }}
-                  }
+                  <span>{{ vipRequestFilterLabel(filter) }}</span>
+                  <strong>{{ vipRequestCount(filter) }}</strong>
                 </button>
-                <button
-                  class="admin-button"
-                  type="button"
-                  [disabled]="isFetching || isKeyProcessing(item.userCode)"
-                  [attr.aria-busy]="isKeyProcessing(item.userCode, 'extend')"
-                  (click)="extendAccessKey(item)"
-                >
-                  @if (isKeyProcessing(item.userCode, 'extend')) {
-                    <app-loading-spinner [label]="texts().admin.panel.extending" />
-                  } @else {
-                    {{ texts().admin.panel.extend30 }}
-                  }
-                </button>
-              </div>
-            </article>
-          }
-        </div>
-      </section>
+              }
+            </div>
 
-      <app-admin-gallery-manager />
+            @if (!isVipRequestsFetching && !vipRequestsErrorMessage && filteredVipRequests().length === 0) {
+              <p class="admin-empty">{{ texts().admin.vipRequests.empty }}</p>
+            }
+
+            <div class="admin-grid admin-grid--requests">
+              @for (request of filteredVipRequests(); track trackVipRequest($index, request)) {
+                <article class="admin-card admin-request">
+                  <div class="admin-card__top">
+                    <div>
+                      <strong>{{ request.title || texts().vipBoard.untitled }}</strong>
+                      <span>{{ request.displayName }} · {{ maskUserCode(request.userCode) }}</span>
+                    </div>
+                    <span class="admin-status" [ngClass]="'admin-status--' + request.status">
+                      {{ vipRequestStatusLabel(request.status) }}
+                    </span>
+                  </div>
+
+                  <dl class="admin-details">
+                    <div>
+                      <dt>{{ texts().admin.vipRequests.userCode }}</dt>
+                      <dd>{{ maskUserCode(request.userCode) }}</dd>
+                    </div>
+                    <div>
+                      <dt>{{ texts().admin.panel.createdAt }}</dt>
+                      <dd>{{ request.createdAt }}</dd>
+                    </div>
+                    <div>
+                      <dt>{{ texts().admin.panel.updatedAt }}</dt>
+                      <dd>{{ request.updatedAt }}</dd>
+                    </div>
+                    <div class="admin-details__wide">
+                      <dt>{{ texts().vipBoard.messageField }}</dt>
+                      <dd>{{ request.message || '-' }}</dd>
+                    </div>
+                    <div class="admin-details__wide">
+                      <dt>{{ texts().vipBoard.adminReply }}</dt>
+                      <dd>{{ request.adminReply || '-' }}</dd>
+                    </div>
+                  </dl>
+
+                  @if (request.status === 'pending') {
+                    <div class="admin-actions">
+                      <button
+                        class="admin-button"
+                        type="button"
+                        [disabled]="isVipRequestProcessing(request.id)"
+                        [attr.aria-busy]="isVipRequestProcessing(request.id)"
+                        (click)="completeVipRequest(request)"
+                      >
+                        @if (isVipRequestProcessing(request.id)) {
+                          <app-loading-spinner [label]="texts().admin.vipRequests.completing" />
+                        } @else {
+                          {{ texts().admin.vipRequests.completeAction }}
+                        }
+                      </button>
+                    </div>
+                  }
+                </article>
+              }
+            </div>
+          </section>
+        }
+
+        @case ('gallery') {
+          <app-admin-gallery-manager />
+        }
+      }
     }
   </div>
 </section>

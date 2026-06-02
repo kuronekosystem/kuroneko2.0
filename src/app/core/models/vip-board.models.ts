@@ -1,4 +1,4 @@
-export type VipIllustrationRequestStatus = 'pending' | 'reviewed' | 'accepted' | 'rejected' | 'done';
+export type VipIllustrationRequestStatus = 'pending' | 'reviewed' | 'accepted' | 'rejected' | 'done' | 'disabled';
 
 export interface VipIllustrationRequest {
   id: number;

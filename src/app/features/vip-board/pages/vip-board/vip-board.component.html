@@ -1,6 +1,7 @@
 <section class="vip-board">
   <div class="vip-board__shell">
     <app-back-button fallbackRoute="/gallery" />
+    <app-vip-session-status class="vip-board__vip-session" />
 
     <div class="vip-board__header">
       <div>
@@ -9,6 +10,8 @@
         @if (session) {
           <p class="vip-board__copy">{{ session.displayName }}{{ texts().vipBoard.welcome }}</p>
         }
+        <p class="vip-board__copy">{{ texts().vipBoard.description }}</p>
+        <p class="vip-board__privacy">{{ texts().vipBoard.privacyNotice }}</p>
       </div>
       <a class="vip-board__link" routerLink="/gallery">{{ texts().vipBoard.galleryLink }}</a>
     </div>
@@ -25,7 +28,7 @@
         <textarea id="message" name="message" [(ngModel)]="message" required></textarea>
       </div>
 
-      <button class="vip-board__submit" type="submit" [disabled]="isSubmitting" [attr.aria-busy]="isSubmitting">
+      <button class="vip-board__submit" type="submit" [disabled]="isSubmitting || isFormInvalid()" [attr.aria-busy]="isSubmitting">
         @if (isSubmitting) {
           <app-loading-spinner [label]="texts().vipBoard.submitting" />
         } @else {
@@ -39,32 +42,58 @@
       <div class="vip-board__message vip-board__message--error" role="alert">{{ errorMessage }}</div>
     }
 
-    @if (successMessage) {
-      <div class="vip-board__message" role="status">{{ successMessage }}</div>
-    }
-
     <div class="vip-board__list">
-      <h2>{{ texts().vipBoard.listTitle }}</h2>
+      <div class="vip-board__list-header">
+        <div>
+          <h2>{{ texts().vipBoard.myRequests }}</h2>
+          @if (lastUpdatedAt) {
+            <span class="vip-board__last-updated">{{ lastUpdatedLabel() }}</span>
+          }
+        </div>
+        <button
+          class="vip-board__refresh"
+          type="button"
+          [disabled]="isLoading"
+          [attr.aria-busy]="isLoading"
+          (click)="refreshSuggestions()"
+        >
+          @if (isLoading) {
+            <app-loading-spinner [label]="texts().vipBoard.loading" />
+          } @else {
+            {{ texts().refresh.action }}
+          }
+        </button>
+      </div>
 
       @if (isLoading) {
         <app-loading-message
-          title="リクエストボードを読み込んでいます。"
-          description="少しお待ちください…"
+          [title]="texts().vipBoard.loading"
+          [description]="texts().loadingMessage.slowDescription"
           [spinnerLabel]="texts().vipBoard.loading"
         />
       }
 
       @if (!isLoading && suggestions.length === 0) {
-        <p class="vip-board__empty">{{ texts().vipBoard.empty }}</p>
+        <p class="vip-board__empty">{{ texts().vipBoard.noMyRequests }}</p>
       }
 
       @for (item of suggestions; track item.id) {
         <article class="vip-board__item">
           <div class="vip-board__item-header">
             <strong>{{ item.title || texts().vipBoard.untitled }}</strong>
-            <span>{{ texts().vipBoard.status }}: {{ statusLabel(item.status) }}</span>
+            <span>{{ texts().vipBoard.statusLabel }}: {{ statusLabel(item.status) }}</span>
           </div>
           <p>{{ item.message }}</p>
+          <dl class="vip-board__meta">
+            <div>
+              <dt>{{ texts().vipBoard.createdAt }}</dt>
+              <dd>{{ item.createdAt || '-' }}</dd>
+            </div>
+            <div>
+              <dt>{{ texts().vipBoard.updatedAt }}</dt>
+              <dd>{{ item.updatedAt || '-' }}</dd>
+            </div>
+          </dl>
           @if (item.adminReply) {
             <div class="vip-board__reply">
               <strong>{{ texts().vipBoard.adminReply }}</strong>

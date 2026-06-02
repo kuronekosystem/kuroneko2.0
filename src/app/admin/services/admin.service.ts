@@ -12,7 +12,11 @@ import {
   AdminGalleryItemPayload,
   AdminGalleryItemResponse,
   AdminGalleryItemsResponse,
-  AdminMutationResponse
+  AdminMutationResponse,
+  AdminVipIllustrationRequest,
+  AdminVipIllustrationRequestUpdateResponse,
+  AdminVipIllustrationRequestsResponse,
+  VipIllustrationRequestStatus
 } from '../models/admin.types';
 
 @Injectable({
@@ -114,6 +118,57 @@ export class AdminService {
 
     this.assertSuccess(response, '追加確認に変更できませんでした。');
     return response;
+  }
+
+  async disableAccessRequest(credentials: AdminCredentials, requestCode: string, notes: string): Promise<AdminMutationResponse> {
+    const response = await this.api.post<AdminMutationResponse>({
+      action: 'admin_disable_access_request',
+      adminUsername: credentials.adminUsername,
+      adminPassword: credentials.adminPassword,
+      requestCode,
+      notes
+    });
+
+    this.assertSuccess(response, 'Could not hide access request.');
+    return response;
+  }
+
+  async adminGetVipIllustrationRequests(credentials: AdminCredentials): Promise<AdminVipIllustrationRequest[]> {
+    const response = await this.api.post<AdminVipIllustrationRequestsResponse>({
+      action: 'admin_get_vip_illustration_requests',
+      adminUsername: credentials.adminUsername,
+      adminPassword: credentials.adminPassword
+    });
+
+    this.assertSuccess(response, 'Could not load VIP illustration requests.');
+    return response.items ?? [];
+  }
+
+  async getVipIllustrationRequests(credentials: AdminCredentials): Promise<AdminVipIllustrationRequest[]> {
+    return this.adminGetVipIllustrationRequests(credentials);
+  }
+
+  async adminUpdateVipIllustrationRequestStatus(
+    credentials: AdminCredentials,
+    id: number,
+    status: VipIllustrationRequestStatus,
+    adminReply: string
+  ): Promise<AdminVipIllustrationRequest> {
+    const response = await this.api.post<AdminVipIllustrationRequestUpdateResponse>({
+      action: 'admin_update_vip_illustration_request_status',
+      adminUsername: credentials.adminUsername,
+      adminPassword: credentials.adminPassword,
+      id,
+      status,
+      adminReply
+    });
+
+    this.assertSuccess(response, 'Could not update VIP illustration request.');
+    if (!response.item) {
+      throw new Error('Could not read updated VIP illustration request.');
+    }
+
+    return response.item;
   }
 
   async disableAccessKey(credentials: AdminCredentials, userCode: string, notes: string): Promise<AdminMutationResponse> {

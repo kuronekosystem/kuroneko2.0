@@ -10,6 +10,24 @@
       {{ texts().accessCenter.introLine3 }}
     </p>
 
+    <app-vip-session-status class="access-vip-session" />
+
+    <section class="access-activity-hours" aria-labelledby="access-activity-hours-title">
+      <p class="access-activity-hours__kicker" id="access-activity-hours-title">
+        {{ texts().access.activityHours.title }}
+      </p>
+      <p class="access-activity-hours__description">
+        {{ texts().access.activityHours.description }}
+      </p>
+      <div class="access-activity-hours__slots">
+        <span>{{ texts().access.activityHours.daytime }}</span>
+        <span>{{ texts().access.activityHours.nighttime }}</span>
+      </div>
+      <p class="access-activity-hours__note">
+        {{ texts().access.activityHours.note }}
+      </p>
+    </section>
+
     <div class="access-grid">
       <a class="access-card" routerLink="/access/login">
         <strong>{{ texts().accessCenter.loginTitle }}</strong>

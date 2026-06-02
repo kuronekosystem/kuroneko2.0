@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { getUserFriendlyApiErrorMessage } from '../../../core/errors/api-error-message';
@@ -18,6 +18,7 @@ import { LoadingSpinnerComponent } from '../../../shared/components/loading-spin
 })
 export class AccessRequestComponent {
   private readonly accessService = inject(AccessService);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly languageService = inject(LanguageService);
   readonly texts = this.languageService.texts;
 
@@ -28,16 +29,24 @@ export class AccessRequestComponent {
   contact = '';
   proofText = '';
   isSubmitting = false;
+  hasAttemptedSubmit = false;
   errorMessage = '';
   result: AccessRequestResponse | null = null;
+
+  isFormInvalid(): boolean {
+    return this.validateForm() !== null;
+  }
 
   async submit(): Promise<void> {
     this.errorMessage = '';
     this.result = null;
+    this.hasAttemptedSubmit = true;
+    this.markViewForUpdate();
 
     const validationError = this.validateForm();
     if (validationError) {
       this.errorMessage = validationError;
+      this.markViewForUpdate();
       return;
     }
 
@@ -51,25 +60,32 @@ export class AccessRequestComponent {
     };
 
     this.isSubmitting = true;
+    this.markViewForUpdate();
 
     try {
       const response = await this.accessService.requestAccess(payload);
       if (!response.success) {
-        this.errorMessage = getUserFriendlyApiErrorMessage(response.message, 'request');
+        this.errorMessage = getUserFriendlyApiErrorMessage(response.message, 'request', this.texts().apiErrors);
         return;
       }
 
       this.result = response;
     } catch (error) {
       const message = error instanceof Error ? error.message : undefined;
-      this.errorMessage = getUserFriendlyApiErrorMessage(message, 'request');
+      this.errorMessage = getUserFriendlyApiErrorMessage(message, 'request', this.texts().apiErrors);
     } finally {
       this.isSubmitting = false;
+      this.markViewForUpdate();
     }
+  }
+
+  private markViewForUpdate(): void {
+    this.changeDetectorRef.markForCheck();
   }
 
   private validateForm(): string | null {
     if (!this.displayName.trim()) return this.texts().accessRequest.validateInput;
+    if (this.source !== 'fanbox' && this.source !== 'paypal') return this.texts().accessRequest.validateInput;
 
     if (this.source === 'fanbox' && !this.fanboxName.trim() && !this.proofText.trim()) {
       return this.texts().accessRequest.fanboxValidation;

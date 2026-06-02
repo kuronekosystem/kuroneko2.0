@@ -13,6 +13,36 @@ export const DEFAULT_LANGUAGE: LanguageCode = 'ja';
 export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
   ja: {
     languageSelector: { label: '言語', ariaLabel: '言語を選択' },
+    appLoader: {
+      brand: 'クロネコエンジン',
+      latinBrand: 'KuroNekoEngine',
+      initializing: 'システム初期化中...',
+      accessingMainframe: 'メインフレームにアクセス中...',
+      decodingSecurity: 'セキュリティを解読中...',
+      welcome: 'ようこそ、クロネコオペレーター'
+    },
+    loadingMessage: {
+      loading: '読み込み中...',
+      processing: '処理中...',
+      slowTitle: '通信に時間がかかっています。',
+      slowDescription: 'そのまま少しお待ちください。',
+      verySlowTitle: 'まだ処理を続けています。',
+      verySlowDescription: '通信環境やシステムの応答により時間がかかる場合があります。'
+    },
+    refresh: {
+      action: '更新',
+      success: '更新しました',
+      lastUpdated: '最終更新'
+    },
+    modal: {
+      ok: 'OK',
+      cancel: 'キャンセル',
+      close: '閉じる',
+      success: '完了',
+      error: 'エラー',
+      info: 'お知らせ',
+      confirm: '確認'
+    },
     linktree: {
       ariaLabel: 'Kuroneko links',
       eyebrow: 'クロネコプロジェクト',
@@ -50,6 +80,17 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       accept: '\u540c\u610f\u3057\u3066\u9032\u3080',
       cancel: '\u623b\u308b',
       shortNotice: '\u3053\u306e\u5148\u306f\u652f\u63f4\u8005\u5411\u3051\u306e\u9650\u5b9a\u30a8\u30ea\u30a2\u3067\u3059\u300218\u6b73\u4ee5\u4e0a\u306e\u65b9\u306e\u307f\u304a\u9032\u307f\u304f\u3060\u3055\u3044\u3002'
+    },
+    access: {
+      activityHours: {
+        title: '【活動時間の目安】',
+        shortTitle: '⏰ 活動時間（目安・JST）',
+        shortDescription: '※固定ではありません。順次確認しています。',
+        description: 'クロネコエンジンは常時対応ではありませんが、通常は日本時間（JST）の以下の時間帯に活動しています。',
+        daytime: '☀ 11:30 ～ 13:30',
+        nighttime: '🌙 20:00 ～ 24:00',
+        note: '上記はあくまで目安です。仕事や制作状況によって活動時間は変動します。メッセージやVIPリクエストはすべて確認していますので、返信や対応まで少しお待ちいただく場合があります。ご理解とご協力をお願いいたします。'
+      }
     },
     accessCenter: {
       eyebrow: 'VIPアクセスセンター',
@@ -141,24 +182,50 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       empty: '現在、表示できるギャラリー項目はありません。',
       page: 'ページ',
       previous: '前へ',
-      next: '次へ'
+      next: '次へ',
+      zoom: {
+        label: 'ズーム',
+        in: '拡大',
+        out: '縮小',
+        reset: 'リセット'
+      },
+      close: '閉じる',
+      toggleUi: 'UIを切り替える',
+      imageLoading: '画像を読み込んでいます…',
+      highResolutionNotice: '高解像度画像のため、少し時間がかかる場合があります。',
+      imageLoadError: '画像を読み込めませんでした。'
     },
     vipBoard: {
       eyebrow: 'VIPリクエストボード',
       title: '次に見たいイラストのアイデアを送ることができます。',
       welcome: 'さん、限定ボードへようこそ。',
-      description: '次に見たいイラストのアイデアを送ることができます。',
+      description: 'ここでは、今後見てみたいクロネコくんのイラスト案を送ることができます。すべてのリクエストが採用されるわけではありませんが、制作の参考として大切に確認します。',
+      privacyNotice: '他のユーザーのリクエスト内容は公開されません。',
       titleField: 'タイトル（任意）',
       messageField: 'リクエスト内容',
       submit: '送信する',
       submitting: '送信中...',
-      sent: 'リクエストを送信しました。',
+      requestReceived: 'リクエストを受け付けました。',
+      requestReceivedDescription: '内容を確認し、必要に応じて今後の制作の参考にさせていただきます。',
+      sent: 'リクエストを受け付けました。',
       sendFailed: '送信できませんでした。しばらくしてからもう一度お試しください。',
-      listTitle: 'みんなのリクエスト',
+      listTitle: '自分のリクエスト',
+      myRequests: '自分のリクエスト',
+      noMyRequests: 'まだ自分のリクエストはありません。',
       loading: '読み込み中...',
-      empty: 'まだリクエストはありません。',
+      empty: 'まだ自分のリクエストはありません。',
       untitled: '無題のリクエスト',
-      status: '状態',
+      statusLabel: '状態',
+      createdAt: '作成日',
+      updatedAt: '更新日',
+      status: {
+        pending: '確認中',
+        reviewed: '確認済み',
+        accepted: '採用候補',
+        rejected: '対応できません',
+        done: '完了',
+        disabled: '非表示'
+      },
       adminReply: '管理者からの返信',
       galleryLink: 'ギャラリーへ',
       messageRequired: 'リクエスト内容を入力してください。',
@@ -169,8 +236,17 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       back: '戻る',
       toLinktree: 'LinkTreeへ戻る'
     },
+    vipSession: {
+      active: 'VIPセッション中',
+      loggedInAs: 'ログイン中:',
+      accessId: 'アクセスID:',
+      goToGallery: '▶ ギャラリーへ移動',
+      logout: 'ログアウト',
+      confirmLogout: 'VIPセッションを終了しますか？'
+    },
     notFound: {
       code: '404',
+      eyebrow: 'KURONEKO SYSTEM ERROR',
       title: 'ページが見つかりません',
       message: 'お探しのページは存在しないか、移動された可能性があります。',
       subMessage: 'クロネコエンジンの入口へ戻ってください。',
@@ -190,7 +266,50 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       done: '完了',
       unknown: '不明'
     },
+    apiErrors: {
+      invalidAccess: 'アクセスIDまたはキーが正しくありません。',
+      expiredAccess: 'アクセス期限が切れています。',
+      inactiveAccess: 'このアクセスキーは現在有効ではありません。',
+      requestNotFound: '申請コードが見つかりませんでした。',
+      adminInvalidCredentials: '管理者IDまたはキーが正しくありません。',
+      gallerySessionInvalid: 'セッションの確認ができませんでした。\nもう一度ログインしてください。',
+      requestSystem: '申請を送信できませんでした。しばらくしてからもう一度お試しください。',
+      statusSystem: '申請を確認できませんでした。しばらくしてからもう一度お試しください。',
+      gallerySystem: 'ギャラリーを読み込めませんでした。\nアクセス情報を確認して、もう一度お試しください。',
+      adminSystem: '管理パネルに接続できませんでした。',
+      vipBoardSystem: '送信できませんでした。しばらくしてからもう一度お試しください。',
+      accessSystem: 'システムエラーが発生しました。しばらくしてからもう一度お試しください。'
+    },
     admin: {
+      tabs: {
+        requests: 'アクセス申請',
+        keys: '発行済みアクセスキー',
+        gallery: 'ギャラリー管理',
+        vipRequests: 'VIPリクエスト'
+      },
+      requestFilters: {
+        all: 'すべて',
+        pending: '確認待ち',
+        approved: '承認済み',
+        rejected: '却下済み',
+        needMoreInfo: '追加確認',
+        disabled: '非表示'
+      },
+      requestState: {
+        pendingHelp: 'この申請は確認待ちです。内容を確認して対応を選択してください。',
+        needMoreInfoHelp: '追加情報の確認が必要です。内容が揃った場合のみ再確認してください。',
+        approvedHelp: 'この申請はすでに承認されています。発行済みアクセスキーを確認してください。',
+        rejectedHelp: 'この申請は却下済みです。必要な場合のみ管理メモを確認してください。',
+        disabledHelp: 'この申請は管理者により非表示になっています。'
+      },
+      requestActions: {
+        reviewAgain: '再確認する',
+        alreadyApproved: 'すでに承認済みです。',
+        alreadyRejected: 'すでに却下済みです。',
+        alreadyDisabled: 'この申請は非表示です。',
+        confirmAction: '本当にこの操作を実行しますか？',
+        confirmDisableRequest: 'この申請を非表示にしますか？'
+      },
       panel: {
         product: 'クロネコエンジン 2.0',
         title: '管理パネル',
@@ -198,7 +317,7 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         sessionActive: '管理者セッション有効',
         sessionInactive: '管理者未認証',
         logout: 'ログアウト',
-        loginKicker: 'Admin Access',
+        loginKicker: '管理者アクセス',
         loginTitle: '管理者ログイン',
         loginDescription: '申請とアクセスキーを管理するため、管理者IDとキーを入力してください。',
         adminUsername: '管理者ID',
@@ -206,9 +325,9 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         loginSubmit: '管理者として入る',
         authenticating: '認証中...',
         loadingTitle: '管理データを読み込んでいます。',
-        loadingDescription: 'Google Sheets との通信に少し時間がかかる場合があります…',
+        loadingDescription: 'データの取得に少し時間がかかる場合があります…',
         processing: '処理中...',
-        requestsKicker: 'Access Requests',
+        requestsKicker: 'アクセス申請',
         requestsTitle: 'アクセス申請一覧',
         refresh: '更新',
         countSuffix: '件',
@@ -218,6 +337,7 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         source: '支援方法',
         contact: '連絡先',
         createdAt: '作成日',
+        updatedAt: '更新日',
         proofText: '確認用メモ',
         adminNotes: '管理メモ',
         durationDays: '有効日数',
@@ -229,7 +349,7 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         shareIssued: 'この情報をユーザーに共有してください。',
         copyUserCode: 'userCode コピー',
         copyAccessKey: 'accessKey コピー',
-        keysKicker: 'Issued Keys',
+        keysKicker: '発行済みキー',
         keysTitle: '発行済みアクセスキー',
         emptyKeys: '発行済みアクセスキーはありません。',
         accessKey: 'アクセスキー',
@@ -241,6 +361,7 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         copy: 'コピー',
         disabling: '無効化中...',
         disable: '無効化',
+        disableRequest: '申請を非表示',
         extending: '延長中...',
         extend30: '30日延長',
         inputCredentials: '管理者IDと管理者キーを入力してください。',
@@ -254,6 +375,8 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         updateFailed: '更新できませんでした。',
         disableSuccess: 'アクセスキーを無効化しました。',
         disableFailed: '無効化できませんでした。',
+        disableRequestSuccess: '申請を非表示にしました。',
+        disableRequestFailed: '申請を非表示にできませんでした。',
         extendSuccess: 'アクセス期限を延長しました。',
         extendFailed: '延長できませんでした。',
         copySuccess: '{label}をコピーしました。',
@@ -262,14 +385,30 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         authenticationRequired: '管理者認証が必要です。',
         dataLoadFailed: '管理データを読み込めませんでした。'
       },
+      vipRequests: {
+        kicker: 'VIPリクエスト',
+        title: 'VIPリクエスト',
+        filtersLabel: 'VIPリクエストのフィルター',
+        empty: '現在、VIPリクエストはありません。',
+        userCode: 'アクセスID',
+        loading: 'VIPリクエストを読み込んでいます...',
+        error: 'VIPリクエストを読み込めませんでした。',
+        completeAction: '完了にする',
+        completing: '処理中...',
+        confirmComplete: 'このVIPリクエストを完了にしますか？',
+        adminReplyPrompt: '管理者からの返信（任意）',
+        completeSuccess: 'VIPリクエストを完了にしました。',
+        updateFailed: 'VIPリクエストを更新できませんでした。'
+      },
       gallery: {
+        kicker: 'ギャラリー項目',
         title: 'ギャラリー管理',
         subtitle: '限定ギャラリーに表示する画像URLを管理します。',
         add: '新規追加',
         save: '保存',
         cancelEdit: '編集をキャンセル',
         edit: '編集',
-        disable: '非公開にする',
+        disable: '非公開',
         delete: '削除',
         copyUrl: 'URLコピー',
         titleField: 'タイトル',
@@ -283,6 +422,14 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         filterAll: 'すべて',
         filterActive: '公開',
         filterDisabled: '非公開',
+        search: '検索',
+        searchPlaceholder: 'タイトル、説明、カテゴリ、IDで検索',
+        filtersLabel: 'ギャラリーフィルター',
+        allCategories: 'すべてのカテゴリ',
+        results: '件',
+        page: 'ページ',
+        previous: '前へ',
+        next: '次へ',
         loading: 'ギャラリー項目を読み込んでいます...',
         empty: '登録済みのギャラリー項目はありません。',
         saving: '保存中...',
@@ -304,6 +451,36 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
   },
   es: {
     languageSelector: { label: 'Idioma', ariaLabel: 'Seleccionar idioma' },
+    appLoader: {
+      brand: 'クロネコエンジン',
+      latinBrand: 'KuroNekoEngine',
+      initializing: 'Inicializando sistema...',
+      accessingMainframe: 'Accediendo al mainframe...',
+      decodingSecurity: 'Decodificando seguridad...',
+      welcome: 'Bienvenido, operador Kuroneko'
+    },
+    loadingMessage: {
+      loading: 'Cargando...',
+      processing: 'Procesando...',
+      slowTitle: 'La comunicación está tardando.',
+      slowDescription: 'Espera un momento más.',
+      verySlowTitle: 'El proceso sigue en curso.',
+      verySlowDescription: 'La red o la respuesta del sistema pueden tardar más de lo normal.'
+    },
+    refresh: {
+      action: 'Actualizar',
+      success: 'Actualizado',
+      lastUpdated: 'Última actualización'
+    },
+    modal: {
+      ok: 'OK',
+      cancel: 'Cancelar',
+      close: 'Cerrar',
+      success: 'Completado',
+      error: 'Error',
+      info: 'Aviso',
+      confirm: 'Confirmación'
+    },
     linktree: {
       ariaLabel: 'Enlaces de Kuroneko',
       eyebrow: 'クロネコプロジェクト',
@@ -341,6 +518,17 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       accept: 'Aceptar y continuar',
       cancel: 'Volver',
       shortNotice: 'Esta es un \u00e1rea exclusiva para apoyadores. Solo mayores de 18 a\u00f1os pueden continuar.'
+    },
+    access: {
+      activityHours: {
+        title: 'Horario de actividad orientativo',
+        shortTitle: '⏰ Horario de actividad (JST)',
+        shortDescription: 'No es un horario fijo. Revisamos los mensajes por orden.',
+        description: 'クロネコエンジン no atiende de forma permanente, pero normalmente revisa mensajes y solicitudes en estos horarios de Japon (JST).',
+        daytime: '☀ 11:30 - 13:30',
+        nighttime: '🌙 20:00 - 24:00',
+        note: 'Estos horarios son solo una referencia. Pueden variar segun el trabajo o el estado de produccion. Revisamos todos los mensajes y solicitudes VIP, asi que la respuesta o atencion puede tardar un poco. Gracias por tu comprension y apoyo.'
+      }
     },
     accessCenter: {
       eyebrow: 'Centro de acceso VIP',
@@ -432,24 +620,50 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       empty: 'No hay imágenes disponibles',
       page: 'Página',
       previous: 'Anterior',
-      next: 'Siguiente'
+      next: 'Siguiente',
+      zoom: {
+        label: 'Zoom',
+        in: 'Acercar',
+        out: 'Alejar',
+        reset: 'Restablecer'
+      },
+      close: 'Cerrar',
+      toggleUi: 'Mostrar u ocultar interfaz',
+      imageLoading: 'Cargando imagen…',
+      highResolutionNotice: 'Las imágenes de alta resolución pueden tardar un poco.',
+      imageLoadError: 'No se pudo cargar la imagen.'
     },
     vipBoard: {
       eyebrow: 'Tablero de solicitudes VIP',
       title: 'Puedes enviar ideas para la próxima ilustración.',
       welcome: ', bienvenido al tablero exclusivo.',
-      description: 'Puedes enviar ideas para la próxima ilustración.',
+      description: 'Aquí puedes enviar ideas de ilustraciones de クロネコくん que te gustaría ver en el futuro. No todas las solicitudes serán realizadas, pero serán revisadas cuidadosamente como referencia creativa.',
+      privacyNotice: 'Las solicitudes de otros usuarios no se muestran públicamente.',
       titleField: 'Título (opcional)',
       messageField: 'Contenido de la solicitud',
       submit: 'Enviar',
       submitting: 'Enviando...',
-      sent: 'Solicitud enviada.',
+      requestReceived: 'Tu solicitud fue recibida.',
+      requestReceivedDescription: 'El contenido será revisado y podrá ser considerado como referencia para futuras ilustraciones.',
+      sent: 'Tu solicitud fue recibida.',
       sendFailed: 'No se pudo enviar.',
-      listTitle: 'Solicitudes de todos',
+      listTitle: 'Mis solicitudes',
+      myRequests: 'Mis solicitudes',
+      noMyRequests: 'Todavía no tienes solicitudes.',
       loading: 'Cargando...',
-      empty: 'Todavía no hay solicitudes.',
+      empty: 'Todavía no tienes solicitudes.',
       untitled: 'Solicitud sin título',
-      status: 'Estado',
+      statusLabel: 'Estado',
+      createdAt: 'Creada',
+      updatedAt: 'Actualizada',
+      status: {
+        pending: 'En revisión',
+        reviewed: 'Revisada',
+        accepted: 'Candidata',
+        rejected: 'No se puede realizar',
+        done: 'Completada',
+        disabled: 'Oculta'
+      },
       adminReply: 'Respuesta del administrador',
       galleryLink: 'Ir a la galería',
       messageRequired: 'Ingresa el contenido de la solicitud.',
@@ -460,8 +674,17 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       back: 'Volver',
       toLinktree: 'Volver al LinkTree'
     },
+    vipSession: {
+      active: 'Sesión VIP activa',
+      loggedInAs: 'Sesión:',
+      accessId: 'ID de acceso:',
+      goToGallery: '▶ Ir a la galería',
+      logout: 'Cerrar sesión',
+      confirmLogout: '¿Quieres cerrar la sesión VIP?'
+    },
     notFound: {
       code: '404',
+      eyebrow: 'ERROR DEL SISTEMA KURONEKO',
       title: 'Página no encontrada',
       message: 'La página que buscas no existe o pudo haber sido movida.',
       subMessage: 'Vuelve a la entrada principal de クロネコエンジン.',
@@ -481,7 +704,50 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       done: 'Completado',
       unknown: 'Desconocido'
     },
+    apiErrors: {
+      invalidAccess: 'El ID de acceso o la clave no son correctos.',
+      expiredAccess: 'El acceso está vencido.',
+      inactiveAccess: 'Esta clave de acceso no está activa.',
+      requestNotFound: 'No se encontró el código de solicitud.',
+      adminInvalidCredentials: 'El ID o la clave de administrador no son correctos.',
+      gallerySessionInvalid: 'No se pudo verificar la sesión.\nInicia sesión otra vez.',
+      requestSystem: 'No se pudo enviar la solicitud. Inténtalo nuevamente más tarde.',
+      statusSystem: 'No se pudo consultar la solicitud. Inténtalo nuevamente más tarde.',
+      gallerySystem: 'No se pudo cargar la galería.\nRevisa tus datos de acceso e inténtalo otra vez.',
+      adminSystem: 'No se pudo conectar con el panel de administración.',
+      vipBoardSystem: 'No se pudo enviar. Inténtalo nuevamente más tarde.',
+      accessSystem: 'Ocurrió un error del sistema. Inténtalo nuevamente más tarde.'
+    },
     admin: {
+      tabs: {
+        requests: 'Solicitudes de acceso',
+        keys: 'Claves de acceso emitidas',
+        gallery: 'Gestión de galería',
+        vipRequests: 'Solicitudes VIP'
+      },
+      requestFilters: {
+        all: 'Todo',
+        pending: 'Pendiente',
+        approved: 'Aprobado',
+        rejected: 'Rechazado',
+        needMoreInfo: 'Necesita más información',
+        disabled: 'Ocultas'
+      },
+      requestState: {
+        pendingHelp: 'Esta solicitud está pendiente. Revisa el contenido y elige una acción.',
+        needMoreInfoHelp: 'Esta solicitud necesita información adicional. Vuelve a revisarla solo cuando el contenido esté completo.',
+        approvedHelp: 'Esta solicitud ya fue aprobada. Revisa la clave emitida en la pestaña de claves.',
+        rejectedHelp: 'Esta solicitud fue rechazada. Revisa las notas admin solo si hace falta.',
+        disabledHelp: 'Esta solicitud fue ocultada por administración.'
+      },
+      requestActions: {
+        reviewAgain: 'Revisar de nuevo',
+        alreadyApproved: 'Esta solicitud ya está aprobada.',
+        alreadyRejected: 'Esta solicitud ya fue rechazada.',
+        alreadyDisabled: 'Esta solicitud está oculta.',
+        confirmAction: '¿Seguro que quieres ejecutar esta acción?',
+        confirmDisableRequest: '¿Seguro que quieres ocultar esta solicitud?'
+      },
       panel: {
         product: 'クロネコエンジン 2.0',
         title: 'Panel de administración',
@@ -497,7 +763,7 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         loginSubmit: 'Entrar como admin',
         authenticating: 'Autenticando...',
         loadingTitle: 'Cargando datos de administración.',
-        loadingDescription: 'La comunicación con Google Sheets puede tardar un poco…',
+        loadingDescription: 'La carga de datos puede tardar un poco…',
         processing: 'Procesando...',
         requestsKicker: 'Solicitudes',
         requestsTitle: 'Solicitudes de acceso',
@@ -509,6 +775,7 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         source: 'Fuente',
         contact: 'Contacto',
         createdAt: 'Creado',
+        updatedAt: 'Actualizado',
         proofText: 'Comprobante / nota',
         adminNotes: 'Notas admin',
         durationDays: 'Dias de acceso',
@@ -531,7 +798,8 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         showKey: 'Mostrar clave',
         copy: 'Copiar',
         disabling: 'Desactivando...',
-        disable: 'Desactivar',
+        disable: 'Deshabilitar',
+        disableRequest: 'Ocultar solicitud',
         extending: 'Extendiendo...',
         extend30: 'Extender 30 dias',
         inputCredentials: 'Ingresa el ID y la clave admin.',
@@ -544,7 +812,9 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         needMoreInfoSuccess: 'Solicitud marcada como requiere mas informacion.',
         updateFailed: 'No se pudo actualizar.',
         disableSuccess: 'Clave de acceso desactivada.',
-        disableFailed: 'No se pudo desactivar.',
+        disableFailed: 'No se pudo deshabilitar.',
+        disableRequestSuccess: 'Solicitud ocultada.',
+        disableRequestFailed: 'No se pudo ocultar la solicitud.',
         extendSuccess: 'Vigencia de acceso extendida.',
         extendFailed: 'No se pudo extender.',
         copySuccess: '{label} copiado.',
@@ -553,14 +823,30 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         authenticationRequired: 'Se requiere autenticacion admin.',
         dataLoadFailed: 'No se pudieron cargar los datos de administración.'
       },
+      vipRequests: {
+        kicker: 'Solicitudes VIP',
+        title: 'Solicitudes VIP',
+        filtersLabel: 'Filtros de solicitudes VIP',
+        empty: 'No hay solicitudes VIP para mostrar.',
+        userCode: 'ID de acceso',
+        loading: 'Cargando solicitudes VIP...',
+        error: 'No se pudieron cargar las solicitudes VIP.',
+        completeAction: 'Marcar como completada',
+        completing: 'Procesando...',
+        confirmComplete: '¿Quieres marcar esta solicitud VIP como completada?',
+        adminReplyPrompt: 'Respuesta del administrador (opcional)',
+        completeSuccess: 'Solicitud VIP marcada como completada.',
+        updateFailed: 'No se pudo actualizar la solicitud VIP.'
+      },
       gallery: {
+        kicker: 'Elementos de galería',
         title: 'Gestion de galeria',
         subtitle: 'Administra por URL las imagenes que se muestran en la galeria exclusiva.',
         add: 'Agregar nuevo',
         save: 'Guardar',
         cancelEdit: 'Cancelar edicion',
         edit: 'Editar',
-        disable: 'Poner privado',
+        disable: 'Deshabilitar',
         delete: 'Eliminar',
         copyUrl: 'Copiar URL',
         titleField: 'Titulo',
@@ -574,6 +860,14 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         filterAll: 'Todo',
         filterActive: 'Publicado',
         filterDisabled: 'Privado',
+        search: 'Buscar',
+        searchPlaceholder: 'Buscar por título, descripción, categoría o ID',
+        filtersLabel: 'Filtros de galería',
+        allCategories: 'Todas las categorías',
+        results: 'resultados',
+        page: 'Página',
+        previous: 'Anterior',
+        next: 'Siguiente',
         loading: 'Cargando elementos de galeria...',
         empty: 'No hay elementos de galeria registrados.',
         saving: 'Guardando...',
@@ -595,6 +889,36 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
   },
   en: {
     languageSelector: { label: 'Language', ariaLabel: 'Select language' },
+    appLoader: {
+      brand: 'クロネコエンジン',
+      latinBrand: 'KuroNekoEngine',
+      initializing: 'Initializing system...',
+      accessingMainframe: 'Accessing mainframe...',
+      decodingSecurity: 'Decoding security...',
+      welcome: 'Welcome, Kuroneko operator'
+    },
+    loadingMessage: {
+      loading: 'Loading...',
+      processing: 'Processing...',
+      slowTitle: 'Communication is taking longer than usual.',
+      slowDescription: 'Please wait a little longer.',
+      verySlowTitle: 'The process is still running.',
+      verySlowDescription: 'Network conditions or system response time may cause delays.'
+    },
+    refresh: {
+      action: 'Refresh',
+      success: 'Updated',
+      lastUpdated: 'Last updated'
+    },
+    modal: {
+      ok: 'OK',
+      cancel: 'Cancel',
+      close: 'Close',
+      success: 'Done',
+      error: 'Error',
+      info: 'Notice',
+      confirm: 'Confirm'
+    },
     linktree: {
       ariaLabel: 'Kuroneko links',
       eyebrow: 'クロネコプロジェクト',
@@ -632,6 +956,17 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       accept: 'Accept and continue',
       cancel: 'Go back',
       shortNotice: 'This is an exclusive supporter area. Only users aged 18 or older may continue.'
+    },
+    access: {
+      activityHours: {
+        title: 'Activity hours guide',
+        shortTitle: '⏰ Activity hours (JST)',
+        shortDescription: 'This is not a fixed schedule. Messages are reviewed in order.',
+        description: 'クロネコエンジン is not monitored at all times, but messages and requests are usually reviewed during these Japan Standard Time (JST) windows.',
+        daytime: '☀ 11:30 - 13:30',
+        nighttime: '🌙 20:00 - 24:00',
+        note: 'These hours are only a guide. They may change depending on work or production status. All messages and VIP requests are reviewed, so replies or handling may take a little time. Thank you for your understanding and support.'
+      }
     },
     accessCenter: {
       eyebrow: 'VIP access center',
@@ -723,24 +1058,50 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       empty: 'No images available',
       page: 'Page',
       previous: 'Previous',
-      next: 'Next'
+      next: 'Next',
+      zoom: {
+        label: 'Zoom',
+        in: 'Zoom in',
+        out: 'Zoom out',
+        reset: 'Reset'
+      },
+      close: 'Close',
+      toggleUi: 'Toggle UI',
+      imageLoading: 'Loading image…',
+      highResolutionNotice: 'High-resolution images may take a moment.',
+      imageLoadError: 'Could not load image.'
     },
     vipBoard: {
       eyebrow: 'VIP request board',
       title: 'You can send ideas for the next illustration.',
       welcome: ', welcome to the exclusive board.',
-      description: 'You can send ideas for the next illustration.',
+      description: 'Here you can send ideas for future クロネコくん illustrations you would like to see. Not every request will be produced, but each one will be reviewed carefully as creative reference.',
+      privacyNotice: 'Other users’ requests are not displayed publicly.',
       titleField: 'Title (optional)',
       messageField: 'Request content',
       submit: 'Send',
       submitting: 'Sending...',
-      sent: 'Request sent.',
+      requestReceived: 'Your request has been received.',
+      requestReceivedDescription: 'It will be reviewed and may be considered as a reference for future illustrations.',
+      sent: 'Your request has been received.',
       sendFailed: 'Could not send.',
-      listTitle: 'Everyone’s requests',
+      listTitle: 'My requests',
+      myRequests: 'My requests',
+      noMyRequests: 'You have not sent any requests yet.',
       loading: 'Loading...',
-      empty: 'There are no requests yet.',
+      empty: 'You have not sent any requests yet.',
       untitled: 'Untitled request',
-      status: 'Status',
+      statusLabel: 'Status',
+      createdAt: 'Created',
+      updatedAt: 'Updated',
+      status: {
+        pending: 'Under review',
+        reviewed: 'Reviewed',
+        accepted: 'Candidate',
+        rejected: 'Not available',
+        done: 'Completed',
+        disabled: 'Hidden'
+      },
       adminReply: 'Admin reply',
       galleryLink: 'Go to gallery',
       messageRequired: 'Enter the request content.',
@@ -751,8 +1112,17 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       back: 'Back',
       toLinktree: 'Back to LinkTree'
     },
+    vipSession: {
+      active: 'VIP session active',
+      loggedInAs: 'Logged in as:',
+      accessId: 'Access ID:',
+      goToGallery: '▶ Go to gallery',
+      logout: 'Log out',
+      confirmLogout: 'End the VIP session?'
+    },
     notFound: {
       code: '404',
+      eyebrow: 'KURONEKO SYSTEM ERROR',
       title: 'Page not found',
       message: 'The page you are looking for does not exist or may have been moved.',
       subMessage: 'Please return to the entrance of クロネコエンジン.',
@@ -772,7 +1142,50 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       done: 'Done',
       unknown: 'Unknown'
     },
+    apiErrors: {
+      invalidAccess: 'The access ID or key is incorrect.',
+      expiredAccess: 'This access has expired.',
+      inactiveAccess: 'This access key is not active.',
+      requestNotFound: 'The request code was not found.',
+      adminInvalidCredentials: 'The admin ID or key is incorrect.',
+      gallerySessionInvalid: 'The session could not be verified.\nPlease log in again.',
+      requestSystem: 'The request could not be sent. Please try again later.',
+      statusSystem: 'The request could not be checked. Please try again later.',
+      gallerySystem: 'The gallery could not be loaded.\nCheck your access details and try again.',
+      adminSystem: 'Could not connect to the admin panel.',
+      vipBoardSystem: 'Could not send. Please try again later.',
+      accessSystem: 'A system error occurred. Please try again later.'
+    },
     admin: {
+      tabs: {
+        requests: 'Access requests',
+        keys: 'Issued access keys',
+        gallery: 'Gallery management',
+        vipRequests: 'VIP requests'
+      },
+      requestFilters: {
+        all: 'All',
+        pending: 'Pending',
+        approved: 'Approved',
+        rejected: 'Rejected',
+        needMoreInfo: 'Needs more information',
+        disabled: 'Hidden'
+      },
+      requestState: {
+        pendingHelp: 'This request is pending. Review the details and choose an action.',
+        needMoreInfoHelp: 'This request needs additional information. Review it again only when the details are complete.',
+        approvedHelp: 'This request has already been approved. Check the issued access key in the keys tab.',
+        rejectedHelp: 'This request has been rejected. Check admin notes only if needed.',
+        disabledHelp: 'This request has been hidden by admin.'
+      },
+      requestActions: {
+        reviewAgain: 'Review again',
+        alreadyApproved: 'This request is already approved.',
+        alreadyRejected: 'Already rejected.',
+        alreadyDisabled: 'This request is hidden.',
+        confirmAction: 'Are you sure you want to run this action?',
+        confirmDisableRequest: 'Are you sure you want to hide this request?'
+      },
       panel: {
         product: 'クロネコエンジン 2.0',
         title: 'Admin panel',
@@ -788,7 +1201,7 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         loginSubmit: 'Enter as admin',
         authenticating: 'Authenticating...',
         loadingTitle: 'Loading admin data.',
-        loadingDescription: 'Communication with Google Sheets may take a little time…',
+        loadingDescription: 'Loading data may take a little time…',
         processing: 'Processing...',
         requestsKicker: 'Access Requests',
         requestsTitle: 'Access requests',
@@ -800,6 +1213,7 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         source: 'Source',
         contact: 'Contact',
         createdAt: 'Created',
+        updatedAt: 'Updated',
         proofText: 'Proof note',
         adminNotes: 'Admin notes',
         durationDays: 'Duration days',
@@ -823,6 +1237,7 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         copy: 'Copy',
         disabling: 'Disabling...',
         disable: 'Disable',
+        disableRequest: 'Hide request',
         extending: 'Extending...',
         extend30: 'Extend 30 days',
         inputCredentials: 'Enter the admin ID and key.',
@@ -835,7 +1250,9 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         needMoreInfoSuccess: 'Request marked as needing more information.',
         updateFailed: 'Could not update.',
         disableSuccess: 'Access key disabled.',
-        disableFailed: 'Could not disable the access key.',
+        disableFailed: 'Disable failed.',
+        disableRequestSuccess: 'Request hidden.',
+        disableRequestFailed: 'Could not hide the request.',
         extendSuccess: 'Access period extended.',
         extendFailed: 'Could not extend the access period.',
         copySuccess: '{label} copied.',
@@ -844,14 +1261,30 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         authenticationRequired: 'Admin authentication is required.',
         dataLoadFailed: 'Could not load admin data.'
       },
+      vipRequests: {
+        kicker: 'VIP requests',
+        title: 'VIP requests',
+        filtersLabel: 'VIP request filters',
+        empty: 'There are no VIP requests to show.',
+        userCode: 'Access ID',
+        loading: 'Loading VIP requests...',
+        error: 'Could not load VIP requests.',
+        completeAction: 'Mark as done',
+        completing: 'Processing...',
+        confirmComplete: 'Mark this VIP request as done?',
+        adminReplyPrompt: 'Admin reply (optional)',
+        completeSuccess: 'VIP request marked as done.',
+        updateFailed: 'Could not update VIP request.'
+      },
       gallery: {
+        kicker: 'Gallery items',
         title: 'Gallery management',
         subtitle: 'Manage exclusive gallery images by URL.',
         add: 'Add new',
         save: 'Save',
         cancelEdit: 'Cancel edit',
         edit: 'Edit',
-        disable: 'Make private',
+        disable: 'Disable',
         delete: 'Delete',
         copyUrl: 'Copy URL',
         titleField: 'Title',
@@ -865,6 +1298,14 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         filterAll: 'All',
         filterActive: 'Published',
         filterDisabled: 'Private',
+        search: 'Search',
+        searchPlaceholder: 'Search by title, description, category, or ID',
+        filtersLabel: 'Gallery filters',
+        allCategories: 'All categories',
+        results: 'results',
+        page: 'Page',
+        previous: 'Previous',
+        next: 'Next',
         loading: 'Loading gallery items...',
         empty: 'There are no gallery items registered.',
         saving: 'Saving...',
@@ -886,6 +1327,36 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
   },
   'zh-CN': {
     languageSelector: { label: '语言', ariaLabel: '选择语言' },
+    appLoader: {
+      brand: 'クロネコエンジン',
+      latinBrand: 'KuroNekoEngine',
+      initializing: '正在初始化系统...',
+      accessingMainframe: '正在访问主框架...',
+      decodingSecurity: '正在解析安全层...',
+      welcome: '欢迎，Kuroneko 操作员'
+    },
+    loadingMessage: {
+      loading: '加载中...',
+      processing: '处理中...',
+      slowTitle: '通信时间较长。',
+      slowDescription: '请再稍等片刻。',
+      verySlowTitle: '仍在继续处理。',
+      verySlowDescription: '网络环境或系统响应可能导致处理时间较长。'
+    },
+    refresh: {
+      action: '刷新',
+      success: '已刷新',
+      lastUpdated: '最后更新'
+    },
+    modal: {
+      ok: 'OK',
+      cancel: '取消',
+      close: '关闭',
+      success: '完成',
+      error: '错误',
+      info: '通知',
+      confirm: '确认'
+    },
     linktree: {
       ariaLabel: 'Kuroneko 链接',
       eyebrow: 'クロネコプロジェクト',
@@ -923,6 +1394,17 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       accept: '\u540c\u610f\u5e76\u7ee7\u7eed',
       cancel: '\u8fd4\u56de',
       shortNotice: '\u8fd9\u91cc\u662f\u652f\u6301\u8005\u9650\u5b9a\u533a\u57df\u3002\u4ec5\u965018\u5c81\u4ee5\u4e0a\u7528\u6237\u7ee7\u7eed\u3002'
+    },
+    access: {
+      activityHours: {
+        title: '【活动时间参考】',
+        shortTitle: '⏰ 活动时间（参考・JST）',
+        shortDescription: '※时间并非固定。我们会依次确认。',
+        description: 'クロネコエンジン并非全天候响应，但通常会在日本时间（JST）的以下时间段进行活动。',
+        daytime: '☀ 11:30 - 13:30',
+        nighttime: '🌙 20:00 - 24:00',
+        note: '以上仅为参考。根据工作和创作情况，活动时间可能会变动。消息和VIP请求都会被确认，因此回复或处理可能需要一些时间。感谢你的理解与配合。'
+      }
     },
     accessCenter: {
       eyebrow: 'VIP 访问中心',
@@ -1014,24 +1496,50 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       empty: '暂无图片',
       page: '页码',
       previous: '上一页',
-      next: '下一页'
+      next: '下一页',
+      zoom: {
+        label: '缩放',
+        in: '放大',
+        out: '缩小',
+        reset: '重置'
+      },
+      close: '关闭',
+      toggleUi: '切换界面',
+      imageLoading: '正在加载图片…',
+      highResolutionNotice: '高分辨率图片可能需要一些时间。',
+      imageLoadError: '无法加载图片。'
     },
     vipBoard: {
       eyebrow: 'VIP 请求看板',
       title: '你可以发送下一张插画的想法。',
       welcome: '，欢迎来到限定看板。',
-      description: '你可以发送下一张插画的想法。',
+      description: '你可以在这里发送今后想看到的 クロネコくん 插画想法。并非所有请求都会被采用，但都会作为创作参考被认真查看。',
+      privacyNotice: '其他用户的请求内容不会公开显示。',
       titleField: '标题（可选）',
       messageField: '请求内容',
       submit: '发送',
       submitting: '发送中...',
-      sent: '请求已发送。',
+      requestReceived: '你的请求已收到。',
+      requestReceivedDescription: '内容将被查看，并可能作为今后插画创作的参考。',
+      sent: '你的请求已收到。',
       sendFailed: '无法发送。',
-      listTitle: '大家的请求',
+      listTitle: '我的请求',
+      myRequests: '我的请求',
+      noMyRequests: '你还没有发送请求。',
       loading: '加载中...',
-      empty: '还没有请求。',
+      empty: '你还没有发送请求。',
       untitled: '无标题请求',
-      status: '状态',
+      statusLabel: '状态',
+      createdAt: '创建时间',
+      updatedAt: '更新时间',
+      status: {
+        pending: '确认中',
+        reviewed: '已确认',
+        accepted: '候选采用',
+        rejected: '暂无法处理',
+        done: '已完成',
+        disabled: '已隐藏'
+      },
       adminReply: '管理员回复',
       galleryLink: '前往画廊',
       messageRequired: '请输入请求内容。',
@@ -1042,8 +1550,17 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       back: '返回',
       toLinktree: '返回 LinkTree'
     },
+    vipSession: {
+      active: 'VIP 会话中',
+      loggedInAs: '当前用户:',
+      accessId: '访问 ID:',
+      goToGallery: '▶ 前往画廊',
+      logout: '退出登录',
+      confirmLogout: '要结束 VIP 会话吗？'
+    },
     notFound: {
       code: '404',
+      eyebrow: 'KURONEKO 系统错误',
       title: '页面未找到',
       message: '你要查找的页面不存在，或可能已被移动。',
       subMessage: '请返回 クロネコエンジン 的入口。',
@@ -1063,7 +1580,50 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       done: '完成',
       unknown: '未知'
     },
+    apiErrors: {
+      invalidAccess: '访问 ID 或密钥不正确。',
+      expiredAccess: '访问权限已过期。',
+      inactiveAccess: '此访问密钥当前未启用。',
+      requestNotFound: '未找到申请代码。',
+      adminInvalidCredentials: '管理员 ID 或密钥不正确。',
+      gallerySessionInvalid: '无法确认会话。\n请重新登录。',
+      requestSystem: '无法发送申请。请稍后再试。',
+      statusSystem: '无法确认申请。请稍后再试。',
+      gallerySystem: '无法加载画廊。\n请确认访问信息后重试。',
+      adminSystem: '无法连接到管理面板。',
+      vipBoardSystem: '无法发送。请稍后再试。',
+      accessSystem: '发生系统错误。请稍后再试。'
+    },
     admin: {
+      tabs: {
+        requests: '访问申请',
+        keys: '已发行访问密钥',
+        gallery: '图库管理',
+        vipRequests: 'VIP 请求'
+      },
+      requestFilters: {
+        all: '全部',
+        pending: '待确认',
+        approved: '已批准',
+        rejected: '已拒绝',
+        needMoreInfo: '需要更多信息',
+        disabled: '已隐藏'
+      },
+      requestState: {
+        pendingHelp: '此申请正在等待确认。请检查内容并选择处理方式。',
+        needMoreInfoHelp: '此申请需要补充信息。请在内容完整后再重新确认。',
+        approvedHelp: '此申请已批准。请在访问密钥标签中确认已发行的密钥。',
+        rejectedHelp: '此申请已拒绝。仅在需要时查看管理员备注。',
+        disabledHelp: '此申请已被管理员隐藏。'
+      },
+      requestActions: {
+        reviewAgain: '重新确认',
+        alreadyApproved: '此申请已批准。',
+        alreadyRejected: '此申请已拒绝。',
+        alreadyDisabled: '此申请已隐藏。',
+        confirmAction: '确定要执行此操作吗？',
+        confirmDisableRequest: '确定要隐藏此申请吗？'
+      },
       panel: {
         product: 'クロネコエンジン 2.0',
         title: '管理面板',
@@ -1071,7 +1631,7 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         sessionActive: '管理员会话有效',
         sessionInactive: '管理员未认证',
         logout: '退出登录',
-        loginKicker: 'Admin Access',
+        loginKicker: '管理员访问',
         loginTitle: '管理员登录',
         loginDescription: '请输入管理员 ID 和密钥以管理申请和访问密钥。',
         adminUsername: '管理员 ID',
@@ -1079,9 +1639,9 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         loginSubmit: '以管理员身份进入',
         authenticating: '认证中...',
         loadingTitle: '正在读取管理数据。',
-        loadingDescription: '与 Google Sheets 通信可能需要一些时间…',
+        loadingDescription: '加载数据可能需要一些时间…',
         processing: '处理中...',
-        requestsKicker: 'Access Requests',
+        requestsKicker: '访问申请',
         requestsTitle: '访问申请列表',
         refresh: '刷新',
         countSuffix: '项',
@@ -1091,6 +1651,7 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         source: '支持方式',
         contact: '联系方式',
         createdAt: '创建时间',
+        updatedAt: '更新时间',
         proofText: '验证备注',
         adminNotes: '管理员备注',
         durationDays: '有效天数',
@@ -1102,7 +1663,7 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         shareIssued: '请将这些信息分享给用户。',
         copyUserCode: '复制 userCode',
         copyAccessKey: '复制 accessKey',
-        keysKicker: 'Issued Keys',
+        keysKicker: '已发行密钥',
         keysTitle: '已发行访问密钥',
         emptyKeys: '没有已发行的访问密钥。',
         accessKey: '访问密钥',
@@ -1113,7 +1674,8 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         showKey: '显示密钥',
         copy: '复制',
         disabling: '停用中...',
-        disable: '停用',
+        disable: '禁用',
+        disableRequest: '隐藏申请',
         extending: '延长中...',
         extend30: '延长 30 天',
         inputCredentials: '请输入管理员 ID 和管理员密钥。',
@@ -1126,7 +1688,9 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         needMoreInfoSuccess: '已更改为需要补充信息。',
         updateFailed: '无法更新。',
         disableSuccess: '访问密钥已停用。',
-        disableFailed: '无法停用。',
+        disableFailed: '无法禁用。',
+        disableRequestSuccess: '申请已隐藏。',
+        disableRequestFailed: '无法隐藏申请。',
         extendSuccess: '访问期限已延长。',
         extendFailed: '无法延长。',
         copySuccess: '已复制 {label}。',
@@ -1135,14 +1699,30 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         authenticationRequired: '需要管理员认证。',
         dataLoadFailed: '无法读取管理数据。'
       },
+      vipRequests: {
+        kicker: 'VIP 请求',
+        title: 'VIP 请求',
+        filtersLabel: 'VIP 请求筛选',
+        empty: '当前没有 VIP 请求。',
+        userCode: '访问 ID',
+        loading: '正在加载 VIP 请求...',
+        error: '无法加载 VIP 请求。',
+        completeAction: '标记为完成',
+        completing: '处理中...',
+        confirmComplete: '要将此 VIP 请求标记为完成吗？',
+        adminReplyPrompt: '管理员回复（可选）',
+        completeSuccess: 'VIP 请求已标记为完成。',
+        updateFailed: '无法更新 VIP 请求。'
+      },
       gallery: {
+        kicker: '图库项目',
         title: '图库管理',
         subtitle: '通过 URL 管理限定图库中显示的图片。',
         add: '新增',
         save: '保存',
         cancelEdit: '取消编辑',
         edit: '编辑',
-        disable: '设为私密',
+        disable: '设为非公开',
         delete: '删除',
         copyUrl: '复制 URL',
         titleField: '标题',
@@ -1156,6 +1736,14 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         filterAll: '全部',
         filterActive: '公开',
         filterDisabled: '私密',
+        search: '搜索',
+        searchPlaceholder: '按标题、说明、分类或 ID 搜索',
+        filtersLabel: '图库筛选',
+        allCategories: '所有分类',
+        results: '项结果',
+        page: '页',
+        previous: '上一页',
+        next: '下一页',
         loading: '正在读取图库项目...',
         empty: '没有已注册的图库项目。',
         saving: '保存中...',
@@ -1177,6 +1765,36 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
   },
   'zh-TW': {
     languageSelector: { label: '語言', ariaLabel: '選擇語言' },
+    appLoader: {
+      brand: 'クロネコエンジン',
+      latinBrand: 'KuroNekoEngine',
+      initializing: '正在初始化系統...',
+      accessingMainframe: '正在存取主框架...',
+      decodingSecurity: '正在解析安全層...',
+      welcome: '歡迎，Kuroneko 操作員'
+    },
+    loadingMessage: {
+      loading: '載入中...',
+      processing: '處理中...',
+      slowTitle: '通訊時間較長。',
+      slowDescription: '請再稍等片刻。',
+      verySlowTitle: '仍在繼續處理。',
+      verySlowDescription: '網路環境或系統回應可能導致處理時間較長。'
+    },
+    refresh: {
+      action: '重新整理',
+      success: '已重新整理',
+      lastUpdated: '最後更新'
+    },
+    modal: {
+      ok: 'OK',
+      cancel: '取消',
+      close: '關閉',
+      success: '完成',
+      error: '錯誤',
+      info: '通知',
+      confirm: '確認'
+    },
     linktree: {
       ariaLabel: 'Kuroneko 連結',
       eyebrow: 'クロネコプロジェクト',
@@ -1214,6 +1832,17 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       accept: '\u540c\u610f\u4e26\u7e7c\u7e8c',
       cancel: '\u8fd4\u56de',
       shortNotice: '\u9019\u88e1\u662f\u652f\u6301\u8005\u9650\u5b9a\u5340\u57df\u3002\u50c5\u965018\u6b72\u4ee5\u4e0a\u4f7f\u7528\u8005\u7e7c\u7e8c\u3002'
+    },
+    access: {
+      activityHours: {
+        title: '【活動時間參考】',
+        shortTitle: '⏰ 活動時間（參考・JST）',
+        shortDescription: '※時間並非固定。我們會依序確認。',
+        description: 'クロネコエンジン並非全天候回應，但通常會在日本時間（JST）的以下時段進行活動。',
+        daytime: '☀ 11:30 - 13:30',
+        nighttime: '🌙 20:00 - 24:00',
+        note: '以上僅供參考。依工作與創作狀況，活動時間可能會變動。訊息和VIP請求都會被確認，因此回覆或處理可能需要一些時間。感謝你的理解與配合。'
+      }
     },
     accessCenter: {
       eyebrow: 'VIP 存取中心',
@@ -1305,24 +1934,50 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       empty: '目前沒有圖片',
       page: '頁面',
       previous: '上一頁',
-      next: '下一頁'
+      next: '下一頁',
+      zoom: {
+        label: '縮放',
+        in: '放大',
+        out: '縮小',
+        reset: '重設'
+      },
+      close: '關閉',
+      toggleUi: '切換介面',
+      imageLoading: '正在載入圖片…',
+      highResolutionNotice: '高解析度圖片可能需要一些時間。',
+      imageLoadError: '無法載入圖片。'
     },
     vipBoard: {
       eyebrow: 'VIP 請求看板',
       title: '你可以傳送下一張插畫的想法。',
       welcome: '，歡迎來到限定看板。',
-      description: '你可以傳送下一張插畫的想法。',
+      description: '你可以在這裡傳送今後想看到的 クロネコくん 插畫想法。並非所有請求都會被採用，但都會作為創作參考被仔細確認。',
+      privacyNotice: '其他使用者的請求內容不會公開顯示。',
       titleField: '標題（選填）',
       messageField: '請求內容',
       submit: '傳送',
       submitting: '傳送中...',
-      sent: '請求已傳送。',
+      requestReceived: '你的請求已收到。',
+      requestReceivedDescription: '內容將被確認，並可能作為今後插畫創作的參考。',
+      sent: '你的請求已收到。',
       sendFailed: '無法傳送。',
-      listTitle: '大家的請求',
+      listTitle: '我的請求',
+      myRequests: '我的請求',
+      noMyRequests: '你還沒有傳送請求。',
       loading: '載入中...',
-      empty: '還沒有請求。',
+      empty: '你還沒有傳送請求。',
       untitled: '無標題請求',
-      status: '狀態',
+      statusLabel: '狀態',
+      createdAt: '建立時間',
+      updatedAt: '更新時間',
+      status: {
+        pending: '確認中',
+        reviewed: '已確認',
+        accepted: '候選採用',
+        rejected: '暫無法處理',
+        done: '已完成',
+        disabled: '已隱藏'
+      },
       adminReply: '管理者回覆',
       galleryLink: '前往畫廊',
       messageRequired: '請輸入請求內容。',
@@ -1333,8 +1988,17 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       back: '返回',
       toLinktree: '返回 LinkTree'
     },
+    vipSession: {
+      active: 'VIP 連線中',
+      loggedInAs: '目前使用者:',
+      accessId: '存取 ID:',
+      goToGallery: '▶ 前往畫廊',
+      logout: '登出',
+      confirmLogout: '要結束 VIP 連線嗎？'
+    },
     notFound: {
       code: '404',
+      eyebrow: 'KURONEKO 系統錯誤',
       title: '找不到頁面',
       message: '你要尋找的頁面不存在，或可能已被移動。',
       subMessage: '請返回 クロネコエンジン 的入口。',
@@ -1354,7 +2018,50 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       done: '完成',
       unknown: '未知'
     },
+    apiErrors: {
+      invalidAccess: '存取 ID 或金鑰不正確。',
+      expiredAccess: '存取權限已過期。',
+      inactiveAccess: '此存取金鑰目前未啟用。',
+      requestNotFound: '找不到申請代碼。',
+      adminInvalidCredentials: '管理員 ID 或金鑰不正確。',
+      gallerySessionInvalid: '無法確認工作階段。\n請重新登入。',
+      requestSystem: '無法傳送申請。請稍後再試。',
+      statusSystem: '無法確認申請。請稍後再試。',
+      gallerySystem: '無法載入畫廊。\n請確認存取資訊後重試。',
+      adminSystem: '無法連接管理面板。',
+      vipBoardSystem: '無法傳送。請稍後再試。',
+      accessSystem: '發生系統錯誤。請稍後再試。'
+    },
     admin: {
+      tabs: {
+        requests: '存取申請',
+        keys: '已發行存取金鑰',
+        gallery: '圖庫管理',
+        vipRequests: 'VIP 請求'
+      },
+      requestFilters: {
+        all: '全部',
+        pending: '待確認',
+        approved: '已核准',
+        rejected: '已拒絕',
+        needMoreInfo: '需要更多資訊',
+        disabled: '已隱藏'
+      },
+      requestState: {
+        pendingHelp: '此申請正在等待確認。請檢查內容並選擇處理方式。',
+        needMoreInfoHelp: '此申請需要補充資訊。請在內容完整後再重新確認。',
+        approvedHelp: '此申請已核准。請在存取金鑰分頁確認已發行的金鑰。',
+        rejectedHelp: '此申請已拒絕。僅在需要時查看管理備註。',
+        disabledHelp: '此申請已被管理員隱藏。'
+      },
+      requestActions: {
+        reviewAgain: '重新確認',
+        alreadyApproved: '此申請已核准。',
+        alreadyRejected: '此申請已拒絕。',
+        alreadyDisabled: '此申請已隱藏。',
+        confirmAction: '確定要執行此操作嗎？',
+        confirmDisableRequest: '確定要隱藏此申請嗎？'
+      },
       panel: {
         product: 'クロネコエンジン 2.0',
         title: '管理面板',
@@ -1362,7 +2069,7 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         sessionActive: '管理員工作階段有效',
         sessionInactive: '管理員未認證',
         logout: '登出',
-        loginKicker: 'Admin Access',
+        loginKicker: '管理員存取',
         loginTitle: '管理員登入',
         loginDescription: '請輸入管理員 ID 和金鑰以管理申請和存取金鑰。',
         adminUsername: '管理員 ID',
@@ -1370,9 +2077,9 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         loginSubmit: '以管理員身分進入',
         authenticating: '認證中...',
         loadingTitle: '正在讀取管理資料。',
-        loadingDescription: '與 Google Sheets 通訊可能需要一些時間…',
+        loadingDescription: '載入資料可能需要一些時間…',
         processing: '處理中...',
-        requestsKicker: 'Access Requests',
+        requestsKicker: '存取申請',
         requestsTitle: '存取申請列表',
         refresh: '重新整理',
         countSuffix: '項',
@@ -1382,6 +2089,7 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         source: '支援方式',
         contact: '聯絡方式',
         createdAt: '建立時間',
+        updatedAt: '更新時間',
         proofText: '驗證備註',
         adminNotes: '管理員備註',
         durationDays: '有效天數',
@@ -1393,7 +2101,7 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         shareIssued: '請將這些資訊分享給使用者。',
         copyUserCode: '複製 userCode',
         copyAccessKey: '複製 accessKey',
-        keysKicker: 'Issued Keys',
+        keysKicker: '已發行金鑰',
         keysTitle: '已發行存取金鑰',
         emptyKeys: '沒有已發行的存取金鑰。',
         accessKey: '存取金鑰',
@@ -1405,6 +2113,7 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         copy: '複製',
         disabling: '停用中...',
         disable: '停用',
+        disableRequest: '隱藏申請',
         extending: '延長中...',
         extend30: '延長 30 天',
         inputCredentials: '請輸入管理員 ID 和管理員金鑰。',
@@ -1418,6 +2127,8 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         updateFailed: '無法更新。',
         disableSuccess: '存取金鑰已停用。',
         disableFailed: '無法停用。',
+        disableRequestSuccess: '申請已隱藏。',
+        disableRequestFailed: '無法隱藏申請。',
         extendSuccess: '存取期限已延長。',
         extendFailed: '無法延長。',
         copySuccess: '已複製 {label}。',
@@ -1426,14 +2137,30 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         authenticationRequired: '需要管理員認證。',
         dataLoadFailed: '無法讀取管理資料。'
       },
+      vipRequests: {
+        kicker: 'VIP 請求',
+        title: 'VIP 請求',
+        filtersLabel: 'VIP 請求篩選',
+        empty: '目前沒有 VIP 請求。',
+        userCode: '存取 ID',
+        loading: '正在載入 VIP 請求...',
+        error: '無法載入 VIP 請求。',
+        completeAction: '標記為完成',
+        completing: '處理中...',
+        confirmComplete: '要將此 VIP 請求標記為完成嗎？',
+        adminReplyPrompt: '管理員回覆（選填）',
+        completeSuccess: 'VIP 請求已標記為完成。',
+        updateFailed: '無法更新 VIP 請求。'
+      },
       gallery: {
+        kicker: '圖庫項目',
         title: '圖庫管理',
         subtitle: '透過 URL 管理限定圖庫中顯示的圖片。',
         add: '新增',
         save: '儲存',
         cancelEdit: '取消編輯',
         edit: '編輯',
-        disable: '設為私密',
+        disable: '設為非公開',
         delete: '刪除',
         copyUrl: '複製 URL',
         titleField: '標題',
@@ -1447,6 +2174,14 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
         filterAll: '全部',
         filterActive: '公開',
         filterDisabled: '私密',
+        search: '搜尋',
+        searchPlaceholder: '依標題、說明、分類或 ID 搜尋',
+        filtersLabel: '圖庫篩選',
+        allCategories: '所有分類',
+        results: '筆結果',
+        page: '頁',
+        previous: '上一頁',
+        next: '下一頁',
         loading: '正在讀取圖庫項目...',
         empty: '沒有已註冊的圖庫項目。',
         saving: '儲存中...',

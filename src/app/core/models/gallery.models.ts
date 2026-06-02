@@ -34,6 +34,7 @@ export interface SlideshowState {
   active: boolean;
   index: number;
   zoomed: boolean;
+  zoomLevel: number;
   uiHidden: boolean;
   manualHidden: boolean;
   pan: PanState;
@@ -65,6 +66,7 @@ export const DEFAULT_SLIDESHOW_STATE: SlideshowState = {
   active: false,
   index: 0,
   zoomed: false,
+  zoomLevel: 1,
   uiHidden: false,
   manualHidden: false,
   pan: { ...DEFAULT_PAN_STATE },

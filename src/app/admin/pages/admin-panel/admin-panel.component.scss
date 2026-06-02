@@ -108,6 +108,43 @@
   justify-self: center;
 }
 
+.admin-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.admin-tab,
+.admin-filter-card {
+  display: grid;
+  align-items: center;
+  min-width: 0;
+  padding: 0.85rem 1rem;
+  color: #e0e0e0;
+  border: 1px solid rgba(255, 215, 0, 0.28);
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(20, 20, 20, 0.86), rgba(10, 10, 10, 0.96));
+  font: inherit;
+  font-weight: 800;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+}
+
+.admin-tab:hover,
+.admin-filter-card:hover {
+  border-color: rgba(255, 215, 0, 0.48);
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.18);
+}
+
+.admin-tab.active,
+.admin-filter-card.active {
+  color: #ffd700;
+  border-color: #ffd700;
+  box-shadow: 0 0 22px rgba(255, 215, 0, 0.2);
+}
+
 .admin-section {
   padding: clamp(1rem, 2vw, 1.35rem);
   overflow: hidden;
@@ -284,6 +321,31 @@
   margin-top: 1rem;
 }
 
+.admin-request-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.admin-filter-card {
+  gap: 0.35rem;
+  min-height: 5.25rem;
+}
+
+.admin-filter-card span {
+  color: rgba(224, 224, 224, 0.78);
+  font-size: 0.82rem;
+  overflow-wrap: anywhere;
+}
+
+.admin-filter-card strong {
+  color: #ffd700;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
 .admin-details {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -317,6 +379,10 @@
 .admin-actions--stack {
   align-items: stretch;
   display: grid;
+  padding: 0.85rem;
+  border: 1px solid rgba(255, 215, 0, 0.14);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .admin-actions .admin-button {
@@ -345,6 +411,23 @@
   display: grid;
   gap: 0.55rem;
   margin-top: 1rem;
+}
+
+.admin-request__help,
+.admin-request__processed {
+  margin: 0.85rem 0 0;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid rgba(255, 215, 0, 0.16);
+  border-radius: 8px;
+  color: rgba(224, 224, 224, 0.78);
+  background: rgba(0, 0, 0, 0.24);
+  line-height: 1.55;
+}
+
+.admin-request__processed {
+  color: #ffd700;
+  border-color: rgba(255, 215, 0, 0.28);
+  background: rgba(255, 215, 0, 0.06);
 }
 
 .admin-approved code,
@@ -430,8 +513,14 @@
   }
 
   .admin-button,
-  .admin-filter {
+  .admin-filter,
+  .admin-tab,
+  .admin-filter-card {
     width: 100%;
+  }
+
+  .admin-tabs {
+    grid-template-columns: 1fr;
   }
 
   .admin-actions {

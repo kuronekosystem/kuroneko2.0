@@ -48,6 +48,6 @@ export class VipBoardService {
       throw new Error(response.message || this.texts().vipBoard.loadFailed);
     }
 
-    return response.items ?? [];
+    return (response.items ?? []).filter(item => item.userCode === credentials.userCode);
   }
 }

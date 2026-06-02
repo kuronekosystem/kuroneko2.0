@@ -1,20 +1,22 @@
 import { Page, Route } from '@playwright/test';
 
 type ApiPayload = Record<string, unknown>;
+type MockApiResponseFactory = (action: string, payload: ApiPayload, url: URL) => ApiPayload | undefined;
 
 const apiPattern = 'https://script.google.com/**';
 
-export async function mockKuronekoApi(page: Page): Promise<void> {
+export async function mockKuronekoApi(page: Page, responseOverride?: MockApiResponseFactory): Promise<void> {
   await page.route(apiPattern, async route => {
     const request = route.request();
     const url = new URL(request.url());
     const payload = await readPayload(route);
     const action = readAction(url, payload);
+    const response = responseOverride?.(action, payload, url) ?? responseFor(action, url, payload);
 
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify(responseFor(action, url, payload))
+      body: JSON.stringify(response)
     });
   });
 }

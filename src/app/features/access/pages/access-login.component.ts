@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { getUserFriendlyApiErrorMessage } from '../../../core/errors/api-error-message';
@@ -18,6 +18,7 @@ import { LoadingSpinnerComponent } from '../../../shared/components/loading-spin
 })
 export class AccessLoginComponent {
   private readonly accessService = inject(AccessService);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly languageService = inject(LanguageService);
   private readonly router = inject(Router);
   readonly texts = this.languageService.texts;
@@ -28,23 +29,29 @@ export class AccessLoginComponent {
   errorMessage = '';
   successMessage = '';
 
+  isFormInvalid(): boolean {
+    return !this.userCode.trim() || !this.accessKey.trim();
+  }
+
   async submit(): Promise<void> {
     this.errorMessage = '';
     this.successMessage = '';
+    this.markViewForUpdate();
 
-    if (!this.userCode.trim() || !this.accessKey.trim()) {
+    if (this.isFormInvalid()) {
       this.errorMessage = this.texts().accessLogin.validateInput;
+      this.markViewForUpdate();
       return;
     }
 
     this.isSubmitting = true;
+    this.markViewForUpdate();
 
     try {
       const response = await this.accessService.validateAccess(this.userCode, this.accessKey);
       if (
         response.success &&
         response.userCode &&
-        response.accessKey &&
         response.displayName &&
         response.source &&
         response.status &&
@@ -53,7 +60,7 @@ export class AccessLoginComponent {
       ) {
         const session: VipAccessSession = {
           userCode: response.userCode,
-          accessKey: response.accessKey,
+          accessKey: response.accessKey ?? this.accessKey.trim(),
           displayName: response.displayName,
           source: response.source,
           status: response.status,
@@ -63,17 +70,23 @@ export class AccessLoginComponent {
 
         this.accessService.saveSession(session);
         this.successMessage = `${this.texts().accessLogin.accessApproved} ${this.texts().accessLogin.movingToGallery}`;
+        this.markViewForUpdate();
         await new Promise(resolve => setTimeout(resolve, 450));
         await this.router.navigate(['/gallery']);
         return;
       }
 
-      this.errorMessage = getUserFriendlyApiErrorMessage(response.message, 'access');
+      this.errorMessage = getUserFriendlyApiErrorMessage(response.message, 'access', this.texts().apiErrors);
     } catch (error) {
       const message = error instanceof Error ? error.message : undefined;
-      this.errorMessage = getUserFriendlyApiErrorMessage(message, 'access');
+      this.errorMessage = getUserFriendlyApiErrorMessage(message, 'access', this.texts().apiErrors);
     } finally {
       this.isSubmitting = false;
+      this.markViewForUpdate();
     }
+  }
+
+  private markViewForUpdate(): void {
+    this.changeDetectorRef.markForCheck();
   }
 }

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
@@ -10,19 +10,24 @@ import { FooterComponent } from '../../../../layout/footer/footer.component';
 import { NavbarComponent } from '../../../../layout/navbar/navbar.component';
 import { BackButtonComponent } from '../../../../shared/components/back-button/back-button.component';
 import { LoadingMessageComponent } from '../../../../shared/components/loading-message/loading-message.component';
+import { LoadingSpinnerComponent } from '../../../../shared/components/loading-spinner/loading-spinner.component';
+import { VipSessionStatusComponent } from '../../../../shared/components/vip-session-status/vip-session-status.component';
+import { ModalService } from '../../../../shared/services/modal.service';
 import { GalleryService } from '../../services/gallery.service';
 import { SlideshowComponent } from '../../components/slideshow/slideshow.component';
 
 @Component({
   selector: 'app-gallery',
   standalone: true,
-  imports: [CommonModule, SlideshowComponent, NavbarComponent, FooterComponent, BackButtonComponent, LoadingMessageComponent],
+  imports: [CommonModule, SlideshowComponent, NavbarComponent, FooterComponent, BackButtonComponent, LoadingMessageComponent, LoadingSpinnerComponent, VipSessionStatusComponent],
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.scss']
 })
 export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly accessService = inject(AccessService);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly languageService = inject(LanguageService);
+  private readonly modalService = inject(ModalService);
   private readonly galleryService = inject(GalleryService);
   private readonly router = inject(Router);
 
@@ -38,6 +43,8 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
   readonly session = this.accessService.getStoredSession();
   readonly texts = this.languageService.texts;
   errorMessage = '';
+  isRefreshing = false;
+  lastUpdatedAt: Date | null = null;
 
   // Getter para slideshow
   get slideshowActive(): boolean {
@@ -99,11 +106,24 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private async loadGallery(): Promise<void> {
+  async refreshGallery(): Promise<void> {
+    await this.loadGallery(true);
+  }
+
+  lastUpdatedLabel(): string {
+    if (!this.lastUpdatedAt) return '';
+    return `${this.texts().refresh.lastUpdated}: ${this.formatTime(this.lastUpdatedAt)}`;
+  }
+
+  private async loadGallery(showSuccessMessage = false): Promise<void> {
+    this.isRefreshing = showSuccessMessage;
     this.errorMessage = '';
+    this.markViewForUpdate();
     const result = await this.galleryService.loadImages();
     if (result === 'invalid-session') {
-      this.errorMessage = getUserFriendlyApiErrorMessage('invalid access', 'gallery');
+      this.errorMessage = getUserFriendlyApiErrorMessage('invalid access', 'gallery', this.texts().apiErrors);
+      this.isRefreshing = false;
+      this.markViewForUpdate();
       this.accessService.clearSession();
       await new Promise(resolve => setTimeout(resolve, 700));
       await this.router.navigate(['/access/login']);
@@ -111,11 +131,24 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     if (result === 'system-error') {
-      this.errorMessage = getUserFriendlyApiErrorMessage(undefined, 'gallery');
+      const message = getUserFriendlyApiErrorMessage(undefined, 'gallery', this.texts().apiErrors);
+      if (showSuccessMessage) {
+        this.modalService.showError(this.texts().modal.error, message);
+      } else {
+        this.errorMessage = message;
+      }
+      this.isRefreshing = false;
+      this.markViewForUpdate();
       return;
     }
 
+    this.lastUpdatedAt = new Date();
+    if (showSuccessMessage) {
+      this.modalService.showSuccess(this.texts().modal.success, this.texts().refresh.success, 1500);
+    }
+    this.isRefreshing = false;
     this.scheduleObserver();
+    this.markViewForUpdate();
   }
 
   private scheduleObserver(): void {
@@ -197,5 +230,16 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
 
   goToVipBoard(): void {
     this.router.navigate(['/vip-board']);
+  }
+
+  private markViewForUpdate(): void {
+    this.changeDetectorRef.markForCheck();
+  }
+
+  private formatTime(date: Date): string {
+    return new Intl.DateTimeFormat(undefined, {
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(date);
   }
 }

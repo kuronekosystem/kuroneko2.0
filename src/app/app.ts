@@ -1,14 +1,19 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { LanguageService } from './core/i18n/language.service';
+import { AppModalComponent } from './shared/components/app-modal/app-modal.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, AppModalComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App implements OnInit {
+  private readonly languageService = inject(LanguageService);
+
+  readonly texts = this.languageService.texts;
   showLoader = signal(true);
   loadProgress = signal(0);
 

@@ -1,0 +1,39 @@
+@if (modal(); as modalData) {
+  <div class="app-modal" role="presentation">
+    <div class="app-modal__overlay" (click)="modalData.type === 'confirm' ? cancel() : close()"></div>
+
+    <section
+      class="app-modal__dialog"
+      [class]="'app-modal__dialog app-modal__dialog--' + modalData.type"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-labelledby]="'app-modal-title-' + modalData.id"
+      [attr.aria-describedby]="'app-modal-message-' + modalData.id"
+    >
+      <button
+        class="app-modal__close"
+        type="button"
+        (click)="modalData.type === 'confirm' ? cancel() : close()"
+        [attr.aria-label]="texts().modal.close"
+      >
+        &times;
+      </button>
+
+      <span class="app-modal__kicker">{{ typeLabel() }}</span>
+      <h2 [id]="'app-modal-title-' + modalData.id">{{ modalData.title }}</h2>
+      <p [id]="'app-modal-message-' + modalData.id">{{ modalData.message }}</p>
+
+      <div class="app-modal__actions">
+        @if (modalData.showCancel) {
+          <button class="app-modal__button app-modal__button--ghost" type="button" (click)="cancel()">
+            {{ modalData.cancelText || texts().modal.cancel }}
+          </button>
+        }
+
+        <button class="app-modal__button" type="button" (click)="confirm()">
+          {{ modalData.confirmText || texts().modal.ok }}
+        </button>
+      </div>
+    </section>
+  </div>
+}

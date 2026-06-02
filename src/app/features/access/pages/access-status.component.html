@@ -13,13 +13,24 @@
       </div>
 
       <div class="access-actions">
-        <button class="access-submit" type="submit" [disabled]="isSubmitting" [attr.aria-busy]="isSubmitting">
+        <button class="access-submit" type="submit" [disabled]="isSubmitting || isFormInvalid()" [attr.aria-busy]="isSubmitting">
           @if (isSubmitting) {
             <app-loading-spinner [label]="texts().accessStatus.submitting" />
           } @else {
             {{ texts().accessStatus.submit }}
           }
         </button>
+        @if (result?.success) {
+          <button
+            class="access-secondary"
+            type="button"
+            [disabled]="isSubmitting || isFormInvalid()"
+            [attr.aria-busy]="isSubmitting"
+            (click)="submit(true)"
+          >
+            {{ texts().refresh.action }}
+          </button>
+        }
         <a class="access-secondary" routerLink="/access">{{ texts().accessStatus.backToAccess }}</a>
       </div>
     </form>
@@ -38,7 +49,10 @@
 
     @if (result?.success) {
       <div class="access-message access-result" role="status">
-        <strong>{{ texts().vipBoard.status }}: {{ statusLabel(result?.status) }}</strong>
+        <strong>{{ texts().vipBoard.statusLabel }}: {{ statusLabel(result?.status) }}</strong>
+        @if (lastUpdatedAt) {
+          <span>{{ lastUpdatedLabel() }}</span>
+        }
         <span>{{ texts().accessStatus.requestCode }}: <code class="access-code">{{ result?.requestCode }}</code></span>
 
         @if (result?.status === 'approved') {

@@ -1,4 +1,5 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
+import { LanguageService } from '../../../core/i18n/language.service';
 
 @Component({
   selector: 'app-loading-spinner',
@@ -7,5 +8,8 @@ import { Component, input } from '@angular/core';
   styleUrls: ['./loading-spinner.component.scss']
 })
 export class LoadingSpinnerComponent {
-  readonly label = input('読み込み中...');
+  private readonly languageService = inject(LanguageService);
+
+  readonly label = input<string | undefined>();
+  readonly displayLabel = computed(() => this.label() ?? this.languageService.texts().loadingMessage.loading);
 }

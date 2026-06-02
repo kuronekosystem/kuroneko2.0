@@ -1,4 +1,5 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
+import { LanguageService } from '../../../core/i18n/language.service';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 
 @Component({
@@ -9,11 +10,22 @@ import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.comp
   styleUrls: ['./loading-message.component.scss']
 })
 export class LoadingMessageComponent {
-  readonly title = input('読み込み中...');
+  private readonly languageService = inject(LanguageService);
+
+  readonly title = input<string | undefined>();
   readonly description = input('');
-  readonly spinnerLabel = input('処理中...');
-  readonly slowTitle = input('通信に時間がかかっています。');
-  readonly slowDescription = input('そのまま少しお待ちください。');
-  readonly verySlowTitle = input('まだ処理を続けています。');
-  readonly verySlowDescription = input('通信環境やGoogle Apps Scriptの応答により時間がかかる場合があります。');
+  readonly spinnerLabel = input<string | undefined>();
+  readonly slowTitle = input<string | undefined>();
+  readonly slowDescription = input<string | undefined>();
+  readonly verySlowTitle = input<string | undefined>();
+  readonly verySlowDescription = input<string | undefined>();
+
+  readonly displayTitle = computed(() => this.title() ?? this.languageService.texts().loadingMessage.loading);
+  readonly displaySpinnerLabel = computed(() => this.spinnerLabel() ?? this.languageService.texts().loadingMessage.processing);
+  readonly displaySlowTitle = computed(() => this.slowTitle() ?? this.languageService.texts().loadingMessage.slowTitle);
+  readonly displaySlowDescription = computed(() => this.slowDescription() ?? this.languageService.texts().loadingMessage.slowDescription);
+  readonly displayVerySlowTitle = computed(() => this.verySlowTitle() ?? this.languageService.texts().loadingMessage.verySlowTitle);
+  readonly displayVerySlowDescription = computed(() =>
+    this.verySlowDescription() ?? this.languageService.texts().loadingMessage.verySlowDescription
+  );
 }

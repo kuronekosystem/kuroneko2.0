@@ -11,6 +11,9 @@
       <div class="access-field">
         <label for="displayName">{{ texts().accessRequest.displayName }}</label>
         <input id="displayName" name="displayName" [(ngModel)]="displayName" required>
+        @if (hasAttemptedSubmit && !displayName.trim()) {
+          <small class="access-field__error">{{ texts().accessRequest.validateInput }}</small>
+        }
       </div>
 
       <div class="access-field">
@@ -25,6 +28,9 @@
         <div class="access-field">
           <label for="fanboxName">{{ texts().accessRequest.fanboxName }}</label>
           <input id="fanboxName" name="fanboxName" [(ngModel)]="fanboxName">
+          @if (hasAttemptedSubmit && !fanboxName.trim() && !proofText.trim()) {
+            <small class="access-field__error">{{ texts().accessRequest.fanboxValidation }}</small>
+          }
         </div>
       }
 
@@ -32,6 +38,9 @@
         <div class="access-field">
           <label for="paypalTransactionId">{{ texts().accessRequest.paypalTransactionId }}</label>
           <input id="paypalTransactionId" name="paypalTransactionId" [(ngModel)]="paypalTransactionId">
+          @if (hasAttemptedSubmit && !paypalTransactionId.trim() && !proofText.trim()) {
+            <small class="access-field__error">{{ texts().accessRequest.paypalValidation }}</small>
+          }
         </div>
       }
 
@@ -46,7 +55,7 @@
       </div>
 
       <div class="access-actions">
-        <button class="access-submit" type="submit" [disabled]="isSubmitting" [attr.aria-busy]="isSubmitting">
+        <button class="access-submit" type="submit" [disabled]="isSubmitting || isFormInvalid()" [attr.aria-busy]="isSubmitting">
           @if (isSubmitting) {
             <app-loading-spinner [label]="texts().accessRequest.submitting" />
           } @else {
