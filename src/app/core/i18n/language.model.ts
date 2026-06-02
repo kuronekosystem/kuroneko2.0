@@ -60,6 +60,72 @@ export interface TranslationMap {
     systemSmall: string;
     visitCount: string;
     visitLoading: string;
+    supportPlans: {
+      title: string;
+      subtitle: string;
+      recommended: string;
+      whyTitle: string;
+      reasons: readonly string[];
+      supporter: {
+        name: string;
+        price: string;
+        description: string;
+        button: string;
+        imageAlt: string;
+      };
+      vip: {
+        name: string;
+        price: string;
+        description: string;
+        button: string;
+        imageAlt: string;
+      };
+      special: {
+        name: string;
+        price: string;
+        description: string;
+        button: string;
+        imageAlt: string;
+      };
+    };
+  };
+  support: {
+    modal: {
+      title: string;
+      subtitle: string;
+      description: string;
+    };
+    plan: {
+      recommended: string;
+      supporter: {
+        title: string;
+        price: string;
+        description: string;
+        button: string;
+        imageAlt: string;
+      };
+      vip: {
+        title: string;
+        price: string;
+        description: string;
+        button: string;
+        imageAlt: string;
+      };
+      special: {
+        title: string;
+        price: string;
+        description: string;
+        button: string;
+        imageAlt: string;
+      };
+    };
+    value: {
+      independent: string;
+      privacy: string;
+      gallery: string;
+      futureIllustrations: string;
+      longTerm: string;
+    };
   };
   music: {
     title: string;

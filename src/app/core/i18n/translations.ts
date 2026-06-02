@@ -61,7 +61,79 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       systemButton: 'クロネコエンジンへ',
       systemSmall: 'VIPアクセスセンター',
       visitCount: 'アクセス数',
-      visitLoading: '読み込み中...'
+      visitLoading: '読み込み中...',
+      supportPlans: {
+        title: '🐾 クロネコエンジンを応援する',
+        subtitle: '皆さまからのご支援は、ギャラリーの維持、プラットフォームの改善、今後のイラスト制作、そしてクロネコくんの世界を育てる力になります。',
+        recommended: 'おすすめ / Recommended',
+        whyTitle: 'なぜクロネコエンジンを応援するの？',
+        reasons: [
+          'クロネコくんに特化した独立プラットフォームの維持を支えられます。',
+          '今後のイラスト、新機能、翻訳、改善を応援できます。',
+          'このプロジェクト専用に設計されたギャラリー体験を楽しめます。',
+          'ファンのために作られた、プライバシーを大切にする環境を支えられます。',
+          'クロネコエンジンの世界を長く育てていく力になります。'
+        ],
+        supporter: {
+          name: '🌱 Supporter',
+          price: '$3 USD / 300円',
+          description: 'クロネコエンジンの世界を支える最初の仲間として、プロジェクトを応援できます。',
+          button: 'Supporterとして応援する',
+          imageAlt: 'Supporter プラン'
+        },
+        vip: {
+          name: '🌙 VIP Access',
+          price: '$7 USD / 700円',
+          description: '限定ギャラリー機能、VIPリクエスト、クロネコエンジン内でのより深い体験にアクセスできます。',
+          button: 'VIPになる',
+          imageAlt: 'VIP Access プラン'
+        },
+        special: {
+          name: '✨ Special Supporter',
+          price: '$10 USD / 1000円',
+          description: 'クロネコエンジンの未来づくりと、長期的な開発を支えるプランです。',
+          button: 'Special Supporterになる',
+          imageAlt: 'Special Supporter プラン'
+        }
+      }
+    },
+    support: {
+      modal: {
+        title: '🐾 クロネコエンジンを応援する',
+        subtitle: 'PayPal Support',
+        description: '皆さまからのご支援は、ギャラリーの維持、今後のイラスト制作、改善、そしてクロネコくんの世界を育てる力になります。'
+      },
+      plan: {
+        recommended: 'おすすめ / Recommended',
+        supporter: {
+          title: '🌱 Supporter',
+          price: '$3 USD / 300円',
+          description: 'クロネコエンジンの世界を支える最初の仲間として、プロジェクトを応援できます。',
+          button: 'Supporterとして応援する',
+          imageAlt: 'Supporter プラン'
+        },
+        vip: {
+          title: '🌙 VIP Access',
+          price: '$7 USD / 700円',
+          description: '限定ギャラリー機能、VIPリクエスト、クロネコエンジン内でのより深い体験にアクセスできます。',
+          button: 'VIPになる',
+          imageAlt: 'VIP Access プラン'
+        },
+        special: {
+          title: '✨ Special Supporter',
+          price: '$10 USD / 1000円',
+          description: 'クロネコエンジンの未来づくりと、長期的な開発を支えるプランです。',
+          button: 'Special Supporterになる',
+          imageAlt: 'Special Supporter プラン'
+        }
+      },
+      value: {
+        independent: '独立したプラットフォーム',
+        privacy: 'プライバシーを大切にする体験',
+        gallery: 'ギャラリー改善',
+        futureIllustrations: '今後のイラスト制作',
+        longTerm: '長期的なサポート'
+      }
     },
     music: {
       title: 'クロネコ BGM',
@@ -499,7 +571,79 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       systemButton: 'Entrar al sistema de galería',
       systemSmall: 'Centro de acceso VIP',
       visitCount: 'Visitas',
-      visitLoading: 'Cargando...'
+      visitLoading: 'Cargando...',
+      supportPlans: {
+        title: '🐾 Apoya Kuroneko Engine',
+        subtitle: 'Cada contribución ayuda a mantener la galería, mejorar la plataforma, apoyar futuras ilustraciones y hacer crecer el mundo de Kuroneko-kun.',
+        recommended: 'Recomendado',
+        whyTitle: '¿Por qué apoyar Kuroneko Engine?',
+        reasons: [
+          'Ayudas a mantener una plataforma independiente dedicada a Kuroneko-kun.',
+          'Apoyas futuras ilustraciones, nuevas funciones, traducciones y mejoras.',
+          'Disfrutas una experiencia de galería dedicada y diseñada específicamente para este proyecto.',
+          'Apoyas un entorno seguro y enfocado en la privacidad para fans.',
+          'Ayudas a asegurar el crecimiento sostenible del ecosistema Kuroneko Engine.'
+        ],
+        supporter: {
+          name: '🌱 Supporter',
+          price: '$3 USD / 300円',
+          description: 'Conviértete en uno de los primeros compañeros que apoyan el mundo de Kuroneko Engine.',
+          button: 'Apoyar como Supporter',
+          imageAlt: 'Plan Supporter'
+        },
+        vip: {
+          name: '🌙 Acceso VIP',
+          price: '$7 USD / 700円',
+          description: 'Accede a funciones exclusivas de galería, solicitudes VIP y una experiencia más profunda dentro del ecosistema Kuroneko Engine.',
+          button: 'Convertirme en VIP',
+          imageAlt: 'Plan de acceso VIP'
+        },
+        special: {
+          name: '✨ Supporter Especial',
+          price: '$10 USD / 1000円',
+          description: 'Ayuda a construir el futuro de Kuroneko Engine y apoya el desarrollo a largo plazo.',
+          button: 'Convertirme en Supporter Especial',
+          imageAlt: 'Plan Supporter Especial'
+        }
+      }
+    },
+    support: {
+      modal: {
+        title: '🐾 Apoya Kuroneko Engine',
+        subtitle: 'Soporte por PayPal',
+        description: 'Cada contribución ayuda a mantener Kuroneko Engine, apoyar futuras ilustraciones, mejorar la galería y hacer crecer el mundo de Kuroneko-kun.'
+      },
+      plan: {
+        recommended: 'Recomendado',
+        supporter: {
+          title: '🌱 Supporter',
+          price: '$3 USD / 300円',
+          description: 'Conviértete en uno de los primeros compañeros que apoyan el mundo de Kuroneko Engine.',
+          button: 'Apoyar como Supporter',
+          imageAlt: 'Plan Supporter'
+        },
+        vip: {
+          title: '🌙 Acceso VIP',
+          price: '$7 USD / 700円',
+          description: 'Accede a funciones exclusivas de galería, solicitudes VIP y una experiencia más profunda dentro del ecosistema Kuroneko Engine.',
+          button: 'Convertirme en VIP',
+          imageAlt: 'Plan de acceso VIP'
+        },
+        special: {
+          title: '✨ Supporter Especial',
+          price: '$10 USD / 1000円',
+          description: 'Ayuda a construir el futuro de Kuroneko Engine y apoya el desarrollo a largo plazo.',
+          button: 'Convertirme en Supporter Especial',
+          imageAlt: 'Plan Supporter Especial'
+        }
+      },
+      value: {
+        independent: 'Plataforma independiente',
+        privacy: 'Experiencia enfocada en privacidad',
+        gallery: 'Mejoras de galería',
+        futureIllustrations: 'Futuras ilustraciones',
+        longTerm: 'Apoyo a largo plazo'
+      }
     },
     music: {
       title: 'BGM de Kuroneko',
@@ -937,7 +1081,79 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       systemButton: 'Enter the gallery system',
       systemSmall: 'VIP access center',
       visitCount: 'Visits',
-      visitLoading: 'Loading...'
+      visitLoading: 'Loading...',
+      supportPlans: {
+        title: '🐾 Support Kuroneko Engine',
+        subtitle: 'Every contribution helps maintain the gallery, improve the platform, support future illustrations, and keep the world of Kuroneko-kun growing.',
+        recommended: 'Recommended',
+        whyTitle: 'Why support Kuroneko Engine?',
+        reasons: [
+          'Help maintain an independent platform dedicated to Kuroneko-kun.',
+          'Support future illustrations, new features, translations, and improvements.',
+          'Enjoy a dedicated gallery experience designed specifically for this project.',
+          'Access a secure and privacy-focused environment built for fans.',
+          'Help ensure the long-term growth of the Kuroneko Engine ecosystem.'
+        ],
+        supporter: {
+          name: '🌱 Supporter',
+          price: '$3 USD / 300円',
+          description: 'Become one of the first companions supporting the world of Kuroneko Engine.',
+          button: 'Support as Supporter',
+          imageAlt: 'Supporter plan'
+        },
+        vip: {
+          name: '🌙 VIP Access',
+          price: '$7 USD / 700円',
+          description: 'Access exclusive gallery features, VIP requests, and a deeper experience within the Kuroneko Engine ecosystem.',
+          button: 'Become VIP',
+          imageAlt: 'VIP Access plan'
+        },
+        special: {
+          name: '✨ Special Supporter',
+          price: '$10 USD / 1000円',
+          description: 'Help build the future of Kuroneko Engine and support long-term development.',
+          button: 'Become Special Supporter',
+          imageAlt: 'Special Supporter plan'
+        }
+      }
+    },
+    support: {
+      modal: {
+        title: '🐾 Support Kuroneko Engine',
+        subtitle: 'PayPal Support',
+        description: 'Every contribution helps maintain Kuroneko Engine, support future illustrations, improve the gallery, and keep the world of Kuroneko-kun growing.'
+      },
+      plan: {
+        recommended: 'Recommended',
+        supporter: {
+          title: '🌱 Supporter',
+          price: '$3 USD / 300円',
+          description: 'Become one of the first companions supporting the world of Kuroneko Engine.',
+          button: 'Support as Supporter',
+          imageAlt: 'Supporter plan'
+        },
+        vip: {
+          title: '🌙 VIP Access',
+          price: '$7 USD / 700円',
+          description: 'Access exclusive gallery features, VIP requests, and a deeper experience within the Kuroneko Engine ecosystem.',
+          button: 'Become VIP',
+          imageAlt: 'VIP Access plan'
+        },
+        special: {
+          title: '✨ Special Supporter',
+          price: '$10 USD / 1000円',
+          description: 'Help build the future of Kuroneko Engine and support long-term development.',
+          button: 'Become Special Supporter',
+          imageAlt: 'Special Supporter plan'
+        }
+      },
+      value: {
+        independent: 'Independent platform',
+        privacy: 'Privacy-focused experience',
+        gallery: 'Gallery improvements',
+        futureIllustrations: 'Future illustrations',
+        longTerm: 'Long-term support'
+      }
     },
     music: {
       title: 'Kuroneko BGM',
@@ -1375,7 +1591,79 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       systemButton: '进入画廊系统',
       systemSmall: 'VIP 访问中心',
       visitCount: '访问次数',
-      visitLoading: '加载中...'
+      visitLoading: '加载中...',
+      supportPlans: {
+        title: '🐾 支持 Kuroneko Engine',
+        subtitle: '每一份支持都能帮助维护图库、改进平台、支持未来插画，并让 Kuroneko-kun 的世界持续成长。',
+        recommended: '推荐',
+        whyTitle: '为什么支持 Kuroneko Engine？',
+        reasons: [
+          '帮助维护一个专属于 Kuroneko-kun 的独立平台。',
+          '支持未来插画、新功能、翻译与持续改进。',
+          '享受为本项目专门设计的图库体验。',
+          '支持一个为粉丝打造、重视隐私的安全环境。',
+          '帮助 Kuroneko Engine 生态长期稳定成长。'
+        ],
+        supporter: {
+          name: '🌱 Supporter',
+          price: '$3 USD / 300円',
+          description: '成为最早支持 Kuroneko Engine 世界的伙伴之一。',
+          button: '以 Supporter 身份支持',
+          imageAlt: 'Supporter 方案'
+        },
+        vip: {
+          name: '🌙 VIP Access',
+          price: '$7 USD / 700円',
+          description: '访问专属图库功能、VIP 请求，并在 Kuroneko Engine 生态中获得更深入的体验。',
+          button: '成为 VIP',
+          imageAlt: 'VIP Access 方案'
+        },
+        special: {
+          name: '✨ Special Supporter',
+          price: '$10 USD / 1000円',
+          description: '帮助建设 Kuroneko Engine 的未来，并支持长期开发。',
+          button: '成为 Special Supporter',
+          imageAlt: 'Special Supporter 方案'
+        }
+      }
+    },
+    support: {
+      modal: {
+        title: '🐾 支持 Kuroneko Engine',
+        subtitle: 'PayPal 支持',
+        description: '每一份支持都能帮助维护 Kuroneko Engine、支持未来插画、改进图库，并让 Kuroneko-kun 的世界持续成长。'
+      },
+      plan: {
+        recommended: '推荐',
+        supporter: {
+          title: '🌱 Supporter',
+          price: '$3 USD / 300円',
+          description: '成为最早支持 Kuroneko Engine 世界的伙伴之一。',
+          button: '以 Supporter 身份支持',
+          imageAlt: 'Supporter 方案'
+        },
+        vip: {
+          title: '🌙 VIP Access',
+          price: '$7 USD / 700円',
+          description: '访问专属图库功能、VIP 请求，并在 Kuroneko Engine 生态中获得更深入的体验。',
+          button: '成为 VIP',
+          imageAlt: 'VIP Access 方案'
+        },
+        special: {
+          title: '✨ Special Supporter',
+          price: '$10 USD / 1000円',
+          description: '帮助建设 Kuroneko Engine 的未来，并支持长期开发。',
+          button: '成为 Special Supporter',
+          imageAlt: 'Special Supporter 方案'
+        }
+      },
+      value: {
+        independent: '独立平台',
+        privacy: '重视隐私的体验',
+        gallery: '图库改进',
+        futureIllustrations: '未来插画',
+        longTerm: '长期支持'
+      }
     },
     music: {
       title: '黑猫 BGM',
@@ -1813,7 +2101,79 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationMap> = {
       systemButton: '進入畫廊系統',
       systemSmall: 'VIP 存取中心',
       visitCount: '瀏覽次數',
-      visitLoading: '載入中...'
+      visitLoading: '載入中...',
+      supportPlans: {
+        title: '🐾 支持 Kuroneko Engine',
+        subtitle: '每一份支持都能協助維持圖庫、改善平台、支持未來插畫，並讓 Kuroneko-kun 的世界持續成長。',
+        recommended: '推薦',
+        whyTitle: '為什麼支持 Kuroneko Engine？',
+        reasons: [
+          '協助維持一個專屬於 Kuroneko-kun 的獨立平台。',
+          '支持未來插畫、新功能、翻譯與持續改善。',
+          '享受為本專案專門設計的圖庫體驗。',
+          '支持一個為粉絲打造、重視隱私的安全環境。',
+          '協助 Kuroneko Engine 生態長期穩定成長。'
+        ],
+        supporter: {
+          name: '🌱 Supporter',
+          price: '$3 USD / 300円',
+          description: '成為最早支持 Kuroneko Engine 世界的夥伴之一。',
+          button: '以 Supporter 身分支持',
+          imageAlt: 'Supporter 方案'
+        },
+        vip: {
+          name: '🌙 VIP Access',
+          price: '$7 USD / 700円',
+          description: '存取專屬圖庫功能、VIP 請求，並在 Kuroneko Engine 生態中獲得更深入的體驗。',
+          button: '成為 VIP',
+          imageAlt: 'VIP Access 方案'
+        },
+        special: {
+          name: '✨ Special Supporter',
+          price: '$10 USD / 1000円',
+          description: '協助建設 Kuroneko Engine 的未來，並支持長期開發。',
+          button: '成為 Special Supporter',
+          imageAlt: 'Special Supporter 方案'
+        }
+      }
+    },
+    support: {
+      modal: {
+        title: '🐾 支持 Kuroneko Engine',
+        subtitle: 'PayPal 支持',
+        description: '每一份支持都能協助維持 Kuroneko Engine、支持未來插畫、改善圖庫，並讓 Kuroneko-kun 的世界持續成長。'
+      },
+      plan: {
+        recommended: '推薦',
+        supporter: {
+          title: '🌱 Supporter',
+          price: '$3 USD / 300円',
+          description: '成為最早支持 Kuroneko Engine 世界的夥伴之一。',
+          button: '以 Supporter 身分支持',
+          imageAlt: 'Supporter 方案'
+        },
+        vip: {
+          title: '🌙 VIP Access',
+          price: '$7 USD / 700円',
+          description: '存取專屬圖庫功能、VIP 請求，並在 Kuroneko Engine 生態中獲得更深入的體驗。',
+          button: '成為 VIP',
+          imageAlt: 'VIP Access 方案'
+        },
+        special: {
+          title: '✨ Special Supporter',
+          price: '$10 USD / 1000円',
+          description: '協助建設 Kuroneko Engine 的未來，並支持長期開發。',
+          button: '成為 Special Supporter',
+          imageAlt: 'Special Supporter 方案'
+        }
+      },
+      value: {
+        independent: '獨立平台',
+        privacy: '重視隱私的體驗',
+        gallery: '圖庫改善',
+        futureIllustrations: '未來插畫',
+        longTerm: '長期支持'
+      }
     },
     music: {
       title: '黑貓 BGM',

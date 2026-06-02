@@ -61,10 +61,10 @@
         <span>{{ texts().linktree.fanboxLabel }}</span>
         <small>{{ texts().linktree.fanboxSmall }}</small>
       </a>
-      <a class="linktree__button" [href]="links.paypal" target="_blank" rel="noopener noreferrer">
+      <button type="button" class="linktree__button" (click)="openSupportModal()">
         <span>{{ texts().linktree.paypalLabel }}</span>
         <small>{{ texts().linktree.paypalSmall }}</small>
-      </a>
+      </button>
       <div class="linktree__activity-hours" aria-live="polite">
         <strong>{{ texts().access.activityHours.shortTitle }}</strong>
         <span>{{ texts().access.activityHours.daytime }} / {{ texts().access.activityHours.nighttime }}</span>
@@ -76,6 +76,66 @@
       </button>
     </div>
   </div>
+
+  @if (showSupportModal()) {
+    <div class="linktree__support-overlay">
+      <section
+        class="support-modal"
+        role="dialog"
+        aria-modal="true"
+        [attr.aria-labelledby]="'support-modal-title'"
+        [attr.aria-describedby]="'support-modal-description'"
+      >
+        <button
+          type="button"
+          class="support-modal__close"
+          (click)="closeSupportModal()"
+          [attr.aria-label]="texts().modal.close"
+        >
+          &times;
+        </button>
+
+        <div class="support-modal__header">
+          <span>{{ texts().support.modal.subtitle }}</span>
+          <h2 id="support-modal-title">{{ texts().support.modal.title }}</h2>
+          <p id="support-modal-description">{{ texts().support.modal.description }}</p>
+        </div>
+
+        <div class="support-modal__grid">
+          @for (plan of supportPlans(); track plan.id) {
+            <article class="support-plan" [class.support-plan--recommended]="plan.id === 'vip'">
+              @if (plan.recommended) {
+                <span class="support-plan__badge">{{ plan.recommended }}</span>
+              }
+
+              <img
+                class="support-plan__image"
+                [src]="plan.imageSrc"
+                [alt]="plan.imageAlt"
+                loading="lazy"
+                decoding="async"
+              >
+
+              <div class="support-plan__body">
+                <h3>{{ plan.name }}</h3>
+                <p class="support-plan__price">{{ plan.price }}</p>
+                <p class="support-plan__description">{{ plan.description }}</p>
+                <a class="support-plan__cta" [href]="plan.href" target="_blank" rel="noopener noreferrer">
+                  {{ plan.button }}
+                </a>
+              </div>
+            </article>
+          }
+        </div>
+
+        <ul class="support-modal__values">
+          @for (value of supportValues(); track value) {
+            <li>{{ value }}</li>
+          }
+        </ul>
+      </section>
+    </div>
+  }
 
   @if (showAdultWarning()) {
     <div class="linktree__warning-overlay">

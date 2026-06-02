@@ -7,6 +7,18 @@ import { LanguageSelectorComponent } from '../../../../shared/components/languag
 import { VipSessionStatusComponent } from '../../../../shared/components/vip-session-status/vip-session-status.component';
 import { VisitCounterService } from '../../services/visit-counter.service';
 
+interface SupportPlanViewModel {
+  readonly id: 'supporter' | 'vip' | 'special';
+  readonly imageSrc: string;
+  readonly href: string;
+  readonly name: string;
+  readonly price: string;
+  readonly description: string;
+  readonly button: string;
+  readonly imageAlt: string;
+  readonly recommended?: string;
+}
+
 @Component({
   selector: 'app-linktree',
   standalone: true,
@@ -42,6 +54,55 @@ export class LinktreeComponent implements OnInit, OnDestroy {
   readonly audioError = signal(false);
   readonly isMusicLoading = signal(false);
   readonly showAdultWarning = signal(false);
+  readonly showSupportModal = signal(false);
+  readonly supportPlans = computed<readonly SupportPlanViewModel[]>(() => {
+    const supportPlans = this.texts().support.plan;
+
+    return [
+      {
+        id: 'supporter',
+        imageSrc: 'images/supporter-tier.webp',
+        href: 'https://paypal.me/devusui/3',
+        name: supportPlans.supporter.title,
+        price: supportPlans.supporter.price,
+        description: supportPlans.supporter.description,
+        button: supportPlans.supporter.button,
+        imageAlt: supportPlans.supporter.imageAlt
+      },
+      {
+        id: 'vip',
+        imageSrc: 'images/vip-tier.webp',
+        href: 'https://paypal.me/devusui/7',
+        name: supportPlans.vip.title,
+        price: supportPlans.vip.price,
+        description: supportPlans.vip.description,
+        button: supportPlans.vip.button,
+        imageAlt: supportPlans.vip.imageAlt,
+        recommended: supportPlans.recommended
+      },
+      {
+        id: 'special',
+        imageSrc: 'images/special-supporter-tier.webp',
+        href: 'https://paypal.me/devusui/10',
+        name: supportPlans.special.title,
+        price: supportPlans.special.price,
+        description: supportPlans.special.description,
+        button: supportPlans.special.button,
+        imageAlt: supportPlans.special.imageAlt
+      }
+    ];
+  });
+  readonly supportValues = computed(() => {
+    const value = this.texts().support.value;
+
+    return [
+      value.independent,
+      value.privacy,
+      value.gallery,
+      value.futureIllustrations,
+      value.longTerm
+    ] as const;
+  });
   readonly shouldShowVisitCounter = computed(() => this.isVisitCountLoading() || this.visitCount() !== null);
   readonly formattedVisitCount = computed(() => {
     const count = this.visitCount();
@@ -97,10 +158,23 @@ export class LinktreeComponent implements OnInit, OnDestroy {
     this.showAdultWarning.set(false);
   }
 
+  openSupportModal(): void {
+    this.showSupportModal.set(true);
+  }
+
+  closeSupportModal(): void {
+    this.showSupportModal.set(false);
+  }
+
   @HostListener('document:keydown.escape')
   closeWarningOnEscape(): void {
     if (this.showAdultWarning()) {
       this.closeAdultWarning();
+      return;
+    }
+
+    if (this.showSupportModal()) {
+      this.closeSupportModal();
     }
   }
 
