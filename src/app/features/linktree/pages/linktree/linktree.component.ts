@@ -5,6 +5,7 @@ import { APP_LINKS } from '../../../../core/constants/app-links.config';
 import { LanguageService } from '../../../../core/i18n/language.service';
 import { LanguageSelectorComponent } from '../../../../shared/components/language-selector/language-selector.component';
 import { VipSessionStatusComponent } from '../../../../shared/components/vip-session-status/vip-session-status.component';
+import { ModalService } from '../../../../shared/services/modal.service';
 import { VisitCounterService } from '../../services/visit-counter.service';
 
 interface SupportPlanViewModel {
@@ -19,6 +20,14 @@ interface SupportPlanViewModel {
   readonly recommended?: string;
 }
 
+interface AccountLinkViewModel {
+  readonly id: 'emergency' | 'shin' | 'nyx' | 'pixiv' | 'mika' | 'instagram';
+  readonly href: string;
+  readonly title: string;
+  readonly subtitle: string;
+  readonly ageRestricted: boolean;
+}
+
 @Component({
   selector: 'app-linktree',
   standalone: true,
@@ -29,6 +38,7 @@ interface SupportPlanViewModel {
 export class LinktreeComponent implements OnInit, OnDestroy {
   private readonly languageService = inject(LanguageService);
   private readonly visitCounterService = inject(VisitCounterService);
+  private readonly modalService = inject(ModalService);
   private readonly router = inject(Router);
   private readonly audioSource = environment.assets.bgm;
   private readonly adultWarningAcceptedKey = environment.storage.adultWarningAccepted;
@@ -47,6 +57,7 @@ export class LinktreeComponent implements OnInit, OnDestroy {
 
   readonly links = APP_LINKS;
   readonly texts = this.languageService.texts;
+  readonly projectVersion = environment.app.version;
   readonly visitCount = signal<number | null>(null);
   readonly isVisitCountLoading = signal(true);
   readonly isPlaying = signal(false);
@@ -55,6 +66,60 @@ export class LinktreeComponent implements OnInit, OnDestroy {
   readonly isMusicLoading = signal(false);
   readonly showAdultWarning = signal(false);
   readonly showSupportModal = signal(false);
+  readonly generalAccountLinks = computed<readonly AccountLinkViewModel[]>(() => {
+    const accounts = this.texts().linktree.accounts;
+
+    return [
+      {
+        id: 'emergency',
+        href: 'https://x.com/er_mao13619',
+        title: accounts.emergency.title,
+        subtitle: this.formatAccountSubtitle(accounts.emergency.username, accounts.emergency.description),
+        ageRestricted: false
+      },
+      {
+        id: 'mika',
+        href: 'https://x.com/mika_kuroneko',
+        title: accounts.mika.title,
+        subtitle: this.formatAccountSubtitle(accounts.mika.username, accounts.mika.description),
+        ageRestricted: false
+      },
+      {
+        id: 'instagram',
+        href: 'https://www.instagram.com/kuro.nekoworld/',
+        title: accounts.instagram.title,
+        subtitle: this.formatAccountSubtitle(accounts.instagram.username, accounts.instagram.description),
+        ageRestricted: false
+      }
+    ];
+  });
+  readonly adultAccountLinks = computed<readonly AccountLinkViewModel[]>(() => {
+    const accounts = this.texts().linktree.accounts;
+
+    return [
+      {
+        id: 'shin',
+        href: 'https://x.com/shinai_kuroneko',
+        title: accounts.shin.title,
+        subtitle: this.formatAccountSubtitle(accounts.shin.username, accounts.shin.description),
+        ageRestricted: true
+      },
+      {
+        id: 'nyx',
+        href: 'https://x.com/nyx_kuroneko',
+        title: accounts.nyx.title,
+        subtitle: this.formatAccountSubtitle(accounts.nyx.username, accounts.nyx.description),
+        ageRestricted: true
+      },
+      {
+        id: 'pixiv',
+        href: this.links.pixiv,
+        title: this.texts().linktree.pixivLabel,
+        subtitle: this.texts().linktree.pixivSmall,
+        ageRestricted: true
+      }
+    ];
+  });
   readonly supportPlans = computed<readonly SupportPlanViewModel[]>(() => {
     const supportPlans = this.texts().support.plan;
 
@@ -166,6 +231,23 @@ export class LinktreeComponent implements OnInit, OnDestroy {
     this.showSupportModal.set(false);
   }
 
+  async handleExternalLinkClick(event: MouseEvent, link: AccountLinkViewModel): Promise<void> {
+    if (!link.ageRestricted) return;
+
+    event.preventDefault();
+    const modal = this.texts().linktree.ageRestrictedModal;
+    const confirmed = await this.modalService.confirm(
+      modal.title,
+      modal.message,
+      modal.confirm,
+      modal.cancel
+    );
+
+    if (confirmed) {
+      this.openExternalLink(link.href);
+    }
+  }
+
   @HostListener('document:keydown.escape')
   closeWarningOnEscape(): void {
     if (this.showAdultWarning()) {
@@ -180,6 +262,17 @@ export class LinktreeComponent implements OnInit, OnDestroy {
 
   private navigateToAccess(): void {
     void this.router.navigateByUrl('/access');
+  }
+
+  private formatAccountSubtitle(username: string, description: string): string {
+    return username ? `${username} · ${description}` : description;
+  }
+
+  private openExternalLink(href: string): void {
+    const externalWindow = globalThis.open(href, '_blank', 'noopener,noreferrer');
+    if (externalWindow) {
+      externalWindow.opener = null;
+    }
   }
 
   private prepareAudio(): void {

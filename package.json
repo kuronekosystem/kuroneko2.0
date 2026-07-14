@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "dev": "ng serve",
     "start": "ng serve",
     "build": "ng build",
     "build:gh-pages": "ng build --configuration production --base-href /kuroneko2.0/ && node scripts/copy-index-to-404.cjs",

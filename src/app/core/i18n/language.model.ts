@@ -45,6 +45,11 @@ export interface TranslationMap {
     ariaLabel: string;
     eyebrow: string;
     title: string;
+    version: {
+      betaLabel: string;
+      betaBadge: string;
+      developmentNotice: string;
+    };
     introLine1: string;
     introLine2: string;
     introLine3: string;
@@ -60,6 +65,41 @@ export interface TranslationMap {
     systemSmall: string;
     visitCount: string;
     visitLoading: string;
+    ageRestrictedBadge: string;
+    ageRestrictedModal: {
+      title: string;
+      message: string;
+      confirm: string;
+      cancel: string;
+    };
+    adultSectionTitle: string;
+    accounts: {
+      emergency: {
+        title: string;
+        username: string;
+        description: string;
+      };
+      shin: {
+        title: string;
+        username: string;
+        description: string;
+      };
+      nyx: {
+        title: string;
+        username: string;
+        description: string;
+      };
+      mika: {
+        title: string;
+        username: string;
+        description: string;
+      };
+      instagram: {
+        title: string;
+        username: string;
+        description: string;
+      };
+    };
     supportPlans: {
       title: string;
       subtitle: string;

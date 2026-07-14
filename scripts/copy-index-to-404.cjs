@@ -46,6 +46,7 @@ if (!outputDirectory) {
 
 const indexPath = path.join(outputDirectory, 'index.html');
 const fallbackPath = path.join(outputDirectory, '404.html');
+const noJekyllPath = path.join(outputDirectory, '.nojekyll');
 const indexHtml = fs.readFileSync(indexPath, 'utf8');
 
 if (!indexHtml.includes(expectedBaseHref)) {
@@ -53,5 +54,6 @@ if (!indexHtml.includes(expectedBaseHref)) {
 }
 
 fs.copyFileSync(indexPath, fallbackPath);
+fs.writeFileSync(noJekyllPath, '');
 
-console.log(`[gh-pages] Copiado index.html -> 404.html en ${path.relative(projectRoot, outputDirectory)}`);
+console.log(`[gh-pages] Copiado index.html -> 404.html y creado .nojekyll en ${path.relative(projectRoot, outputDirectory)}`);

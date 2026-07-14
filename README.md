@@ -147,11 +147,74 @@ Destino de publicacion:
 https://kuronekosystem.github.io/kuroneko2.0/
 ```
 
-El proyecto debe compilarse con base href:
+El proyecto se publica bajo el subpath del repositorio:
 
 ```text
 /kuroneko2.0/
 ```
+
+La configuracion de produccion en `angular.json` usa:
+
+- `baseHref`: `/kuroneko2.0/`
+- `deployUrl`: `/kuroneko2.0/`
+- assets copiados desde `public/`
+- salida de build: `dist/kuroneko2.0/browser`
+
+Build local para GitHub Pages:
+
+```bash
+npm run build:gh-pages
+```
+
+Este comando ejecuta el build de produccion y luego prepara compatibilidad SPA para GitHub Pages:
+
+- valida que `index.html` contenga `<base href="/kuroneko2.0/">`
+- copia `index.html` como `404.html`
+- crea `.nojekyll`
+
+Archivos esperados en la salida:
+
+```text
+dist/kuroneko2.0/browser/index.html
+dist/kuroneko2.0/browser/404.html
+dist/kuroneko2.0/browser/.nojekyll
+```
+
+La copia `404.html` permite refrescar o entrar directamente a rutas internas como:
+
+```text
+https://kuronekosystem.github.io/kuroneko2.0/admin
+https://kuronekosystem.github.io/kuroneko2.0/gallery
+https://kuronekosystem.github.io/kuroneko2.0/access
+```
+
+### GitHub Actions
+
+El workflow de deploy esta en:
+
+```text
+.github/workflows/deploy-gh-pages.yml
+```
+
+Se ejecuta automaticamente al hacer push a `main` y tambien puede lanzarse manualmente desde GitHub Actions.
+
+Pasos del workflow:
+
+1. Instala dependencias con `npm ci`.
+2. Ejecuta typecheck con `npx tsc --noEmit -p tsconfig.app.json`.
+3. Ejecuta `npm run build:gh-pages`.
+4. Sube `dist/kuroneko2.0/browser` como artifact de GitHub Pages.
+5. Despliega usando GitHub Pages.
+
+### Configuracion requerida en GitHub
+
+En el repositorio, configurar:
+
+```text
+Settings -> Pages -> Build and deployment -> Source: GitHub Actions
+```
+
+No se requieren tokens ni secretos para este workflow.
 
 ## Estado actual
 

@@ -8,6 +8,13 @@
 
     <p class="linktree__eyebrow">{{ texts().linktree.eyebrow }}</p>
     <h1 class="linktree__title">{{ texts().linktree.title }}</h1>
+    <div class="linktree__version" aria-live="polite">
+      <span class="linktree__version-line">
+        <span class="linktree__version-text">{{ texts().linktree.version.betaLabel }} {{ projectVersion }}</span>
+        <span class="linktree__version-badge">{{ texts().linktree.version.betaBadge }}</span>
+      </span>
+      <small>{{ texts().linktree.version.developmentNotice }}</small>
+    </div>
     <p class="linktree__copy">
       {{ texts().linktree.introLine1 }}<br>
       {{ texts().linktree.introLine2 }}<br>
@@ -49,14 +56,34 @@
     </div>
 
     <div class="linktree__links" [attr.aria-label]="texts().linktree.ariaLabel">
-      <a class="linktree__button" [href]="links.pixiv" target="_blank" rel="noopener noreferrer">
-        <span>{{ texts().linktree.pixivLabel }}</span>
-        <small>{{ texts().linktree.pixivSmall }}</small>
-      </a>
-      <a class="linktree__button" [href]="links.x" target="_blank" rel="noopener noreferrer">
-        <span>{{ texts().linktree.xLabel }}</span>
-        <small>{{ texts().linktree.xSmall }}</small>
-      </a>
+      @for (account of generalAccountLinks(); track account.id) {
+        <a
+          class="linktree__button"
+          [href]="account.href"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span>{{ account.title }}</span>
+          <small>{{ account.subtitle }}</small>
+        </a>
+      }
+
+      <h2 class="linktree__section-title">{{ texts().linktree.adultSectionTitle }}</h2>
+
+      @for (account of adultAccountLinks(); track account.id) {
+        <a
+          class="linktree__button"
+          [class.linktree__button--age-restricted]="true"
+          [href]="account.href"
+          target="_blank"
+          rel="noopener noreferrer"
+          (click)="handleExternalLinkClick($event, account)"
+        >
+          <span>{{ account.title }}</span>
+          <small>{{ account.subtitle }}</small>
+          <em class="linktree__age-badge">{{ texts().linktree.ageRestrictedBadge }}</em>
+        </a>
+      }
       <a class="linktree__button" [href]="links.fanbox" target="_blank" rel="noopener noreferrer">
         <span>{{ texts().linktree.fanboxLabel }}</span>
         <small>{{ texts().linktree.fanboxSmall }}</small>
